@@ -1,0 +1,66 @@
+---
+title: "The grammar of graphics and `ggplot2`"
+author: "<br>36-315: Statistical Graphics & Visualization"
+footer:  "36-315-summer26.netlify.app"
+format:
+  revealjs:
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    code-line-numbers: false
+    linestretch: 1.25
+    embed-resources: true
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+```
+
+
+## ALWAYS visualize your data
+
+**Anscombe's quartet**
+
+::: columns
+::: {.column width="50%" style="text-align: left;"}
+```{r}
+#| echo: false
+#| fig-height: 9
+library(tidyverse)
+theme_set(theme_light(base_size = 20))
+anscombe |> 
+  pivot_longer(everything(),
+               cols_vary = "slowest",
+               names_to = c(".value", "set"),
+               names_pattern = "(.)(.)") |> 
+  ggplot(aes(x, y)) +
+  geom_smooth(method = "lm", se = FALSE, color = "red", fullrange = TRUE) +
+  geom_point(size = 4) +
+  facet_wrap(~ set)
+```
+:::
+
+::: {.column width="50%" style="text-align: left;"}
+```{r}
+#| echo: false
+anscombe |> 
+  pivot_longer(everything(),
+               cols_vary = "slowest",
+               names_to = c(".value", "set"),
+               names_pattern = "(.)(.)") |> 
+  group_by(set) |> 
+  summarise(across(c(x, y), list(mean = mean, var = var)),
+            x_y_cor = cor(x, y))
+```
+:::
+:::
