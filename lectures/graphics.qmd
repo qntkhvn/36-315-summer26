@@ -1,15 +1,17 @@
 ---
 title: "The grammar of graphics and `ggplot2`"
-author: "<br>36-315: Statistical Graphics & Visualization"
-footer:  "36-315-summer26.netlify.app"
+subtitle: "<br>36-315: Statistical Graphics & Visualization"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
 format:
   revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
     theme: theme.scss
     smaller: true
-    slide-number: c/t
+    slide-number: c
+    linestretch: 1.5
     code-line-numbers: false
-    linestretch: 1.25
-    embed-resources: true
     html-math-method:
       method: mathjax
       url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
