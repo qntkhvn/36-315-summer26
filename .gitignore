@@ -1,0 +1,29 @@
+# Derivative files
+**/*.pdf
+**/*.log
+**/*.tex
+**/*.aux
+**/*.out
+**/*.html
+
+_site/
+.quarto/
+
+/.quarto/
+.Rproj.user
+
+/*.Rproj
+**/.DS_Store
+
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+.RDataTmp
+**/*.quarto_ipynb
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto
