@@ -13,7 +13,7 @@ website:
 format:
   html:
     theme: yeti
-    fontsize: 0.9em
+    fontsize: 0.95em
     css: styles.css
     
 execute:
