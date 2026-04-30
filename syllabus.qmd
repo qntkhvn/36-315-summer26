@@ -164,7 +164,9 @@ For example, a grade of 85% would earn you at least a B, and a curve could only 
 
 :::
 
-**Course Components**
+---
+
+<u><big>**Course Components**</big></u>
 
 **1. Lectures**
 
@@ -180,7 +182,7 @@ Consistent tardiness is not acceptable and may lead to grade deductions.
 
 Bi-weekly lab sessions give students opportunities to directly engage with the course materials.
 Each lab will be turned in as a lab assignment.
-Lab sessions are designed to take 45--60 minutes to complete, but they are not due until 11:59 PM ET on the day of the lab, so students have extra time if needed.
+Labs are designed to be completed during the session, but they are not due until 11:59 PM ET on the day of the lab, so students have extra time if needed.
 **Labs must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 
 Live lab attendance is **mandatory.**
@@ -194,8 +196,6 @@ If there is an unexpected emergency, notify me immediately and I will determine 
 Homework assignments are due on Fridays by 6:00 PM ET, and will be posted on the Monday of the same week.
 **Homeworks must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 Be sure that your code, graphs, and answers are properly displayed on your homework before submitting.
-
-**TODO: EXTENSIONS, REGRADES**
 
 **4. Graphics Critiques**
 
@@ -229,8 +229,50 @@ Students will work individually to analyze a dataset of their choosing.
 The project will culminate in a report and a short video recording.
 More details about the project will be provided later.
 
+---
 
-**Calendar** *(subject to change)*
+<u><big>**Course Logistics and Policies**</big></u>
+
+**Integrity.** Cheating, plagiarism, and/or unauthorized assistance on assignments will be dealt with in accordance with the [CMU Policy on Academic Integrity](https://www.cmu.edu/policies/student-and-student-life/academic-integrity.html). 
+
+**Collaboration.**
+Discussing assignments with your classmates is allowed and encouraged, and helping explain ideas to each other is a core part of the academic experience.
+But it is important that every student get practice working on their own.
+This means that **all the work you turn in must be your own**.
+You must write your own code, generate your own graphics, and write your own solutions and reports.
+
+**External Sources.**
+External sources (e.g., books, websites, etc.) must be used to support your work, not to obtain your work.
+You may use external sources to look up code documentation, find useful packages, find explanations for error messages, or clarify lecture materials.
+You may not use them to copy code, text, or graphics without attribution.
+Do not copy old solutions (in whole or in part), and do not consult or read them.
+
+**Generative AI.** You may consult generative AI tools, but you must still take intellectual responsibility for your code, analysis, and writing, and be able to explain and defend every decision. You must do the thinking, not generative AI. You may not use generative AI to come up with analysis or interpretation for you, only to augment your own work. If you use a generative AI tool, you must disclose your use in your submission and explain what you used it for.
+
+**Assignment Solutions.**
+Homework and lab solutions will typically be posted the day after the assignment is due.
+The provided detailed solutions will be helpful for future assignments.
+Reviewing the solutions is important and helpful, even if you aced the assignment.
+Assignments are typically graded within a week of when they are submitted.
+
+**Regrade Requests.**
+If you believe a mistake was made when your assignment was graded, *first* check the posted assignment solutions. If you still believe a mistake was made---after, and only after, reviewing the solutions---you may submit a regrade request on Gradescope. Do not make a request via email. In your regrade request, clearly (and politely) explain how the solutions indicate a possible grading mistake. This regrade request must be made **within one week** of when the assignment was graded. If a regrade request is made more than one week after grades are posted, it will not be processed.
+
+**Extensions.**
+In general, late assignments will not be accepted.
+However, extensions may be granted for: illness, family emergencies, job interviews, or religious reasons.
+To receive an extension, you must contact the instructor **36 hours** before the due date.
+It is up to the instructor to decide if an extension may be granted.
+Note that if your request does not involve an illness, family emergency, job interview, or religious reason, then it is extremely unlikely that an extension will be granted.
+
+**Disability Services.** 
+If you require a special accommodation (e.g., for exams, class notes, or other aspects of the class),
+please visit the [Office of Disability Resources](https://www.cmu.edu/disability-resources/) to obtain appropriate
+documentation. We cannot make any accommodations without documentation.
+
+---
+
+<u><big>**Course Timeline**</big></u> *(subject to change)*
 
 | Date                    | Session            | Assignment              |
 | ----------------------- | ------------------ | ----------------------- |
