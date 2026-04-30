@@ -4,7 +4,7 @@ project:
 website:
   title: "36-315"
   navbar:
-    background: "#f8f8f8"
+    background: "#f2f2f2"
     right:
       - href: index.qmd
         text: "**Home**"

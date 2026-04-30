@@ -126,7 +126,7 @@ There will be one take-home exam on Tuesday, June 2.
 :::
 
 ::: {.g-col-9}
-Includes a recorded video presentation and a project report, both due Thursday, June 18.
+Includes a video presentation and a project report, both due Thursday, June 18.
 :::
 
 :::
@@ -199,10 +199,9 @@ Be sure that your code, graphs, and answers are properly displayed on your homew
 
 **4. Graphics Critiques**
 
-Data visualizations are found all over the place: political ads, hedge fund investor letters, sustainability reports, etc.
-Throughout the course, we will discuss various data visualizations in the wild from a statistical point of view.
-You will turn in two graphics critiques based on data visualizations you find.
-Both data visualizations must be from a recent source that was posted online for the first time within the **past month** (i.e., not from some 2016 blog post) and can **not** be an example from lecture, labs, or homework.
+Data visualizations can be found everywhere.
+In the course, you will turn in two critiques of data visualizations you find.
+These must be from a recent source that was posted online for the first time within the **past year** (i.e., not from some 2011 blog post) and can **not** be an example from lecture, labs, or homework.
 
 A graphics critique assignment template (using Quarto) will be provided.
 You will get practice doing this on the first homework.
@@ -219,9 +218,17 @@ The exam is designed to take 2--3 hours, but the 15-hour time window is only mea
 More details will be given closer to the exam date.
 Failure to submit on time is an automatic 0%.
 
-**6. Project**
+**6. Final Project**
 
-TBA
+The purpose of this project is to assess students’ ability to create high-quality data visualizations and communicate their work in common formats: reports and presentations.
+These communication skills are important in statistics and data science.
+The deliverables can be part of your data science portfolio, as you
+apply for jobs, graduate schools, and other opportunities.
+
+Students will work individually to analyze a dataset of their choosing.
+The project will culminate in a report and a short video recording.
+More details about the project will be provided later.
+
 
 **Calendar** *(subject to change)*
 
@@ -247,7 +254,7 @@ TBA
 | May 29 (Friday)         | Lecture 8          | Homework 3 due          |
 | **Week 4**              |                    |                         |
 | June 1 (Monday)         | Lecture 9          |                         |
-| June 2 (Tuesday)        | NO LAB             | Midterm due             |
+| June 2 (Tuesday)        | NO LAB             | Take-Home due           |
 | June 3 (Wednesday)      | Lecture 10         |                         |
 | June 4 (Thursday)       | Lab 6              | Lab 6 due               |
 | June 5 (Friday)         | Lecture 11         | Homework 4 due          |
@@ -263,6 +270,3 @@ TBA
 | June 17 (Wednesday)     | Lecture 16         |                         |
 | June 18 (Thursday)      | NO LAB             | Final Project due       |
 | June 19 (Friday)        | Juneteenth         |                         |
-
-
-
