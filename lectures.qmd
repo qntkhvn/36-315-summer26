@@ -1,7 +1,21 @@
 ---
-title: "**Lectures**"
+title: "Lectures"
 ---
 
-|            | Date    | Title                                                     | Materials                                |
-|------------|---------|-----------------------------------------------------------|------------------------------------------|
-| Lecture 1  | TBA     | TBA                                                       | TBA                                      |
+|            | Date     | Topic | Materials |
+|------------|----------|-------|-----------|
+| Lecture 1  | May 11   | TBA   | TBA       |
+| Lecture 2  | May 13   | TBA   | TBA       |
+| Lecture 3  | May 15   | TBA   | TBA       |
+| Lecture 4  | May 18   | TBA   | TBA       |
+| Lecture 5  | May 20   | TBA   | TBA       |
+| Lecture 6  | May 22   | TBA   | TBA       |
+| Lecture 7  | May 27   | TBA   | TBA       |
+| Lecture 8  | May 29   | TBA   | TBA       |
+| Lecture 9  | June 1   | TBA   | TBA       |
+| Lecture 10 | June 3   | TBA   | TBA       |
+| Lecture 11 | June 5   | TBA   | TBA       |
+| Lecture 12 | June 8   | TBA   | TBA       |
+| Lecture 13 | June 10  | TBA   | TBA       |
+| Lecture 14 | June 12  | TBA   | TBA       |
+| Lecture 15 | June 15  | TBA   | TBA       |

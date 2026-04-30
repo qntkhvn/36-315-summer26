@@ -8,7 +8,10 @@ website:
     right:
       - href: index.qmd
         text: "**Home**"
-      - lectures.qmd
+      - href: syllabus.qmd
+        text: "**Syllabus**"
+      - href: lectures.qmd
+        text: "**Lectures**"
 
 format:
   html:

@@ -1,3 +1,5 @@
+personal/
+
 # Derivative files
 **/*.pdf
 **/*.log
@@ -27,3 +29,4 @@ _site/
 .httr-oauth
 .DS_Store
 .quarto
+.positai

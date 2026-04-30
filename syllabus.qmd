@@ -1,0 +1,268 @@
+---
+title: "<small>36-315: Statistical Graphics and Visualization, Summer 2026</small>"
+format: html
+---
+
+---
+
+::: {.grid}
+
+::: {.g-col-3}
+**Instructor**
+:::
+
+::: {.g-col-9}
+Quang Nguyen
+
+Email: [`quang@stat.cmu.edu`](mailto:quang@stat.cmu.edu)
+
+Office Hours: Wednesdays 2--3pm
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Website**
+:::
+
+::: {.g-col-9}
+[`36-315-summer26.netlify.app`](https://36-315-summer26.netlify.app/)
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Textbooks**
+:::
+
+::: {.g-col-9}
+None required. Lecture slides will be posted. Other references will be provided throughout the course.
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Software**
+:::
+
+::: {.g-col-9}
+**R** (programming language), **RStudio** (IDE), and  **Quarto** (reproducible documents)
+
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Lectures**
+:::
+
+::: {.g-col-9}
+MWF 12:30--1:50pm, SH 234
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Labs**
+:::
+
+::: {.g-col-9}
+TR 12:30--1:50pm, BH 140B
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Weekly Assignments**
+:::
+
+::: {.g-col-9}
+Labs are due on Tuesdays/Thursdays by 11:59pm.<br>
+Homeworks are due on Fridays by 6pm.
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Graphic Critiques**
+:::
+
+::: {.g-col-9}
+There will be two graphic critiques due Wednesday, May 27 and Wednesday, June 10.
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Take-Home Exam**
+:::
+
+::: {.g-col-9}
+There will be one take-home exam on Tuesday, June 2.
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Final Project**
+:::
+
+::: {.g-col-9}
+Includes a recorded video presentation and a project report, both due Thursday, June 18.
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Grading**
+:::
+
+::: {.g-col-9}
+
+25% &nbsp; &nbsp; Homework
+
+15% &nbsp; &nbsp; Lab
+
+20% &nbsp; &nbsp; Take-Home Exam
+
+10% &nbsp; &nbsp; Graphics Critique
+
+30% &nbsp; &nbsp; Final Project
+
+Final grades are computed based on the weighting scheme above.
+
+**No assignments are dropped when calculating grades.**
+
+Final letter grades will be based on the standard 10-point scale
+(A: 90--100, B: 80--89, C: 70--79, D: 60--69, R: 0--59).
+Grades will be rounded, such that an 89.50% would be an A, but an 89.49% would not.
+
+Final semester grades may be curved, but the curve will never lead to a worse grade than the 10-point scale.
+For example, a grade of 85% would earn you at least a B, and a curve could only improve it.
+
+:::
+
+:::
+
+**Course Components**
+
+**1. Lectures**
+
+Almost all course content will be covered during lecture.
+Lectures will prepare you for subsequent assignments.
+If you miss a lecture, you are responsible for the material covered.
+
+Please participate during lecture.
+And please make a habit of arriving on time out of respect for your classmates and the instructor.
+Consistent tardiness is not acceptable and may lead to grade deductions.
+
+**2. Labs**
+
+Bi-weekly lab sessions give students opportunities to directly engage with the course materials.
+Each lab will be turned in as a lab assignment.
+Lab sessions are designed to take 45--60 minutes to complete, but they are not due until 11:59 PM ET on the day of the lab, so students have extra time if needed.
+**Labs must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
+
+Live lab attendance is **mandatory.**
+As with lectures, please arrive to labs on time.
+If you submit a lab assignment but did not show up to lab, there is an automatic **20 point** deduction.
+However, if you need to miss a lab for a valid reason, contact me at least **36 hours** before the lab to discuss doing the lab on your own and getting full credit (i.e., if you need to miss a Tuesday lab, contact me by Sunday night; if you need to miss a Thursday lab, contact me by Tuesday night).
+If there is an unexpected emergency, notify me immediately and I will determine if an accommodation is possible.
+
+**3. Homeworks**
+
+Homework assignments are due on Fridays by 6:00 PM ET, and will be posted on the Monday of the same week.
+**Homeworks must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
+Be sure that your code, graphs, and answers are properly displayed on your homework before submitting.
+
+**TODO: EXTENSIONS, REGRADES**
+
+**4. Graphics Critiques**
+
+Data visualizations are found all over the place: political ads, hedge fund investor letters, sustainability reports, etc.
+Throughout the course, we will discuss various data visualizations in the wild from a statistical point of view.
+You will turn in two graphics critiques based on data visualizations you find.
+Both data visualizations must be from a recent source that was posted online for the first time within the **past month** (i.e., not from some 2016 blog post) and can **not** be an example from lecture, labs, or homework.
+
+A graphics critique assignment template (using Quarto) will be provided.
+You will get practice doing this on the first homework.
+Then, you will submit two graphic critiques during the semester.
+The due dates for each critique are **Wednesday, May 27, 11:59pm** and **Wednesday, June 10, 11:59pm**.
+These are meant to be light and entertaining exercises.
+
+**5. Take-Home Exam**
+
+There is one take-home exam on **Tuesday, June 2**.
+The exam will assess students’ ability to use material from the first-half of the semester to answer open-ended questions about a real dataset.
+Students will have from **9AM to 11:59PM ET on Tuesday, June 2** to complete the exam.
+The exam is designed to take 2--3 hours, but the 15-hour time window is only meant to provide some flexibility and alleviate time pressure.
+More details will be given closer to the exam date.
+Failure to submit on time is an automatic 0%.
+
+**6. Project**
+
+TBA
+
+**Calendar** *(subject to change)*
+
+| Date                    | Session            | Assignment              |
+| ----------------------- | ------------------ | ----------------------- |
+| **Week 1**              |                    |                         |
+| May 11 (Monday)         | Lecture 1          |                         |
+| May 12 (Tuesday)        | Lab 0              | Lab 0 due               |
+| May 13 (Wednesday)      | Lecture 2          |                         |
+| May 14 (Thursday)       | Lab 1              | Lab 1 due               |
+| May 15 (Friday)         | Lecture 3          | Homework 1 due          |
+| **Week 2**              |                    |                         |
+| May 18 (Monday)         | Lecture 4          |                         |
+| May 19 (Tuesday)        | Lab 2              | Lab 2 due               |
+| May 20 (Wednesday)      | Lecture 5          |                         |
+| May 21 (Thursday)       | Lab 3              | Lab 3 due               |
+| May 22 (Friday)         | Lecture 6          | Homework 2 due          |
+| **Week 3**              |                    |                         |
+| May 25 (Monday)         | Memorial Day       |                         |
+| May 26 (Tuesday)        | Lab 4              | Lab 4 due               |
+| May 27 (Wednesday)      | Lecture 7          | Graphics Critique 1 due |
+| May 28 (Thursday)       | Lab 5              | Lab 5 due               |
+| May 29 (Friday)         | Lecture 8          | Homework 3 due          |
+| **Week 4**              |                    |                         |
+| June 1 (Monday)         | Lecture 9          |                         |
+| June 2 (Tuesday)        | NO LAB             | Midterm due             |
+| June 3 (Wednesday)      | Lecture 10         |                         |
+| June 4 (Thursday)       | Lab 6              | Lab 6 due               |
+| June 5 (Friday)         | Lecture 11         | Homework 4 due          |
+| **Week 5**              |                    |                         |
+| June 8 (Monday)         | Lecture 12         |                         |
+| June 9 (Tuesday)        | Lab 7              | Lab 7 due               |
+| June 10 (Wednesday)     | Lecture 13         | Graphics Critique 2 due |
+| June 11 (Thursday)      | Lab 8              | Lab 8 due               |
+| June 12 (Friday)        | Lecture 14         | Homework 5 due          |
+| **Week 6**              |                    |                         |
+| June 15 (Monday)        | Lecture 15         |                         |
+| June 16 (Tuesday)       | NO LAB             |                         |
+| June 17 (Wednesday)     | Lecture 16         |                         |
+| June 18 (Thursday)      | NO LAB             | Final Project due       |
+| June 19 (Friday)        | Juneteenth         |                         |
+
+
+

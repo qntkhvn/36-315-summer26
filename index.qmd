@@ -1,7 +1,11 @@
 ---
-title: "36-315: Statistical Graphics & Visualization"
+title: "36-315: Statistical Graphics and Visualization"
 ---
 
 Welcome to 36-315, Summer 2026.
 
-This is a companion website.
+This is a 6-week summer course on Statistical Graphics and Visualization
+
+On this site, the [Lectures](lectures.qmd) tab contains all lecture slides.
+
+All assignments (labs, homeworks, exams, critiques, projects) can be found on Canvas.
