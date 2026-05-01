@@ -10,6 +10,8 @@ website:
         text: "**Home**"
       - href: syllabus.qmd
         text: "**Syllabus**"
+      - href: setup.qmd
+        text: "**Setup**"
       - href: lectures.qmd
         text: "**Lectures**"
 

@@ -1,0 +1,121 @@
+---
+title: "Setup"
+---
+
+---
+
+## `R` and RStudio
+
+`R` is an open-source programming language for statistical computing.
+`R` is widely-used in both academia and industry, due to its capacity for statistical analysis and data science.
+
+In order to use `R` effectively, you need a suitable editing environment, i.e. RStudio.
+For more context, RStudio is an integrated development environment (IDE) developed specifically for `R` programming.
+Although `R` can be run without RStudio, RStudio provides a more user-friendly experience with additional functionality.
+
+**To download `R` and RStudio, visit [`https://posit.co/download/rstudio-desktop`](https://posit.co/download/rstudio-desktop).**
+
+You will see the following two tasks to be completed:
+
+* **1: Install `R`**
+* **2: Install RStudio**
+
+## Step 1: Install `R`
+
+(*Note that the following instructions apply to the latest `R` version (4.6.0) as of May 1, 2026*)
+
+Click on ***DOWNLOAD AND INSTALL R***. This will direct you to the CRAN (Comprehensive R Archive Network) website.
+
+**macOS**
+
+* Click on ***Download R for macOS***.
+
+* Choose the `.pkg` file suitable for your Mac (*Apple silicon (M1,2,..) Macs* or *older Intel Macs*.)
+
+* Open the `.pkg` file after the download is complete.
+
+* Follow the installation instructions.
+
+**Windows**
+
+* Click on ***Download R for Windows***.
+
+* Click on ***install R for the first time*** (on the same line as the ***base*** subdirectory.)
+
+* Choose ***Download R-4.6.0 for Windows***.
+
+* Open the `.exe` file after the download is complete.
+
+* Follow the installation instructions.
+
+## Step 2: Install RStudio
+
+::: callout-important
+## Important
+
+`R` **must** be installed before RStudio.
+:::
+
+Click on ***DOWNLOAD RSTUDIO DESKTOP...***
+(If your operating system is not detected, scroll down and choose the right version.)
+
+**macOS**
+
+* Open the `.dmg` file after the download is complete.
+
+* Drag and drop it to your Applications folder.
+
+**Windows**
+
+* Open the `.exe` file after the download is complete.
+
+* Follow the installation instructions.
+
+## Step 3: Check `R` and RStudio installations
+
+Open RStudio and type in the following command in the **Console** pane.
+
+```{r}
+#| eval: false
+version
+```
+
+This will print out the current version of `R` on your machine.
+The output should look similar to what shown below (the first 4 lines might be different, depending on your operating system.)
+
+```{r}
+#| echo: false
+version
+```
+
+## Step 4: Install an `R` package
+
+In `R`, a package is a collection of functions, data, and compiled code.
+In addition to a set of built-in base packages, there are numerous external `R` packages written by the community to add specific functionality.
+
+In general, to install an `R` package, you can use the `install.packages()` function and pass in the package name.
+
+The following example shows how to install the `tidyverse` package in `R`.
+The `tidyverse` is a suite of `R` packages we will be using throughout this program.
+It features popular packages such as `ggplot2` for data visualization and `dplyr` for data manipulation.
+
+After installing `R` and RStudio, open RStudio and enter the following command in the **Console** pane.
+
+```{r}
+#| eval: false
+install.packages("tidyverse")
+```
+
+To verify that `tidyverse` is successfully installed, run the following command:
+
+```{r}
+#| eval: false
+library(tidyverse)
+```
+
+You should get a message similar to the output below.
+
+```{r}
+#| echo: false
+library(tidyverse)
+```
