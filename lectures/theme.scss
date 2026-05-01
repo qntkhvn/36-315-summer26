@@ -10,22 +10,22 @@ $font-family-sans-serif: "Lato", sans-serif !default;
 $presentation-heading-font: "Lato", sans-serif !default;
 
 // $presentation-heading-color: #C41230;
-$presentation-h1-font-size: 2.5em !default;
-$presentation-h2-font-size: 1.8em !default;
+$presentation-h1-font-size: 2.4em !default;
+$presentation-h2-font-size: 1.6em !default;
 $presentation-h3-font-size: 1.2em !default;
 $presentation-h4-font-size: 1em !default;
 
 $presentation-font-smaller: 0.9;
 
 $code-color: #b20e10 !default;
-$code-block-font-size: 0.58em;
+$code-block-font-size: 0.6em;
 $code-block-border-color: #000000;
 $code-block-bg: #fafafa;
 
 $link-color: #C41230;
 
 .reveal code {
-  font-size: 0.9em !important;
+  font-size: 1em !important;
   line-height: 1.4;
 }
 

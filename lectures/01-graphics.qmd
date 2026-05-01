@@ -1,0 +1,455 @@
+---
+title: "The grammar of graphics and `ggplot2`"
+subtitle: "<br>36-315: Statistical Graphics and Visualization"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+```
+
+## The data science workflow
+
+[![Source: R for Data Science (2e)](https://r4ds.hadley.nz/diagrams/data-science/base.png){width="1100"}](https://r4ds.hadley.nz/intro)
+
+> "The simple graph has brought more information to the data analyst’s mind than any other device." --- John Tukey
+
+## Exploratory data analysis (EDA)
+
+* In statistics/data science, data visualization is part of the EDA process
+
+* Goal of EDA: perform initial explorations in order to better understand the data, discover trends/patterns, spot anomalies, etc.
+
+. . .
+
+* Data can be explored
+
+  * numerically (tables, descriptive statistics,...)
+  
+  * **visually** (graphics; focus of this course)
+  
+. . .
+
+* EDA is NOT a replacement for statistical inference and modeling
+
+* EDA is an important and necessary step to build intuition
+
+## ALWAYS visualize your data
+
+**Anscombe's quartet**
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| fig-height: 9
+library(tidyverse)
+theme_set(theme_light(base_size = 20))
+anscombe |> 
+  pivot_longer(everything(),
+               cols_vary = "slowest",
+               names_to = c(".value", "set"),
+               names_pattern = "(.)(.)") |> 
+  ggplot(aes(x, y)) +
+  geom_smooth(method = "lm", se = FALSE, color = "red", fullrange = TRUE) +
+  geom_point(size = 4) +
+  facet_wrap(~ set)
+```
+:::
+
+::: {.column width="50%"}
+
+<br>
+
+```{r}
+#| echo: false
+anscombe |> 
+  pivot_longer(everything(),
+               cols_vary = "slowest",
+               names_to = c(".value", "set"),
+               names_pattern = "(.)(.)") |> 
+  group_by(set) |> 
+  summarise(across(c(x, y), list(mean = mean, var = var)),
+            x_y_cor = cor(x, y)) |> 
+  ungroup() |> 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) |> 
+  select(panel = set, "mean(x)" = x_mean, "var(x)" = x_var, "mean(y)" = y_mean, "var(y)" = y_var, "cor(x,y)" = x_y_cor) |> 
+  gt::gt() |> 
+  gt::tab_options(table.font.size = "27px", data_row.padding = "18px")
+```
+:::
+:::
+
+## ALWAYS visualize your data
+
+**The Datasaurus dozen: each of these has the same mean, variance, and correlation**
+
+```{r}
+#| echo: false
+#| fig-height: 9
+#| fig-width: 16
+datasauRus::datasaurus_dozen |> 
+  group_by(dataset) |> 
+  ggplot(aes(x, y, color = dataset)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~ dataset, ncol = 5) 
+```
+
+## 3D? Pie? How about 3D Pie? Ugh...
+
+<br>
+
+<center>![](https://external-preview.redd.it/perception-of-3d-pie-charts-v0-2ZPMqni3MhfCh4-8g_Lq1dj0yN-dT2CuC5VbeNn4aXg.jpg?auto=webp&s=5d6c7a6840094e58c6f43ddc67597ba49dac6038){width="800"}</center>
+
+## Don't be misleading
+
+<center>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/CrookedHillary?src=hash&amp;ref_src=twsrc%5Etfw">#CrookedHillary</a> = Obama&#39;s third term, which would be terrible news for our economic growth - seen below. <a href="https://t.co/y9WJoUaaql">pic.twitter.com/y9WJoUaaql</a></p>&mdash; Donald J. Trump (@realDonaldTrump) <a href="https://twitter.com/realDonaldTrump/status/759507812963737600?ref_src=twsrc%5Etfw">July 30, 2016</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+</center>
+
+## The simpler the better
+
+<center>![](https://raw.githubusercontent.com/ryurko/SURE22-examples/main/figures/lecture_examples/nyt_ex.png){width="1400"}</center>
+
+## [The grammar of graphics](https://link.springer.com/book/10.1007/0-387-28695-0)
+
+* Key idea: specify plotting "layers" and combine them to produce a graphic
+* `ggplot2` provides an implementation of the grammar of graphics, with the following layers 
+
+. . .
+
+1. `data`: one or more datasets (in tidy tabular format)
+2. `geom`: geometric objects to visually represent the data (e.g. points, lines, bars, etc.)
+3. `aes`: mappings of variables to visual properties (i.e. aesthetics) of the geometric objects
+4. `scale`: one scale for each variable displayed (e.g. axis limits, log scale, colors, etc.)
+5. `facet`: similar subplots (i.e. facets) for subsets of the same data using a conditioning variable
+6. `stat`: statistical transformations and summaries (e.g. identity, count, smooth, quantile, etc.)
+7. `coord`: one or more coordinate systems (e.g. cartesian, polar, map projection)
+8. `labs`: labels/guides for each variable and other parts of the plot (e.g. title, subtitle, caption, etc.)
+9. `theme`: customization of plot layout (e.g. text size, alignment, legend position, etc.)
+
+## A primer of ggplot2
+
+```{r}
+library(ggplot2)
+```
+
+<br>
+
+Data: `mpg` (for more information, type `help(mpg)` or `?mpg`)
+
+<br>
+
+| Variable | Description                                      | Variable Type |
+|----------|--------------------------------------------------|---------------|
+| `hwy`    | fuel economy (mpg) for city highway driving      | quantitative  |
+| `displ`  | engine displacement (liters)                     | quantitative  |
+| `class`  | car type (compact, minivan, etc.)                | categorical   |
+
+## Starting with the data.
+
+```{r}
+#| include: false
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+```
+
+
+::: columns
+::: {.column width="50%"}
+<br>
+
+```{r}
+#| eval: false
+ggplot(data = mpg)
+```
+
+<br>
+
+or equivalently, using `|>`
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot()
+```
+
+<br>
+
+So far, nothing is displayed
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| fig-height: 9
+ggplot(data = mpg)
+```
+:::
+:::
+
+## Specifying variables and geometric object
+
+::: columns
+::: {.column width="50%"}
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point()
+```
+
+* Adding (`+`) a geometric layer of points to the plot
+
+* Aesthetic mapping: `displ` to x-axis and `hwy` to y-axis via `aes()`
+
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point()
+```
+:::
+:::
+
+## Adding additional variables
+
+::: columns
+::: {.column width="42%"}
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy, color = class)) +
+  geom_point()
+```
+
+* To add additional variables to a plot, use other aesthetics like `color`, `shape`, etc.
+
+* Give each point a unique `color` corresponding to its `class` (car type)
+
+:::
+
+::: {.column width="58%"}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy, color = class)) +
+  geom_point()
+```
+:::
+:::
+
+## Scaling mapped variables
+
+Remember: one scale for each mapped variable
+
+::: columns
+::: {.column width="50%" style="text-align: left;"}
+<br>
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  scale_x_reverse() + 
+  scale_y_continuous(breaks = seq(0, 45, 15),
+                     limits = c(0, 50)) +
+  scale_color_discrete(palette = "Dark2")
+```
+
+* Flip the x-axis scale
+
+* Change y-axis label breaks and limits
+
+* Change color palette
+
+:::
+
+::: {.column width="50%" style="text-align: left;"}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  scale_x_reverse() + 
+  scale_y_continuous(breaks = seq(0, 45, 15),
+                     limits = c(0, 50)) +
+  scale_color_discrete(palette = "Dark2")
+```
+:::
+:::
+
+## Always label your plots! (seriously...)
+
+::: columns
+::: {.column width="50%" style="text-align: left;"}
+<br>
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  scale_x_reverse() + 
+  scale_y_continuous(breaks = seq(0, 45, 15),
+                     limits = c(0, 50)) +
+  scale_color_discrete(palette = "Dark2") +
+  labs(
+    x = "Engine displacement (liters)", 
+    y = "Fuel economy (mpg)", 
+    color = "Car type",
+    title = "Highway fuel economy vs. engine displacement"
+  )
+```
+
+* Each mapped aesthetic can be labeled
+:::
+
+::: {.column width="50%" style="text-align: left;"}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy, color = class)) +
+  geom_point() +
+  scale_x_reverse() + 
+  scale_y_continuous(breaks = seq(0, 45, 15),
+                     limits = c(0, 50)) +
+  scale_color_discrete(palette = "Dark2") +
+  labs(
+    x = "Engine displacement (liters)", 
+    y = "Fuel economy (mpg)", 
+    color = "Car type",
+    title = "Highway fuel economy vs. engine displacement"
+  )
+```
+:::
+:::
+
+## Changing aesthetics without mapping variables
+
+::: columns
+::: {.column width="50%"}
+<br>
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point(color = "darkblue", size = 2, alpha = 0.4)
+```
+
+* Manually set the `color`, `size`, and `alpha` (transparency) of the point layer
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point(color = "darkblue", size = 3, alpha = 0.4)
+```
+:::
+:::
+
+## More customization
+
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point(color = "darkblue", size = 2, alpha = 0.4) +
+  geom_smooth(method = "lm") + # add smooth regression line
+  scale_x_reverse() +
+  scale_y_continuous(breaks = seq(0, 45, 15), limits = c(0, 50)) +
+  labs(x = "Engine displacement (liters)", 
+       y = "Fuel economy (mpg)", 
+       title = "Highway fuel economy vs. engine displacement") + 
+  theme_light() + # change the theme
+  # update text justification and font face
+  theme(axis.title = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+```
+
+## More customization
+
+```{r}
+#| echo: false
+#| fig-height: 5
+#| fig-width: 7
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) +
+  geom_point(color = "darkblue", size = 2, alpha = 0.4) +
+  geom_smooth(method = "lm") + # add smooth regression line
+  scale_x_reverse() +
+  scale_y_continuous(breaks = seq(0, 45, 15), limits = c(0, 50)) +
+  labs(x = "Engine displacement (liters)", 
+       y = "Fuel economy (mpg)", 
+       title = "Highway fuel economy vs. engine displacement") + 
+  theme_light() + # change the theme
+  # update text justification and font face
+  theme(axis.title = element_text(face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+```
+
+
+## Faceting
+
+::: columns
+::: {.column width="50%" style="text-align: left;"}
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_wrap(~ class)
+```
+
+* Create a multi-panel plot faceted by a conditioning variable (in our case, `class`)
+
+* These facet/panel plots are sometimes called lattice plots or trellis plots
+
+:::
+
+::: {.column width="50%" style="text-align: left;"}
+```{r}
+#| echo: false
+#| fig-height: 10
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_wrap(~ class)
+```
+:::
+:::
