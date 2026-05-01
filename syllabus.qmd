@@ -14,7 +14,7 @@ format: html
 :::
 
 ::: {.g-col-9}
-Quang Nguyen
+[Quang Nguyen](https://qntkhvn.netlify.app/)
 
 Email: [`quang@stat.cmu.edu`](mailto:quang@stat.cmu.edu)
 
@@ -178,24 +178,12 @@ For example, a grade of 85% would earn you at least a B, and a curve could only 
 :::
 
 ::: {.g-col-9}
-Graphical displays of quantitative information take on many forms, and they help us understand
-data and statistical methods by (hopefully) clearly communicating arguments, results, and ideas.
-This course introduces students to the most common forms of graphical displays and their uses and
-misuses. Students will learn how to create these displays and understand them from a statistical
-perspective. Furthermore, the course will consider complex data structures that are becoming
-increasingly common in data visualizations (temporal, spatial, and textual); we will discuss common
-ways to process these data that make them easy to visualize. As time permits, we may also consider
-more advanced graphical methods (e.g., interactive graphics and computer-generated animations)
-or image data. In addition to two weekly lectures, there will be weekly lab sessions where students
-learn to use R to create appropriate graphical displays, as well as weekly homeworks that ask
-students to visualize and analyze real datasets. The course culminates in a final project, where
-students make public-facing data visualizations and analyses for a real dataset. All assignments will
-be in **R**; although this is not a programming class, using programming-based statistical software like
-**R** is essential to create modern-day graphics, and this class will give you practice using this kind of
-software. Throughout, communication skills (usually written or visual, but sometimes spoken) will
-play an important role. Indeed, if it's true that "a picture speaks a thousand words," then ideally
-the one thousand words you are communicating with your graphics are statistically correct, clear,
-and compelling.
+Graphical displays of quantitative information take on many forms, and they help us understand data and statistical methods by (hopefully) clearly communicating arguments, results, and ideas.
+This course introduces students to the most common forms of graphical displays and their uses and misuses.
+Students will learn how to create these displays and understand them from a statistical perspective.
+Furthermore, the course will consider complex data structures that are becoming increasingly common in data visualizations (temporal, spatial, and textual); we will discuss common ways to process these data that make them easy to visualize.
+All assignments will be in **R**; although this is not a programming class, using software like **R** is essential to create modern-day graphics. Throughout, communication skills (visual, written, and oral) will play an important role.
+Indeed, if it's true that "a picture speaks a thousand words," then ideally the one thousand words you are communicating with your graphics are statistically correct, clear, and compelling.
 :::
 
 :::
@@ -207,7 +195,7 @@ and compelling.
 :::
 
 ::: {.g-col-9}
-**1. Understand the fundamentals of data and reproducible workflows.**
+**1. Understand the fundamentals of data and reproducible workflows**
 
 * Distinguish between data types and pinpoint which graphics and analyses are appropriate for a particular data type.
 
@@ -215,13 +203,13 @@ and compelling.
 
 * Master the use of **R**, **RStudio**, **Quarto**, and other tools to promote reproducible research and allow others to build from your work.
 
-**2. Create high-quality statistical graphics.**
+**2. Create high-quality statistical graphics**
 
 * Master the use of **ggplot2** to create statistical graphics that are easily readable and understandable for technical and non-technical audiences.
 
 * Incorporate statistical information (e.g., the results of statistical tests or uncertainty quantification) into elegant data visualizations.
 
-**3. Assess and critique statistical graphics.**
+**3. Assess and critique statistical graphics**
 
 * Review statistical graphics objectively and professionally.
 
@@ -229,7 +217,7 @@ and compelling.
 
 * Give useful suggestions for improvement.
 
-**4. Write and speak about statistical graphics and data visualizations.**
+**4. Write and communicate about statistical graphics and data visualizations**
 
 * Describe graphics concisely and accurately to technical and non-technical audiences.
 
@@ -273,16 +261,17 @@ Consistent tardiness is not acceptable and may lead to grade deductions.
 
 ::: {.g-col-9}
 
-Bi-weekly lab sessions give students opportunities to directly engage with the course materials.
+Bi-weekly labs give students opportunities to engage with the course materials.
 Each lab will be turned in as a lab assignment.
-Labs are designed to be completed during the session, but they are not due until 11:59 PM ET on the day of the lab, so students have extra time if needed.
+Labs are designed to be completed during the session, but they are not due until 11:59pm on the day of the lab, so students have extra time if needed.
 **Labs must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 
 Live lab attendance is **mandatory.**
 As with lectures, please arrive to labs on time.
 If you submit a lab assignment but did not show up to lab, there is an automatic **20 point** deduction.
-However, if you need to miss a lab for a valid reason, contact me at least **36 hours** before the lab to discuss doing the lab on your own and getting full credit (i.e., if you need to miss a Tuesday lab, contact me by Sunday night; if you need to miss a Thursday lab, contact me by Tuesday night).
-If there is an unexpected emergency, notify me immediately and I will determine if an accommodation is possible.
+However, if you need to miss a lab for a valid reason, contact the instructor at least **24 hours** before the lab to discuss doing the lab on your own and getting full credit.
+If there is an unexpected emergency, notify the instructor immediately.
+It is up to the instructor to determine if an accommodation is possible.
 :::
 
 :::
@@ -294,7 +283,7 @@ If there is an unexpected emergency, notify me immediately and I will determine 
 :::
 
 ::: {.g-col-9}
-Homework assignments are due on Fridays by 6:00 PM ET, and will be posted on the Monday of the same week.
+Homework assignments are due on Fridays by 6pm, and will be posted on Mondays of the same week.
 **Homeworks must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 Be sure that your code, graphs, and answers are properly displayed on your homework before submitting.
 :::
@@ -331,10 +320,9 @@ These are meant to be light and entertaining exercises.
 
 There is one take-home exam on **Tuesday, June 2**.
 The exam will assess students’ ability to use material from the first-half of the semester to answer open-ended questions about a real dataset.
-Students will have from **9AM to 11:59PM ET on Tuesday, June 2** to complete the exam.
+Students will have from **9am to 11:59pm on Tuesday, June 2** to complete the exam.
 The exam is designed to take 2--3 hours, but the 15-hour time window is only meant to provide some flexibility and alleviate time pressure.
 More details will be given closer to the exam date.
-Failure to submit on time is an automatic 0%.
 
 :::
 
@@ -364,60 +352,6 @@ More details about the project will be provided later.
 
 <u><big>**Course Logistics and Policies**</big></u>
 
-
-::: {.grid}
-
-::: {.g-col-3}
-**Integrity** 
-:::
-
-::: {.g-col-9}
-Cheating, plagiarism, and/or unauthorized assistance on assignments will be dealt with in accordance with the [CMU Policy on Academic Integrity](https://www.cmu.edu/policies/student-and-student-life/academic-integrity.html). 
-:::
-
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
-**Collaboration**
-:::
-
-::: {.g-col-9}
-Discussing assignments with your classmates is allowed and encouraged, and helping explain ideas to each other is a core part of the academic experience.
-But it is important that every student get practice working on their own.
-This means that **all the work you turn in must be your own**.
-You must write your own code, generate your own graphics, and write your own solutions and reports.
-:::
-
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
-**External Sources**
-:::
-
-::: {.g-col-9}
-External sources (e.g., books, websites, etc.) must be used to support your work, not to obtain your work.
-You may use external sources to look up code documentation, find useful packages, find explanations for error messages, or clarify lecture materials.
-You may not use them to copy code, text, or graphics without attribution.
-Do not copy old solutions (in whole or in part), and do not consult or read them.
-:::
-
-:::
-::: {.grid}
-
-::: {.g-col-3}
-**Generative AI** 
-:::
-
-::: {.g-col-9}
-You may consult generative AI tools, but you must still take intellectual responsibility for your code, analysis, and writing, and be able to explain and defend every decision. You must do the thinking, not generative AI. You may not use generative AI to come up with analysis or interpretation for you, only to augment your own work. If you use a generative AI tool, you must disclose your use in your submission and explain what you used it for.
-:::
-
-:::
-
 ::: {.grid}
 
 ::: {.g-col-3}
@@ -426,9 +360,8 @@ You may consult generative AI tools, but you must still take intellectual respon
 
 ::: {.g-col-9}
 Homework and lab solutions will typically be posted the day after the assignment is due.
-The provided detailed solutions will be helpful for future assignments.
-Reviewing the solutions is important and helpful, even if you aced the assignment.
-Assignments are typically graded within a week of when they are submitted.
+Reviewing the solutions is important and helpful for future work.
+Assignments are typically graded within a week of the due date.
 :::
 
 :::
@@ -440,7 +373,7 @@ Assignments are typically graded within a week of when they are submitted.
 :::
 
 ::: {.g-col-9}
-If you believe a mistake was made when your assignment was graded, *first* check the posted assignment solutions. If you still believe a mistake was made---after, and only after, reviewing the solutions---you may submit a regrade request on Gradescope. Do not make a request via email. In your regrade request, clearly (and politely) explain how the solutions indicate a possible grading mistake. This regrade request must be made **within one week** of when the assignment was graded. If a regrade request is made more than one week after grades are posted, it will not be processed.
+If you believe a mistake was made when your assignment was graded, *first* check the posted assignment solutions. If you still believe a mistake was made---after, and only after, reviewing the solutions---you may submit a regrade request on Gradescope. Do not make a request via email. In your regrade request, clearly explain how the solutions indicate a possible grading mistake. This request must be made **within one week** of when the assignment was graded. If a regrade request is made more than one week after grades are posted, it will not be processed.
 :::
 
 :::
@@ -469,13 +402,68 @@ Note that if your request does not involve an illness, family emergency, job int
 :::
 
 ::: {.g-col-9}
-If you require a special accommodation (e.g., for exams, class notes, or other aspects of the class),
-please visit the [Office of Disability Resources](https://www.cmu.edu/disability-resources/) to obtain appropriate
-documentation. We cannot make any accommodations without documentation.
+If you require a special accommodation, please visit the [Office of Disability Resources](https://www.cmu.edu/disability-resources/).
+No accommodations can be provided without proper documentation.
 :::
 
 :::
 
+::: {.grid}
+
+::: {.g-col-3}
+**Integrity** 
+:::
+
+::: {.g-col-9}
+Cheating, plagiarism, and/or unauthorized assistance on assignments will be dealt with in accordance with the [CMU Policy on Academic Integrity](https://www.cmu.edu/policies/student-and-student-life/academic-integrity.html). 
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Collaboration**
+:::
+
+::: {.g-col-9}
+You are encouraged to discuss assignments with your classmates.
+But **all the work you turn in must be your own**.
+You must independently write your own code, generate your own graphics, and write your own solutions and reports.
+Copied or nearly identical homework will be considered cheating and plagiarism.
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**External Sources**
+:::
+
+::: {.g-col-9}
+External sources (e.g., books, websites, etc.) should only be used to support your work, not to obtain your work.
+You may use external sources to look up code documentation, find useful packages, find explanations for error messages, or clarify lecture materials.
+You may not use them to copy code, text, or graphics without proper attribution.
+Do not copy old solutions, and do not consult or read them.
+:::
+
+:::
+::: {.grid}
+
+::: {.g-col-3}
+**Generative AI** 
+:::
+
+::: {.g-col-9}
+When allowed, you may consult generative AI tools.
+However, you must take intellectual responsibility for your code, analysis, and writing, and be able to explain and defend every decision.
+You must do the thinking, not generative AI.
+You may not use generative AI to come up with analysis or interpretation for you, only to augment your own work.
+If you use a generative AI tool, you must disclose and explain what you use it for.
+:::
+
+:::
 
 ---
 
