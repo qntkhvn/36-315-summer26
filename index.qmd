@@ -8,4 +8,4 @@ This is a 6-week summer course on Statistical Graphics and Visualization.
 
 On this site, the [Lectures](lectures.qmd) tab contains all lecture slides.
 
-All assignments (labs, homeworks, exams, critiques, projects) are posted on Canvas.
+All assignments are posted on [Canvas](https://canvas.cmu.edu) and submitted through [Gradescope](https://www.gradescope.com).

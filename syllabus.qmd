@@ -430,7 +430,7 @@ Cheating, plagiarism, and/or unauthorized assistance on assignments will be deal
 You are encouraged to discuss assignments with your classmates.
 But **all the work you turn in must be your own**.
 You must independently write your own code, generate your own graphics, and write your own solutions and reports.
-Copied or nearly identical homework will be considered cheating and plagiarism.
+Copied or nearly identical submissions will be considered cheating and plagiarism.
 :::
 
 :::
