@@ -119,7 +119,7 @@ datasauRus::datasaurus_dozen |>
 
 <br>
 
-<center>![](https://external-preview.redd.it/perception-of-3d-pie-charts-v0-2ZPMqni3MhfCh4-8g_Lq1dj0yN-dT2CuC5VbeNn4aXg.jpg?auto=webp&s=5d6c7a6840094e58c6f43ddc67597ba49dac6038){width="800"}</center>
+<center>![](https://peltiertech.com/images/img200811/GraphJam3d.jpg){width="800"}</center>
 
 ## Don't be misleading
 
@@ -289,7 +289,7 @@ mpg |>
 Remember: one scale for each mapped variable
 
 ::: columns
-::: {.column width="50%" style="text-align: left;"}
+::: {.column width="50%"}
 <br>
 
 ```{r}
@@ -311,7 +311,7 @@ mpg |>
 
 :::
 
-::: {.column width="50%" style="text-align: left;"}
+::: {.column width="50%"}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -329,7 +329,7 @@ mpg |>
 ## Always label your plots! (seriously...)
 
 ::: columns
-::: {.column width="50%" style="text-align: left;"}
+::: {.column width="50%"}
 <br>
 
 ```{r}
@@ -352,7 +352,7 @@ mpg |>
 * Each mapped aesthetic can be labeled
 :::
 
-::: {.column width="50%" style="text-align: left;"}
+::: {.column width="50%"}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -444,7 +444,7 @@ mpg |>
 ## Faceting
 
 ::: columns
-::: {.column width="50%" style="text-align: left;"}
+::: {.column width="50%"}
 ```{r}
 #| eval: false
 mpg |> 
@@ -459,7 +459,7 @@ mpg |>
 
 :::
 
-::: {.column width="50%" style="text-align: left;"}
+::: {.column width="50%"}
 ```{r}
 #| echo: false
 #| fig-height: 10
