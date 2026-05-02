@@ -119,3 +119,17 @@ You should get a message similar to the output below.
 #| echo: false
 library(tidyverse)
 ```
+
+## Customizing RStudio
+
+RStudio can be customized with different themes. To explore built-in themes,
+
+* Navigate to the menu bar at the top of your screen
+
+* Choose `Tools > Global Options... > Appearance`
+
+* Change your RStudio theme under Editor theme
+
+Note that within the Appearance tab, there are also options for changing your Editor font, Editor font size, etc.
+
+Feel free to explore other options within the `Tools > Global Options...` menu.
