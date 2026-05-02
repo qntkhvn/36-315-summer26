@@ -1,0 +1,69 @@
+---
+title: "Final Project Report Guidelines"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+---
+
+# Important information
+
+* Due Thursday, June 18 at 11:59pm
+
+* Must be submitted as a `.html` file (rendered using **Quarto**; a template will be provided).
+
+# Report format
+
+* The report should start with a short paragraph describing the data, followed by a short paragraph describing the main questions of the project.
+
+* After that, the middle part of your report should consist of your graphics, bookended by statements motivating how the graphics fit into the overarching narrative of the project as well as their interpretation and main takeaways.
+
+* Additionally, **you are required to include at least one formal statistical analysis to complement a graphic in your report** (e.g., hypothesis tests, regression analysis,...).
+
+* At the end of your report, you should include a short paragraph (or paragraphs) discussing the main conclusions of your project and potential directions for future work.
+
+Examples of reports from previous semesters can be found [here](https://www.stat.cmu.edu/capstoneresearch/spring2025/#graphics). (You can also change the semester/year in the URL.)
+
+# Rubric
+
+The final report is worth **100pts** total and will be graded based on: 
+
+* **Basic items (60pts)** will be graded in an all-or-nothing fashion.
+
+> For example, the first _basic item_, "Does the report provide a description of the dataset?", is worth 5pts. If the answer to that question is **Yes**, you get 5pts; if the answer is **No**, you get 0pts. The basic items are meant to set a minimum grade you should receive based on very minimum effort.
+
+* **Detailed items (40pts)** will be graded on a 0--5 scale. Each **detailed item** is under a **basic item** and is worth 5pts each.
+
+Here is the full rubric:
+
+#### Basic item (5pts): Does the report provide a description of the dataset? 
+
+> Detailed item (0--5pts): What is the quality of this description? Does it clearly communicate what the rows and columns (i.e., subjects and variables) are in the dataset in a way that is understandable to a CMU statistics undergraduate? 
+
+#### Basic item (9pts): Does the report have the THREE clearly stated questions?
+
+> Detailed item (0--5pts):  What is the quality of the questions? Are they well-motivated by real-world/scientific interests? Or are they shallow? For example, a shallow question would be in the form, *What does the distribution of this variable look like?* A more interesting question would motivate why you would like to inspect particular distributions with real-world context. 
+
+#### Basic item (16pts): Does the report have THREE graphics that follow the data and graphics requirements?
+
+> Detailed item (0--5pts): What is the quality of these graphics? Are these graphics easily readable, interpretable, and properly labeled?
+
+> Detailed item (0--5pts): Are the graphics well-motivated, given the project questions? In other words, do the graphics address/answer the questions, or do they only provide tangential (or even irrelevant) details? 
+
+#### Basic item (10pts): Does the report provide further descriptions/interpretations for each graphic?
+
+> Detailed item (0--5pts): What is the quality of these descriptions? After reading these descriptions, is it crystal clear what is being displayed in the graphic and what the main takeaways are? 
+
+#### Basic item (5pts): Does the report include at least one formal statistical analysis to complement a graphic?
+
+> Detailed item (0--5pts): Are the statistical analyses appropriate given the type of data and questions of interest? Are the statistical analyses interpreted correctly? 
+
+#### Basic item (10pts): Does the report provide clear conclusions that can be made from their graphics and analyses? 
+
+> Detailed item (0--5pts): What is the accuracy of the claims being made? Are the claims well-supported by the graphics and analyses presented? Are the conclusions well-aligned with the project questions?
+
+#### Basic item (5pts): Does the report discuss questions that have not been answered by the project, but could be answered with future work?
+
+> Detailed item (0--5pts): Did the submission provide adequate reasons as to why these questions were left as future work (e.g., the student needs more data, more nuanced statistical techniques they haven't learned, etc.)? Are these future-work questions well-motivated given what you have completed for this project?

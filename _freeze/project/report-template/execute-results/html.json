@@ -1,0 +1,17 @@
+{
+  "hash": "86c8af6cc064e29ea87461a09b8138a6",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"YOUR PROJECT TITLE HERE\"\nsubtitle: \"36-315: Statistical Graphics and Visualization, Summer 2026\"\nauthor: \"YOUR NAME HERE\"\nformat:\n  html:\n    self-contained: true\nexecute:\n  echo: false\n  warning: false\n  message: false\n---\n\n---\n\n# A quick tutorial\n\n**(Feel free to remove this section when you submit)**\n\nThis a Quarto document. \nTo learn more about Quarto see <https://quarto.org>.\nYou can use the Render button to see what it looks like in HTML.\n\n### Text formatting\n\nText can be bolded with **double asterisks** and italicized with *single asterisks*. \nMonospace text, such as for short code snippets, uses `backticks`.\n(Note these are different from quotation marks or apostrophes.) Links are\nwritten [like this](http://example.com/).\n\nBulleted lists can be written with asterisks:\n\n* Each item starts on a new line with an asterisk.\n* Items should start on the beginning of the line.\n* Leave blank lines after the end of the list so the list does not continue.\n\n### Code blocks\n\nCode blocks are evaluated sequentially when you hit Render. \nAs the code runs, `R` prints out which block is running, so naming blocks is useful if you want to know which one takes a long time. \nAfter the block name, you can specify chunk options.\nFor example, `echo` controls whether the code is printed in the document. \nBy default, output is printed in the document in monospace:\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n```\n\n\n:::\n:::\n\n\n### Figures\n\nIf a code block produces a plot or figure, this figure will automatically be inserted inline in the report. That is, it will be inserted exactly where the code block is.\n\n\n::: {.cell}\n::: {.cell-output-display}\n![This is a caption. It should explain what's in the figure and what's interesting about it. For instance: There is a negative, strong linear correlation between miles per gallon and horsepower for US cars in the 1970s.](report-template_files/figure-html/unnamed-chunk-2-1.png){width=480}\n:::\n:::\n\n\nNotice the use of `fig-width` and `fig-height` to control the figure's size (in inches). \nThese control the sizes given to `R` when it generates the plot, so `R` proportionally adjusts the font sizes to be large enough.\n",
+    "supporting": [
+      "report-template_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

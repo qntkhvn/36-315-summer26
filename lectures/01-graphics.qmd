@@ -1,6 +1,6 @@
 ---
 title: "The grammar of graphics and `ggplot2`"
-subtitle: "<br>36-315: Statistical Graphics and Visualization"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
 footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
 format:
   revealjs:
@@ -150,17 +150,18 @@ datasauRus::datasaurus_dozen |>
 8. `labs`: labels/guides for each variable and other parts of the plot (e.g. title, subtitle, caption, etc.)
 9. `theme`: customization of plot layout (e.g. text size, alignment, legend position, etc.)
 
-## A primer of ggplot2
+## First example: fuel economy
+
+* Data: `mpg` (for more information, type `help(mpg)` or `?mpg`)
 
 ```{r}
 library(ggplot2)
 ```
 
-<br>
-
-Data: `mpg` (for more information, type `help(mpg)` or `?mpg`)
-
-<br>
+```{r}
+dim(mpg)
+names(mpg)
+```
 
 | Variable | Description                                      | Variable Type |
 |----------|--------------------------------------------------|---------------|
@@ -168,7 +169,23 @@ Data: `mpg` (for more information, type `help(mpg)` or `?mpg`)
 | `displ`  | engine displacement (liters)                     | quantitative  |
 | `class`  | car type (compact, minivan, etc.)                | categorical   |
 
-## Starting with the data.
+## Tidy data
+
+```{r}
+head(mpg)
+```
+
+In tidy data:
+
+* Each row is an observation (car)
+
+* Each column is a variable/measurement about about each observation
+
+. . .
+
+**How do we convert data into visualizations?**
+
+## Starting with the data
 
 ```{r}
 #| include: false
@@ -407,7 +424,7 @@ mpg |>
 ```{r}
 #| echo: false
 #| fig-height: 5
-#| fig-width: 7
+#| fig-width: 5
 mpg |> 
   ggplot(aes(x = displ, y = hwy)) +
   geom_point(color = "darkblue", size = 2, alpha = 0.4) +

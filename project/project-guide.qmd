@@ -1,0 +1,77 @@
+---
+title: "Final Project General Guidelines"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+---
+
+For the final project, you will work individually and explore ONE dataset of your choosing.
+
+This document provides the following guidelines:
+
+* **Data Sources.** Examples where you can find datasets online.
+
+* **Data Requirements.** Requirements for the dataset.
+
+* **Graphics Requirements.** Requirements for the type of graphics you should make for the project.
+
+These requirements and guidelines will help you decide which dataset to choose for your project.
+The dataset you choose should be something you are excited about.
+
+The project will culminate in a report and a short video recording.
+**Requirements for the report and video presentation will be provided in a separate document.**
+
+# Data Sources
+
+Here are some repositories with many, many datasets to choose from (as well as links to other data sources):
+
++  [TidyTuesday Project](https://github.com/rfordatascience/tidytuesday) (Highly recommended)
+
++  [FiveThirtyEight](https://data.fivethirtyeight.com/)
+
++  [SCORE Sports Data Repository](https://data.scorenetwork.org/)
+
++  [CMU Statistics & Data Science Data Repository](https://cmustatistics.github.io/data-repository/)
+
++  [Kaggle](https://www.kaggle.com/datasets)
+
++  [Data is Plural](https://www.data-is-plural.com/)
+
++  [The US Government](https://www.data.gov/)
+
++  [More links on GitHub](https://github.com/caesar0301/awesome-public-datasets)
+
+**Feel free to use other sources; these are just suggestions.**
+
+# Data Requirements
+
+1. Your data must be contain a mix of categorical and quantitative variables and be complex enough that you can create at least 8 interesting graphics. (But you won't be asked to submit 8; see below.) Datasets with only a few variables will not work.
+
+2. You CANNOT use any of the datasets that were used in any previous assignments in this course or any other course you have taken. You must use a dataset that you have never worked with before.
+
+# Graphics Requirements
+
+1. You are required to submit **THREE** high-quality data visualizations. Your options include:
+
+    * Classic EDA graphics (e.g., side-by-side plots, facetted plots, scatterplots, etc.)
+
+    * Dendrograms, PCA, MDS, or other clustering-based graphics
+
+    * Choropleth maps, heat maps, or other map-type graphics
+
+    * Time series plots
+
+    * Text analysis graphics
+    
+    * Other graphics that the course did not cover (for inspiration, see [here](https://r-graph-gallery.com/))
+
+2. All graphics must be **multivariate** (i.e., involving 2+ variables).
+
+3. All graphics must be in **different formats**.
+
+4. Your graphics should tell a **cohesive story** to some extent. **You are required to come up with THREE interesting, overarching questions to be answered with your data visualizations.** You will use your graphics to provide a comprehensive analysis of those questions, as well as demonstrate your findings and conclusions.
+
+5. **You are required to include at least one formal statistical analysis to complement a graphic.** (See report guidelines for more information.) 

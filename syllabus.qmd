@@ -18,19 +18,7 @@ format: html
 
 Email: [`quang@stat.cmu.edu`](mailto:quang@stat.cmu.edu)
 
-Office Hours: Wednesdays 2--3pm
-:::
-
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
-**Website**
-:::
-
-::: {.g-col-9}
-[`36-315-summer26.netlify.app`](https://36-315-summer26.netlify.app/)
+Office Hours: TBA
 :::
 
 :::
@@ -42,7 +30,9 @@ Office Hours: Wednesdays 2--3pm
 :::
 
 ::: {.g-col-9}
-None required. Lecture slides will be posted. Other references will be provided throughout the course.
+None required.
+Lecture slides will be posted.
+Other references will be provided throughout the course.
 :::
 
 :::
@@ -174,6 +164,19 @@ For example, a grade of 85% would earn you at least a B, and a curve could only 
 ::: {.grid}
 
 ::: {.g-col-3}
+**TL;DR**
+:::
+
+::: {.g-col-9}
+This is a **6-week** summer course on statistical graphics and visualization.
+**This course moves extremely fast.**
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
 **Description**
 :::
 
@@ -246,7 +249,7 @@ Lectures will prepare you for subsequent assignments.
 If you miss a lecture, you are responsible for the material covered.
 
 Please participate and ask questions during lecture.
-And please make a habit of arriving on time out of respect for your classmates and the instructor.
+And please make a habit of showing up on time.
 Consistent tardiness is not acceptable and may lead to grade deductions.
 
 :::
