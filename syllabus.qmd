@@ -98,7 +98,7 @@ TR 12:30--1:50pm, BH 140B
 
 ::: {.g-col-9}
 Labs are due on Tuesdays/Thursdays by 11:59pm.<br>
-Homeworks are due on Fridays by 6pm.
+Homeworks are due on Fridays by 11:59pm.
 :::
 
 :::
@@ -147,15 +147,15 @@ Includes a report and a video presentation, both due Wednesday, June 18.
 
 ::: {.g-col-9}
 
-25% &nbsp; &nbsp; Homework
+25% Homework
 
-15% &nbsp; &nbsp; Lab
+15% Lab
 
-20% &nbsp; &nbsp; Take-Home Exam
+20% Take-Home Exam
 
-10% &nbsp; &nbsp; Graphics Critique
+10% Graphic Critique
 
-30% &nbsp; &nbsp; Final Project
+30% Final Project
 
 Final grades are computed based on the weighting scheme above.
 
@@ -294,7 +294,7 @@ It is up to the instructor to determine if an accommodation is possible.
 :::
 
 ::: {.g-col-9}
-Homework assignments are due on Fridays by 6pm, and will be posted on Mondays of the same week.
+Homework assignments are due on Fridays by 11:59pm, and will be posted on Mondays of the same week.
 **Homeworks must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 Be sure that your code, graphs, and answers are properly displayed on your homework before submitting.
 :::
@@ -312,7 +312,7 @@ Data visualizations can be found everywhere.
 In the course, you will submit two critiques of data visualizations you find.
 These must be from a recent source that was posted online for the first time within the **past year** (i.e., not from some 2011 blog post) and can **not** be an example from lecture, labs, or homework.
 
-A graphics critique assignment template (using Quarto) will be provided.
+A graphic critique assignment template (using Quarto) will be provided.
 You will get practice doing this on the first homework.
 Then, you will submit two graphic critiques during the semester.
 The due dates for each critique are **Wednesday, May 27, 11:59pm** and **Wednesday, June 10, 11:59pm**.
@@ -466,39 +466,39 @@ If you use a generative AI tool, you must disclose and explain what you use it f
 
 *(subject to change)*
 
-| Date                    | Session            | Assignment              |
-| ----------------------- | ------------------ | ----------------------- |
-| **Week 1**              |                    |                         |
-| May 11 (Monday)         | Lecture 1          |                         |
-| May 12 (Tuesday)        | Lab 1              | Lab 1 due               |
-| May 13 (Wednesday)      | Lecture 2          |                         |
-| May 14 (Thursday)       | Lab 2              | Lab 2 due               |
-| May 15 (Friday)         | Lecture 3          | Homework 1 due          |
-| **Week 2**              |                    |                         |
-| May 18 (Monday)         | Lecture 4          |                         |
-| May 19 (Tuesday)        | Lab 3              | Lab 3 due               |
-| May 20 (Wednesday)      | Lecture 5          |                         |
-| May 21 (Thursday)       | Lab 4              | Lab 4 due               |
-| May 22 (Friday)         | Lecture 6          | Homework 2 due          |
-| **Week 3**              |                    |                         |
-| May 25 (Monday)         | Memorial Day       |                         |
-| May 26 (Tuesday)        | Lab 5              | Lab 5 due               |
-| May 27 (Wednesday)      | Lecture 7          | Graphics Critique 1 due |
-| May 28 (Thursday)       | Lab 6              | Lab 6 due               |
-| May 29 (Friday)         | Lecture 8          | Homework 3 due          |
-| **Week 4**              |                    |                         |
-| June 1 (Monday)         | Lecture 9          |                         |
-| June 2 (Tuesday)        | NO LAB             | Take-Home due           |
-| June 3 (Wednesday)      | Lecture 10         |                         |
-| June 4 (Thursday)       | Lab 7              | Lab 7 due               |
-| June 5 (Friday)         | Lecture 11         | Homework 4 due          |
-| **Week 5**              |                    |                         |
-| June 8 (Monday)         | Lecture 12         |                         |
-| June 9 (Tuesday)        | Lab 8              | Lab 8 due               |
-| June 10 (Wednesday)     | Lecture 13         | Graphics Critique 2 due |
-| June 11 (Thursday)      | Lab 9              | Lab 9 due               |
-| June 12 (Friday)        | Lecture 14         | Homework 5 due          |
-| **Week 6**              |                    |                         |
-| June 15 (Monday)        | Lecture 15         |                         |
-| June 16 (Tuesday)       | TBD                |                         |
-| June 17 (Wednesday)     | TBD                | Final Project due       |
+| Date                    | Session            | Assignment     |
+|-------------------------|--------------------|----------------|
+| **Week 1**              |                    |                |
+| May 11 (Monday)         | Lecture 1          |                |
+| May 12 (Tuesday)        | Lab 1              | Lab 1 due      |
+| May 13 (Wednesday)      | Lecture 2          |                |
+| May 14 (Thursday)       | Lab 2              | Lab 2 due      |
+| May 15 (Friday)         | Lecture 3          | Homework 1 due |
+| **Week 2**              |                    |                |
+| May 18 (Monday)         | Lecture 4          |                |
+| May 19 (Tuesday)        | Lab 3              | Lab 3 due      |
+| May 20 (Wednesday)      | Lecture 5          |                |
+| May 21 (Thursday)       | Lab 4              | Lab 4 due      |
+| May 22 (Friday)         | Lecture 6          | Homework 2 due |
+| **Week 3**              |                    |                |
+| May 25 (Monday)         | Memorial Day       |                |
+| May 26 (Tuesday)        | Lab 5              | Lab 5 due      |
+| May 27 (Wednesday)      | Lecture 7          | Critique 1 due |
+| May 28 (Thursday)       | Lab 6              | Lab 6 due      |
+| May 29 (Friday)         | Lecture 8          | Homework 3 due |
+| **Week 4**              |                    |                |
+| June 1 (Monday)         | Lecture 9          |                |
+| June 2 (Tuesday)        | NO LAB             | Take-home due  |
+| June 3 (Wednesday)      | Lecture 10         |                |
+| June 4 (Thursday)       | Lab 7              | Lab 7 due      |
+| June 5 (Friday)         | Lecture 11         | Homework 4 due |
+| **Week 5**              |                    |                |
+| June 8 (Monday)         | Lecture 12         |                |
+| June 9 (Tuesday)        | Lab 8              | Lab 8 due      |
+| June 10 (Wednesday)     | Lecture 13         | Critique 2 due |
+| June 11 (Thursday)      | Lab 9              | Lab 9 due      |
+| June 12 (Friday)        | Lecture 14         | Homework 5 due |
+| **Week 6**              |                    |                |
+| June 15 (Monday)        | Lecture 15         |                |
+| June 16 (Tuesday)       | TBD                |                |
+| June 17 (Wednesday)     | TBD                | Project due    |

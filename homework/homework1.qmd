@@ -15,13 +15,13 @@ execute:
 
 \newpage
 
-# Problem 1: Graphics critique (15 points)
+# Problem 1: Graphic critique (15 points)
 
-As part of your course grade for 36-315, you must submit two graphics critiques. In this question, you will get practice doing this, so that expectations for these are clear. Note that the following is for homework credit; you CANNOT use the graphic you discuss here for your two separate graphics critique submissions.
+As part of your course grade for 36-315, you must submit two graphic critiques. In this question, you will get practice doing this, so that expectations for these are clear. Note that the following is for homework credit; you CANNOT use the graphic you discuss here for your two separate graphic critique submissions.
 
 ## A (5 points) 
 
-Find ONE graphic that you think is interesting. This must be from a recent source that was posted online for the first time within the past year. This can be from an article, blog post, social media thread, academic paper, etc.
+Find ONE graphic that you think is interesting. This must be from a recent source that was posted online for the first time **within the past year**. This can be from an article, blog post, social media thread, academic paper, etc.
 
 For this part, all you have to do is include a hyperlink to the source of graphic.
 
