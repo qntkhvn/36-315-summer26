@@ -87,7 +87,7 @@ version
 ```
 
 This will print out the current version of `R` on your machine.
-The output should look similar to what shown below (the first 4 lines might be different, depending on your operating system.)
+The output should look similar to what shown below.
 
 ```{r}
 #| echo: false
@@ -102,7 +102,7 @@ In addition to a set of built-in base packages, there are numerous external `R` 
 In general, to install an `R` package, you can use the `install.packages()` function and pass in the package name.
 
 The following example shows how to install the `tidyverse` package in `R`.
-The `tidyverse` is a suite of `R` packages we will be using throughout this program.
+The `tidyverse` is a suite of `R` packages we will be using throughout this course.
 It features popular packages such as `ggplot2` for data visualization and `dplyr` for data manipulation.
 
 After installing `R` and RStudio, open RStudio and enter the following command in the **Console** pane.

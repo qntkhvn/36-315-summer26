@@ -21,26 +21,36 @@ format:
 
 ## Lectures
 
-* Lecture 1: The grammar of graphics and ggplot2 [slides](lectures/01-graphics.qmd)
+* TBA
+
+<!-- * Lecture 1: The grammar of graphics and ggplot2 [slides](lectures/01-graphics.qmd) -->
 
 ## Labs
 
-* Lab 1: [assignment](labs/lab1.qmd)
+* TBA
+
+<!-- * Lab 1: [assignment](labs/lab1.qmd) -->
 
 ## Homework
 
-* Homework 1: [assignment](homework/homework1.qmd)
+* TBA
+
+<!-- * Homework 1: [assignment](homework/homework1.qmd) -->
 
 ## Graphics Critiques
 
-* Critique 1: [template](critiques/critique1.qmd)
-* Critique 2: [template](critiques/critique2.qmd)
+* TBA
+
+<!-- * Critique 1: [template](critiques/critique1.qmd) -->
+<!-- * Critique 2: [template](critiques/critique2.qmd) -->
 
 ## Final Project
 
-* Project: [guide](project/project-guide.qmd)
-* Report: [guide](project/report-guide.qmd), [template](project/report-template.qmd)
-* Presentation: [guide](project/presentation-guide.qmd)
+* TBA
+
+<!-- * Project: [guide](project/project-guide.qmd) -->
+<!-- * Report: [guide](project/report-guide.qmd), [template](project/report-template.qmd) -->
+<!-- * Presentation: [guide](project/presentation-guide.qmd) -->
 
 ## Calendar
 
