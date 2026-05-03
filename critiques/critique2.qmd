@@ -1,16 +1,16 @@
 ---
 title: "Graphic Critique 2"
 subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
-fontsize: 10pt
-geometry: margin=0.9in
 format:
   pdf:
     colorlinks: true
+    fontsize: 10pt
+    geometry: margin=0.9in
 ---
 
 ## A (5 points) 
 
-Find ONE graphic that you think is interesting. This must be from a recent source that was posted online for the first time **within the past year**. This can be from an article, blog post, social media thread, academic paper, etc.
+Find ONE graphic that you think is interesting. This must be from a recent source that was posted online for the first time **within the past year**. This can be from an article, blog post, social media thread, academic paper, etc. This cannot be an example from lectures, labs, or homework.
 
 For this part, all you have to do is include a hyperlink to the source of graphic.
 

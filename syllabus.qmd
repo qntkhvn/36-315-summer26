@@ -188,19 +188,6 @@ For example, a grade of 85% would earn you at least a B, and a curve could only 
 ::: {.grid}
 
 ::: {.g-col-3}
-**TL;DR**
-:::
-
-::: {.g-col-9}
-This is a **6-week** summer course on statistical graphics and visualization.
-**This course moves extremely fast.**
-:::
-
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
 **Description**
 :::
 
@@ -287,9 +274,9 @@ Each lab will be turned in as a lab assignment.
 Labs are designed to be completed during the session, but they are not due until **11:59pm on the day of the lab**, so students have extra time if needed.
 **Each lab must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 
-Live lab attendance is **mandatory.**
+**Lab attendance is mandatory.**
+If you submit a lab assignment but did not attend its lab session, there is an automatic **20-point deduction**.
 As with lectures, please arrive to labs on time.
-If you submit a lab assignment but did not attend lab, there is an automatic **20 point** deduction.
 
 If you need to miss a lab for a valid reason, contact the instructor at least **24 hours** before the lab to discuss doing the lab on your own and getting full credit.
 If there is an unexpected emergency, notify the instructor immediately.
@@ -320,7 +307,7 @@ Be sure that your code, graphs, and answers are properly displayed on your homew
 
 ::: {.g-col-9}
 You will submit two critiques of data visualizations you find in the wild.
-These must be from a recent source that was posted online for the first time within the **past year** (i.e., not from some 2011 blog post) and cannot be an example from lecture, labs, or homework.
+These must be from a recent source that was posted online for the first time within the **past year** (i.e., not from some 2011 blog post) and cannot be an example from lectures, labs, or homework.
 
 **Each graphic critique must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 You will get practice doing this on the first homework.

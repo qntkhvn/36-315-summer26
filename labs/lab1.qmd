@@ -1,12 +1,12 @@
 ---
 title: "Lab 1"
 subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
-toc: true
-fontsize: 10pt
-geometry: margin=0.9in
 format:
   pdf:
     colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
 execute:
   warning: false
   message: false
