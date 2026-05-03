@@ -359,25 +359,14 @@ More details about the project will be provided later.
 ::: {.grid}
 
 ::: {.g-col-3}
-**Assignment Solutions**
+**Regrades**
 :::
 
 ::: {.g-col-9}
-Homework and lab solutions will typically be posted the day after the assignment is due.
-Reviewing the solutions is important and helpful for future work.
-Assignments are typically graded within a week of the due date.
-:::
 
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
-**Regrade Requests**
-:::
-
-::: {.g-col-9}
-If you believe a mistake was made when your assignment was graded, *first* check the posted assignment solutions. If you still believe a mistake was made---after, and only after, reviewing the solutions---you may submit a regrade request on Gradescope. Do not make a request via email. In your regrade request, clearly explain how the solutions indicate a possible grading mistake. This request must be made **within one week** of when the assignment was graded. If a regrade request is made more than one week after grades are posted, it will not be processed.
+Any regrade requests for lab and homework assignments must be **submitted on Gradescope within 48 hours** of grade release.
+Do not make a request via email.
+If a regrade request is made more than 48 hours after grade release, it will not be processed.
 :::
 
 :::

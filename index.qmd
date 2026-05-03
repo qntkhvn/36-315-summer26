@@ -28,15 +28,19 @@ format:
 
 ### Labs
 
-*Note: To download a `.qmd` file, right click and choose "Save Link As...".*
+* TBA
 
-* Lab 1: [`.qmd`](labs/lab1.qmd)
+<!-- *Note: To download a `.qmd` file, right click and choose "Save Link As...".* -->
+
+<!-- * Lab 1: [`.qmd`](labs/lab1.qmd) -->
 
 ---
 
 ### Homework
 
-* Homework 1: [`.qmd`](homework/homework1.qmd)
+* TBA
+
+<!-- * Homework 1: [`.qmd`](homework/homework1.qmd) -->
 
 ---
 
