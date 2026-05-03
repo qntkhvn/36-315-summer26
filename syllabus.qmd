@@ -252,9 +252,8 @@ Indeed, if it's true that "a picture speaks a thousand words," then ideally the 
 :::
 
 ::: {.g-col-9}
-Almost all course content will be covered during lecture.
-Lectures will prepare you for subsequent assignments.
-If you miss a lecture, you are responsible for the material covered.
+Almost all course content is covered during lecture.
+If you miss a lecture, you are responsible for the materials covered.
 
 Please participate and ask questions during lecture.
 And please make a habit of showing up on time.
@@ -272,15 +271,16 @@ Consistent tardiness is not acceptable and may lead to grade deductions.
 
 ::: {.g-col-9}
 
-Bi-weekly labs give students opportunities to engage with the course materials.
+Labs will involve exercises (usually a mix of coding and written responses) related to the materials covered during lectures.
 Each lab will be turned in as a lab assignment.
-Labs are designed to be completed during the session, but they are not due until 11:59pm on the day of the lab, so students have extra time if needed.
-**Labs must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
+Labs are designed to be completed during the session, but they are not due until **11:59pm on the day of the lab**, so students have extra time if needed.
+**Each lab must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 
 Live lab attendance is **mandatory.**
 As with lectures, please arrive to labs on time.
-If you submit a lab assignment but did not show up to lab, there is an automatic **20 point** deduction.
-However, if you need to miss a lab for a valid reason, contact the instructor at least **24 hours** before the lab to discuss doing the lab on your own and getting full credit.
+If you submit a lab assignment but did not attend lab, there is an automatic **20 point** deduction.
+
+If you need to miss a lab for a valid reason, contact the instructor at least **24 hours** before the lab to discuss doing the lab on your own and getting full credit.
 If there is an unexpected emergency, notify the instructor immediately.
 It is up to the instructor to determine if an accommodation is possible.
 :::
@@ -294,8 +294,8 @@ It is up to the instructor to determine if an accommodation is possible.
 :::
 
 ::: {.g-col-9}
-Homework assignments are due on Fridays by 11:59pm, and will be posted on Mondays of the same week.
-**Homeworks must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
+**Homework assignments are due on Fridays by 11:59pm**, and are posted on Mondays of the same week.
+**Each homework must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 Be sure that your code, graphs, and answers are properly displayed on your homework before submitting.
 :::
 
@@ -308,15 +308,14 @@ Be sure that your code, graphs, and answers are properly displayed on your homew
 :::
 
 ::: {.g-col-9}
-Data visualizations can be found everywhere.
-In the course, you will submit two critiques of data visualizations you find.
-These must be from a recent source that was posted online for the first time within the **past year** (i.e., not from some 2011 blog post) and can **not** be an example from lecture, labs, or homework.
+You will submit two critiques of data visualizations you find in the wild.
+These must be from a recent source that was posted online for the first time within the **past year** (i.e., not from some 2011 blog post) and cannot be an example from lecture, labs, or homework.
 
-A graphic critique assignment template (using Quarto) will be provided.
+**Each graphic critique must be completed in a Quarto document and submitted on Gradescope as a pdf file.**
 You will get practice doing this on the first homework.
 Then, you will submit two graphic critiques during the semester.
 The due dates for each critique are **Wednesday, May 27, 11:59pm** and **Wednesday, June 10, 11:59pm**.
-These are meant to be light and entertaining exercises.
+These are meant to be light and entertaining assignments.
 :::
 
 :::
@@ -330,10 +329,10 @@ These are meant to be light and entertaining exercises.
 ::: {.g-col-9}
 
 There is one take-home exam on **Tuesday, June 2**.
-The exam will assess students’ ability to use material from the first-half of the semester to answer open-ended questions about a real dataset.
+The exam will assess students’ ability to apply course materials (covered to date) to answer open-ended questions about a real dataset.
 Students will have from **9am to 11:59pm on Tuesday, June 2** to complete the exam.
 The exam is designed to take 2--3 hours, but the 15-hour time window is only meant to provide some flexibility and alleviate time pressure.
-More details will be given closer to the exam date.
+More information will be given closer to the exam date.
 
 :::
 
@@ -346,13 +345,10 @@ More details will be given closer to the exam date.
 :::
 
 ::: {.g-col-9}
-The purpose of this project is to assess students’ ability to create high-quality data visualizations and communicate their work in common formats: reports and presentations.
-These communication skills are important in statistics and data science.
-The deliverables can be part of your portfolio, as you apply for jobs, graduate schools, and other opportunities.
-
-Students will work individually to analyze a dataset of their choosing.
-The project will culminate in a report and a short video recording.
-More details about the project will be provided later.
+The final project will assess students’ data communication skills (visual, written, and oral).
+Students will work individually to create high-quality graphics using a dataset of their choosing.
+The project will culminate in a written report and a short video recording.
+More information will be provided later.
 
 :::
 
@@ -369,8 +365,8 @@ More details about the project will be provided later.
 ::: {.g-col-9}
 
 Any regrade requests for lab and homework assignments must be **submitted on Gradescope within 48 hours** of grade release.
-Do not make a request via email.
-If a regrade request is made more than 48 hours after grade release, it will not be processed.
+Do not submit a request via email.
+If a regrade request is submitted more than 48 hours after grade release, it will not be processed.
 :::
 
 :::
@@ -383,11 +379,13 @@ If a regrade request is made more than 48 hours after grade release, it will not
 
 ::: {.g-col-9}
 
-In general, late assignments will not be accepted.
-However, extensions may be granted for illness, family emergencies, job interviews, or religious reasons.
-To receive an extension, you must contact the instructor at least **36 hours** before the due date.
+In general, late submissions will not be accepted.
+In case of truly exceptional situations (such as illness or other emergencies), the instructor can make exceptions and allow late work.
+Note that file rendering issues or technical difficulties with submission on your end will **not** receive extensions.
+
+To submit an extension request, you must email the instructor at least **36 hours** before the due date.
 It is up to the instructor to decide if an extension may be granted.
-Note that if your request does not involve an illness, family emergency, job interview, or religious reason, then it is extremely unlikely that an extension will be granted.
+
 :::
 
 :::
