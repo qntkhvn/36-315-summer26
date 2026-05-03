@@ -16,8 +16,10 @@ format:
 
 * You are required to record a short video presentation, which should be **at most 5 minutes**.
 
-  * You can record the presentation using Zoom and share the recording with me.
-
+  * You can record the presentation using Zoom and share the recording.
+  
+  * Acceptable video submission formats: a Google Drive link, a Zoom cloud recording link, or a YouTube link.
+  
 * You **must use slides** for the presentation, and CANNOT just walk through your html report.
 
   * Slides may be created in any software.

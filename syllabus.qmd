@@ -20,8 +20,42 @@ format:
 
 ::: {.g-col-9}
 Quang Nguyen ([quang@stat.cmu.edu](mailto:quang@stat.cmu.edu))
+:::
 
-Office Hours: W 2--3pm
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Lectures**
+:::
+
+::: {.g-col-9}
+MWF 12:30--1:50pm, SH 234
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Labs**
+:::
+
+::: {.g-col-9}
+TR 12:30--1:50pm, BH 140B
+:::
+
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Office Hours**
+:::
+
+::: {.g-col-9}
+W 2--3pm
 :::
 
 :::
@@ -34,7 +68,8 @@ Office Hours: W 2--3pm
 
 ::: {.g-col-9}
 [36-315-summer26.netlify.app](https://36-315-summer26.netlify.app/)<br>
-*(Note: Assignments should be submitted through [Gradescope](https://www.gradescope.com))*
+All resources (lectures, assignments, etc.) are posted on this website.<br>
+Assignments must be submitted on [Gradescope](https://www.gradescope.com), unless otherwise noted.
 :::
 
 :::
@@ -62,30 +97,6 @@ Other references will be provided throughout the course.
 ::: {.g-col-9}
 **R** (programming language), **RStudio** (IDE), and  **Quarto** (reproducible documents)
 
-:::
-
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
-**Lectures**
-:::
-
-::: {.g-col-9}
-MWF 12:30--1:50pm, SH 234
-:::
-
-:::
-
-::: {.grid}
-
-::: {.g-col-3}
-**Labs**
-:::
-
-::: {.g-col-9}
-TR 12:30--1:50pm, BH 140B
 :::
 
 :::
