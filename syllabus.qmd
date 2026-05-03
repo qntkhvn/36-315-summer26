@@ -1,12 +1,16 @@
 ---
-title: "36-315: Statistical Graphics and Visualization"
-subtitle: "Carnegie Mellon University, Summer 2026"
-format: html
+title: "Syllabus"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
 ---
 
----
-
-<u><big>**Course Information**</big></u>
+## Basic Information
 
 ::: {.grid}
 
@@ -15,11 +19,22 @@ format: html
 :::
 
 ::: {.g-col-9}
-Quang Nguyen
+Quang Nguyen ([quang@stat.cmu.edu](mailto:quang@stat.cmu.edu))
 
-Email: [`quang@stat.cmu.edu`](mailto:quang@stat.cmu.edu)
+Office Hours: W 2--3pm
+:::
 
-Office Hours: TBA
+:::
+
+::: {.grid}
+
+::: {.g-col-3}
+**Website**
+:::
+
+::: {.g-col-9}
+[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app/)<br>
+*(Note: Assignments should be submitted through [Gradescope](https://www.gradescope.com))*
 :::
 
 :::
@@ -95,7 +110,7 @@ Homeworks are due on Fridays by 6pm.
 :::
 
 ::: {.g-col-9}
-There will be two graphic critiques due Wednesday, May 27 and Wednesday, June 10.
+Two graphic critiques, due Wednesday, May 27 and Wednesday, June 10.
 :::
 
 :::
@@ -107,7 +122,7 @@ There will be two graphic critiques due Wednesday, May 27 and Wednesday, June 10
 :::
 
 ::: {.g-col-9}
-There will be one take-home exam on Tuesday, June 2.
+One take-home exam on Tuesday, June 2.
 :::
 
 :::
@@ -119,7 +134,7 @@ There will be one take-home exam on Tuesday, June 2.
 :::
 
 ::: {.g-col-9}
-Includes a video presentation and a project report, both due Wednesday, June 18.
+Includes a report and a video presentation, both due Wednesday, June 18.
 :::
 
 :::
@@ -157,10 +172,7 @@ For example, a grade of 85% would earn you at least a B, and a curve could only 
 
 :::
 
-
----
-
-<u><big>**Course Overview**</big></u>
+## Overview
 
 ::: {.grid}
 
@@ -231,12 +243,7 @@ Indeed, if it's true that "a picture speaks a thousand words," then ideally the 
 
 :::
 
-
-
----
-
-<u><big>**Course Components**</big></u>
-
+## Components
 
 ::: {.grid}
 
@@ -351,10 +358,7 @@ More details about the project will be provided later.
 
 :::
 
-
----
-
-<u><big>**Course Logistics and Policies**</big></u>
+## Logistics and Policies
 
 ::: {.grid}
 
@@ -458,9 +462,9 @@ If you use a generative AI tool, you must disclose and explain what you use it f
 
 :::
 
----
+## Calendar
 
-<u><big>**Course Timeline**</big></u> *(subject to change)*
+*(subject to change)*
 
 | Date                    | Session            | Assignment              |
 | ----------------------- | ------------------ | ----------------------- |

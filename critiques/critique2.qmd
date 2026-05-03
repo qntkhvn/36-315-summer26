@@ -1,0 +1,38 @@
+---
+title: "Graphics Critique 2"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+---
+
+## A (5 points) 
+
+Find ONE graphic that you think is interesting. This must be from a recent source that was posted online for the first time within the past year. This can be from an article, blog post, social media thread, academic paper, etc.
+
+For this part, all you have to do is include a hyperlink to the source of graphic.
+
+**YOUR ANSWER HERE**
+
+## B (5 points) 
+
+**Describe the graphic** in a paragraph of 3--6 sentences. Be sure to discuss the following:
+
+* What does the graphic show?
+* What variables are plotted, whether it's via symbols, color, or other features of the graphic?
+* What is the main result/takeaway of the graphic?
+
+**YOUR ANSWER HERE**
+
+## C (5 points) 
+
+**Critique the graphic** in a paragraph of 3--6 sentences. Be sure to discuss the following:
+
+* What are the main goal(s) of the graphic?
+* Does the graphic do a good job of achieving its goals?
+* What are the strengths and weaknesses (if any) of the graphic?
+* What would you change (if anything) about this graphic?
+
+**YOUR ANSWER HERE**

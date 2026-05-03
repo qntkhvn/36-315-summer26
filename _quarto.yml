@@ -4,10 +4,11 @@ project:
     - "index.qmd"
     - "syllabus.qmd"
     - "setup.qmd"
-    - "lectures/"
+    - "lectures/*.qmd"
     - "!labs/"
     - "!homework/"
-    - "!project/"
+    - "project/*.qmd"
+    - "!project/report-template.qmd"
   
 format:
   html:

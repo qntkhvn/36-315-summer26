@@ -1,7 +1,13 @@
 ---
-title: "Setup"
----
-
+title: "Computing Setup"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
 ---
 
 ## `R` and RStudio
@@ -120,7 +126,7 @@ You should get a message similar to the output below.
 library(tidyverse)
 ```
 
-## Customize RStudio
+## Optional: Customize RStudio
 
 RStudio can be customized with different themes. To explore built-in themes,
 

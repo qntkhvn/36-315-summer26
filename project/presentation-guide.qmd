@@ -1,0 +1,43 @@
+---
+title: "Final Project Presentation Guidelines"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    code-copy: true
+    code-block-background: true
+---
+
+## Important information
+
+* Due Wednesday, June 17 at 11:59pm.
+
+* You are required to record a short video presentation, which should be **at most 5 minutes**.
+
+  * You can record the presentation using Zoom and share the recording with me.
+
+* You **must use slides** for the presentation, and CANNOT just walk through your html report.
+
+  * Slides may be created in any software.
+  
+* The presentation should effectively summarize the motivating questions, analyses, and takeaways of your project.
+
+## Rubric
+
+* Was the presentation at most 5 minutes in length?<span style="float:right;">(10 points, all or nothing)</span>
+
+* Did you provide a clear description of the dataset?<span style="float:right;">(0--10pts)</span>
+
+* Did you clearly state the questions you would like to answer?<span style="float:right;">(0--10pts)</span>
+
+* Did you showcase high-quality graphics (correctly labeled, interpretable, and informative)?<span style="float:right;">(0--20pts)</span>
+
+* Did you clearly explain/interpret your graphics, and pinpoint their main takeaways?<span style="float:right;">(0--15pts)</span>
+
+* Were the graphics (and their main takeaways) relevant to your questions?<span style="float:right;">(0--15pts)</span>
+
+* Did you provide clear conclusions based on your graphics and analyses?<span style="float:right;">(0--10pts)</span>
+
+* What was the overall quality of your slides? Were the slides high-quality and visually appealing?<span style="float:right;">(0--10pts)</span>
