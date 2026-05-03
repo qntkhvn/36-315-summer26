@@ -1,7 +1,6 @@
-labs/
-homeworks/
-critiques/
+solutions/
 project/
+critiques/
 
 # Derivative files
 **/*.pdf

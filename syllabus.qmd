@@ -1,5 +1,6 @@
 ---
-title: "<small>36-315: Statistical Graphics and Visualization, Summer 2026</small>"
+title: "36-315: Statistical Graphics and Visualization"
+subtitle: "Carnegie Mellon University, Summer 2026"
 format: html
 ---
 

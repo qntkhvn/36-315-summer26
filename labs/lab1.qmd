@@ -1,0 +1,315 @@
+---
+title: "Lab 1"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+toc: true
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# General instructions for all lab and homework assignments
+
+* To preview this file, click the "Render" button in RStudio. (The Shortcut for rendering/knitting in RStudio is Command + Shift + K for macOS users, or Ctrl + Shift + K for Windows users.)
+
+* **All lab and homework assignments should be submitted on Gradescope as a pdf from rendering your Quarto file.**
+
+* Do not worry about the long file URLs that run off the page.
+
+* Each answer must be supported by written statements (unless otherwise specified). **Thus, even if your code output is self-explanatory, be sure to answer questions with written statements outside of code blocks.**
+
+* Be sure to include all code to show your work. Your file should contain the code to answer each question in its own code block. Your code should produce plots/output that will be automatically embedded in the output file.
+
+\newpage
+
+# Problem 1: Using Quarto, code blocks, and code chunks (15 points)
+
+An **Quarto** file (`.qmd`) is a dynamic document for writing reproducible reports and communicating results. It contains the reproducible source code along with the narration that a reader needs to understand your work.
+
+There are three important elements to a **Quarto** file:
+
+* A YAML header at the top (surrounded by `---`)
+
+* Chunks of `R` code
+
+* Text mixed with simple Markdown formatting syntax (for more information, see [here](https://www.markdownguide.org/cheat-sheet/#basic-syntax))
+
+(Note that this file itself is a **Quarto** document with Markdown typesetting.)
+
+Mathematics can be written with LaTeX syntax using dollar signs. 
+For instance, using single dollar signs we can write inline math: $(-b \pm \sqrt{b^2 - 4ac})/2a$.
+
+To write math in "display style", i.e. displayed on its own line centered on the
+page, we use double dollar signs:
+$$
+x^2 + y^2 = 1
+$$
+
+## A (5pts)
+
+**Code chunks**
+
+When you open a new `.qmd` file, you should see a block of code, beginning with three backticks, then an `{r}`, then three more backticks. This is a code chunk! You can type code commands into this chunk, and they will be executed by `R` and included in your output. Code chunks are evaluated sequentially when you hit Render.
+
+Let's test out the following command:
+
+```{r}
+# This is a comment
+print("Hello, World!")
+```
+
+Change the above code so that it outputs the following text: "Hello, World! My name is [your name]."
+
+**Code comments**
+
+Comments should be used frequently when writing code to give insight into what each piece of code is doing. To add a comment to your code, start a new line with the `#` symbol.
+
+Change the existing comment in your first code block so that it says "36-315 Summer 2026". 
+
+## B (5pts)
+
+**Chunk execution options**
+
+For each code block, you can specify various chunk execution options. (For more details, see [here](https://quarto.org/docs/computations/execution-options.html).)
+
+```{r}
+#| echo: true
+#| eval: true
+print("Statistical Graphics and Visualization")
+```
+
+The code chunk above includes two common execution options: `echo` and `eval`.
+
+What do each of them do? Switch these options between `true` and `false` and render the file to see how they affect whether the code and/or its output appear.
+
+**YOUR ANSWER HERE**
+
+## C (5pts)
+
+What is your current `R` version? Find out by typing `version`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+**Important note**: If your current `R` version is NOT 4.6.0, then you should update `R` immediately, in order to receive credit for this part. See instructions [here](https://36-315-summer26.netlify.app/setup.html).
+
+Next, what is your current RStudio version? To find out:
+
+* First, install the `rstudioapi` package by typing `install.packages("rstudioapi")` into your Console.
+
+* Then, type the following into the Console: `rstudioapi::versionInfo()`.
+
+**YOUR ANSWER HERE**
+
+**Important note**: If your current RStudio version is NOT 2026.4.0.526, then you should update RStudio immediately, in order to receive credit for this part. See instructions [here](https://36-315-summer26.netlify.app/setup.html).
+
+\newpage
+
+# Problem 2: R help documentation (15 points)
+
+Checking help documentation is a great way for code debugging.
+This is especially useful when you encounter errors as you code in `R`.
+
+## A (5pts) 
+
+Find the help documentation for the `quantile` function by typing `help(quantile)` or `?quantile` into the Console. This function takes a vector of numbers and computes quantiles for the vectors. What is the description of the `probs` argument?
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+Find the help documentation for the `mean` function. This function takes a vector of numbers and computes their average. What is the example code at the bottom of the help page? (Include this code in its own code block here.)
+
+**YOUR ANSWER HERE**
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+## C (5pts) 
+
+Throughout this course (and programming in general), search engines like Google can be your friend (to an extent but you must be careful!). Use Google or another search engine or Generative AI tools (gasp!) to figure out the name of the function in `R` that finds the standard deviation of a vector, and apply it to the data from Part B. (For example, you can search, "how to compute standard deviation in R".) In general, if you ever don't know how to do something in `R`, googling "how to [whatever] in R" often helps! Find the help documentation for this function, and apply this function to the data from Part B.
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Accessing packages, datasets, and variables (20 points)
+
+In `R`, there are many packages that are not permanently stored in `R`, so we have to load them when we want to use them. You can load an `R` package by typing `library(package_name)`. (Sometimes we need to install the package first, as seen earlier.)
+
+There are many functions that are only available *after* you load a package. Throughout 36-315, please remember to load packages by including `library(package_name)` **within a code chunk in an .qmd file** to load the functions you need; otherwise, you'll get an error saying that the function is undefined. For example, the following code chunk loads the `datasets` package:
+
+```{r}
+library(datasets)
+```
+
+This loads many datasets in `R`; we'll consider one of them, called `trees`.
+
+## A (5pts) 
+
+Look at the help documentation for `trees` by typing `help(trees)` in the Console. What are the names of the three variables in this dataset? How many observations are in this dataset?
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+There isn't always help documentation for datasets that you'll load into `R` (including many datasets that we'll use in 36-315). To get the same information you retrieved in Part A, write a code block using the `names()` and `dim()` functions. For this part, all you need to do is write a code block appropriately using `names()` and `dim()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (10pts) 
+
+To access a particular variable within a dataset, you use the dollar sign format: `datase$variable_name`. For example, the following code displays the `Girth` variable within the `trees` dataset, as well as its mean:
+
+```{r}
+# girth variable
+trees$Girth
+# mean of girth variable
+mean(trees$Girth)
+```
+
+What is the 50\% quantile and standard deviation for each of the three variables in the `trees` dataset? (Be sure to include `R` code that allows you to answer this question.) **Hint**: Problem 2 should have helped you figure out what functions you need for this part.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 4: Reading, manipulating, and plotting data (50 points)
+
+Throughout this course, we will use the [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) function to read in a dataset.
+
+We'll use the Pittsburgh bridges dataset [available here](https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/bridges-pgh.csv) for this lab.
+
+Here's the line of code that first loads the `tidyverse` library and and then reads the dataset into `R`, defining it as `bridges`:
+
+```{r}
+library(tidyverse)
+bridges <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/bridges-pgh.csv")
+```
+
+All we did was copy-and-paste the URL into the `read_csv()` function (with quotation marks).
+
+Now we're going to use what we learned in this lab to create some visuals for this dataset.
+
+## A (10pts) 
+
+The `bridges` dataset contains information on different bridges in Pittsburgh. In this part, write code that displays the column names of `bridges`. Also include in your code `head(bridges)` to get an idea of what these variables look like. Which variables are quantitative, and which are categorical?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## B (10pts) 
+
+Now we'll use the `ggplot()` function to create a **bar plot** of the `river` variable. The `river` variable is either "A" (for Allegheny), "M" (for Monongahela), or "O" (for Ohio). To make things easier, we provide the code for you to do this below; just uncomment the code and render your .qmd file accordingly to create the bar plot. **Note that the code will not run unless you've loaded the `tidyverse` library in your .qmd file!** In what follows, you must answer some questions about the code and plot.
+
+```{r}
+# bridges |>
+#   ggplot(aes(x = river)) +
+#   geom_bar(fill = "darkblue") +
+#   labs(title = "Number of Bridges in Pittsburgh by River",
+#        subtitle = "A = Allegheny River, M = Monongahela River, O = Ohio River",
+#        x = "River", y = "Number of Bridges",
+#        caption = "Source: Pittsburgh Bridges Dataset")
+```
+
+Answer the following questions about the code and plot:
+
+* In general, `ggplot()` code takes the following format: `ggplot(blank1, aes(x = blank2))` or `blank1 |> ggplot(aes(x = blank2))`. Looking at the above code, what kind of `R` object should `blank1` be, and what should `blank2` be?
+
+**YOUR ANSWER HERE**
+
+* What do you think the line `geom_bar(fill = "darkblue")` does?
+
+**YOUR ANSWER HERE**
+
+* What do you think the remaining lines of code do (contained in `labs()`)?
+
+**YOUR ANSWER HERE**
+
+
+## C (15pts) 
+
+Now we'll make a few other **area plots** that we will discuss later this week:
+
+* spine chart
+* pie chart
+* rose diagram
+
+Your goal for this part is to create each of these plots. These plots can be created by copy-and-pasting the bar plot code from Part C and modifying it slightly. Follow these directions to create each of these plots:
+
+* **spine chart**: First, copy-and-paste the bar plot code from Part C. Then, delete the `fill = "darkblue"` within `geom_bar()`. Finally, within `ggplot()`, replace `aes(x = river)` with `aes(x = "", fill = river)`. Also, change the labels in `labs()` if necessary.
+
+```{r}
+# YOUR CODE HERE
+```
+
+* **pie chart**: First, copy-and-paste the **spine chart code** you just made. Then, after `geom_bar()`, "add" `coord_polar("y")`. Be sure to put plus signs before and after `coord_polar("y")`. Also, change the labels in `labs()` if necessary.
+
+```{r}
+# YOUR CODE HERE
+```
+
+* **rose diagram**: First, copy-and-paste the bar plot code from Part C. Then, after `geom_bar(fill = "darkblue")`, "add" `coord_polar() + scale_y_sqrt()`. Be sure to put plus signs before and after `coord_polar() + scale_y_sqrt()`. Also, change the labels in `labs()` if necessary. After you make the rose diagram: In 1-2 sentences, what do you think  `scale_y_sqrt()` does, and what is a benefit to including `scale_y_sqrt()` when making the rose diagram?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## D (5pts) 
+
+Sometimes datasets don't have every variable you want to visualize, in which case you have to create new columns in your data. Now we'll use the `mutate()` function to create two new columns in the `bridges` dataset:
+
+* `over_allegheny`: indicates whether the bridge crosses the Allegheny River (`"yes"` or `"no"`)
+* `length_binary`: indicates whether the bridge is at least 1000 feet long (`"long"` or `"short"`)
+
+Here's some "template code" you can use to create these columns.
+
+Notice that there are some `?` that you need to fill in appropriately. Use the definitions for `over_allegheny` and `length_binary` to figure out what those should be. Consult the help documentation for `ifelse()` to figure out what the other two arguments of this function are. After you’ve filled in the blanks, be sure to uncomment the code above and make sure that it runs appropriately
+
+```{r}
+# bridges <- bridges |> 
+#   mutate(over_allegheny = ifelse(river == "A", ?, ?),
+#          length_binary = ifelse(length < 1000, ?, ?))
+```
+
+**Note that the `mutate()` function is within the `tidyverse` library; so, remember that the above code runs only because you've already loaded the `tidyverse` library earlier in this .qmd file.**
+
+## E (10pts) 
+
+The most common kind of summary statistic for a categorical variable is the counts of each category, often displayed as a **contingency table** (also known as a frequency table). To make a contingency table in `R`, you use the `table()` function. The following code should display a contingency table for the `length_binary` variable (after you've completed Part F):
+
+```{r}
+# table(bridges$length_binary)
+```
+
+Uncomment and run the above code and make sure a contingency table displays. Are there more `"long"` bridges or `"short"` bridges?
+
+**YOUR ANSWER HERE**
+
+It can also be helpful to create a table of proportions, instead of a table of counts. Write a line of code that displays a table of proportions for the `bridges$length_binary` variable. In other words, your table should display the proportion of "short" and "long" bridges. To do this, you can either use the `prop.table()` function or the `table()` function (appropriately divided by a number).
+
+```{r}
+# YOUR CODE HERE
+```

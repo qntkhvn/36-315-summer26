@@ -1,0 +1,317 @@
+---
+title: "Homework 1"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+author: "YOUR NAME HERE"
+toc: true
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Graphics critique (15 points)
+
+As part of your course grade for 36-315, you must submit two graphics critiques. In this question, you will get practice doing this, so that expectations for these are clear. Note that the following is for homework credit; you CANNOT use the graphic you discuss here for your two separate graphics critique submissions.
+
+## A (5 points) 
+
+Find ONE graphic that you think is interesting. This must be from a recent source that was posted online for the first time within the past year. This can be from an article, blog post, social media thread, academic paper, etc.
+
+For this part, all you have to do is include a hyperlink to the source of graphic.
+
+**YOUR ANSWER HERE**
+
+## B (5 points) 
+
+**Describe the graphic** in a paragraph of 3--6 sentences. Be sure to discuss the following:
+
+* What does the graphic show?
+* What variables are plotted, whether it's via symbols, color, or other features of the graphic?
+* What is the main result/takeaway of the graphic?
+
+**YOUR ANSWER HERE**
+
+## C (5 points) 
+
+**Critique the graphic** in a paragraph of 3--6 sentences. Be sure to discuss the following:
+
+* What are the main goal(s) of the graphic?
+* Does the graphic do a good job of achieving its goals?
+* What are the strengths and weaknesses (if any) of the graphic?
+* What would you change (if anything) about this graphic?
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 2: The data will go on (40 points)
+
+For this problem, we will use a famous dataset about the Titanic shipwreck. This dataset was obtained from **Kaggle** (a popular site for finding publicly-available datasets) and is modified for this assignment.
+
+```{r}
+library(tidyverse)
+titanic <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/titanic.csv")
+```
+
+## A (3pts) 
+
+What are the number of rows and columns in this dataset? What are the names of the variables in this dataset? For this part, be sure to include any code you used to answer these questions.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+Read this [description](https://www.kaggle.com/c/titanic/data) to better understand the Titanic dataset. In particular, look at the Data Dictionary and Variable Notes sections. For this question, please do the following:
+
+* Name at least two categorical variables.
+
+**YOUR ANSWER HERE**
+
+* Name at least two quantitative variables.
+
+**YOUR ANSWER HERE**
+
+* Name one ordinal categorical variable.
+
+**YOUR ANSWER HERE**
+
+## C (8pts) 
+
+For the remainder of this problem we're going to focus on the `Embarked` variable. For this part, use the `ggplot()` function to create a bar chart of the `Embarked` variable. Make sure your plot has the following characteristics:
+
+* Its axes are properly labeled and has a proper title.
+
+* Each bar in the graph has the same color by using `+ geom_bar(fill = "yellow", color = "black")`.
+
+After making your plot, change the `fill` and `color` arguments. What do each of them do? (**Note**: The final plot you display in this question should have non-yellow and non-black colors, denoting that you tried changing the `fill` and `color` arguments).
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## D (5pts) 
+
+Using your graph from Part C, describe the distribution of the `Embarked` variable in 1--2 sentences. In particular: Which port did the most passengers embark on, and which port did the fewest passengers embark on? Be sure to write your description as if it were for someone who isn't familiar with the data. **In your answer, be sure to use the actual port names, and not just `C`, `Q`, `S`.** In general, your descriptions of graphs should make sense to people who are not familiar with the actual dataset.
+
+**YOUR ANSWER HERE**
+
+## E (7pts) 
+
+Now make a spine chart of the `Embarked` variable. Make sure to correctly label the axes, and include an appropriate title. In your spine chart, what are the widths of the bars proportional to (if anything)?  What are the heights of the bars proportional to (if anything)? How is this different from the bar chart?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## F (5pts) 
+
+`ggplot()` allows us to easily flip the orientation of our graphs without changing much of the code.  To do this, you simply have to add `+ coord_flip()` to your existing code.  Do this in a separate code block for the spine chart from Part E, and discuss the differences in the two plots.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## G (7pts) 
+
+Now make a rose diagram of the `Embarked` variable.  Be sure to correctly label the axes and include an appropriate title. In your rose diagram, what is the radius of each rose petal proportional to? What does the angle associated with each rose petal correspond to (if anything)?  What is the area of each rose petal proportional to?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Visualizing really old data with modern `ggplot2` (20 points)
+
+Let's explore the data from the first statistical graphic examining the estimated longitudinal distance between Toledo and Rome that was visualized in 1644 by Langren. Install the `HistData` package. Then, load the `Langren1644` dataset into `R` by typing `data(Langren1644)`. See below for some example code (which also corrects a naming error in the `Langren1644` dataset). Before starting this problem, make sure `HistData` package is installed for the code to properly run.
+
+```{r}
+# Make sure this package is installed first!
+library(HistData)
+
+# load the data
+data(Langren1644)
+
+# Correcting the weird spacing of "Italy " to "Italy" in the Langren1644 data.
+# The code collapses the two levels "Italy" and "Italy " into one factor variable
+Langren1644 <- Langren1644 |>
+  mutate(Country = fct_recode(Country, "Italy" = "Italy "))
+```
+
+## A (6 points) 
+
+The plots you made for the Titanic data in Problem 3 visualize a single variable; now we will visualize multiple variables within a single graph. We'll discuss the statistical nuances of graphs with multiple variables later on---the purpose of this problem is just to further explore the `ggplot()` function in more depth.
+
+In this part, we'll create a [scatterplot](https://en.wikipedia.org/wiki/Scatter_plot); I'm assuming most of you are familiar with such a plot, but we'll talk about it in depth later in the course. For now, **the goal of this problem is to make a scatterplot where**:
+
++ `Longitude` is on the x-axis
+
++ `Year` is on the y-axis
+
++ The points in the scatterplot are colored by `Country`
+
+**After you've made your scatterplot, write 1--2 sentences describing what the scatterplot is showing.** You may have to look at the help documentation at `help(Langren1644)` to understand what the variables in your scatterplot are.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## B (6 points) 
+
+Note that even though a scatterplot is considered a "two dimensional" visual, your scatterplot in Part A should have three variables (longitude, year, and country), and thus it is sort of like a "3D plot." Now we're going to make a "4D plot." **The goal of this problem is to make a scatterplot where**:
+
+* `Longitude` is on the x-axis
+
+* `Year` is on the y-axis
+
+* The points in the scatterplot are colored by `Country`
+
+* The shape of the points correspond to the **source** of longitudinal measurement.
+
+* There's a vertical line indicating the true longitudinal distance between Toledo and Rome.
+
+To do this problem, first copy-and-paste the code you wrote for Part A. After you do that, already the first three bullet points are done! Meanwhile, to change the shape of the points, mimic what you did with the `color` parameter in `aes`, but this time do `aes(color = ..., shape = ...)`, where `color` and `shape` are appropriately specified. Then, to add a vertical line, first use Google or `help(Langren1644)` to figure out the true longitudinal distance between Toledo and Rome. Then, use  ` + geom_vline(aes(xintercept = _))` right after your `geom_point(...)` code, where you should replace `_` with the longitudinal distance between Toledo and Rome.
+
+**For this part, all you need to do is write the code to produce the desired scatterplot (as well as display the scatterplot, which your code should do automatically).**
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (8 points) 
+
+Now we're going to make one more scatterplot. First, copy-and-paste your code from the previous part (Part B) and place it here. Then, after your `geom_point(...)` code, use `+ geom_text(aes(label = Name), hjust = -0.05, vjust = -0.05, angle = -90)`. This should add text next to each point; revisit `help(Langren1644)` to understand what exactly this text is. It's okay if some of the text isn't displayed in the plot (particularly the bottom part of the plot). Add a title that (briefly) describes the plot. 
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+Then, answer the following questions:
+
+* Who gave the most accurate estimate?
+
+**YOUR ANSWER HERE**
+
+* Which country gave the most accurate estimates?
+
+**YOUR ANSWER HERE**
+
+* Is the oldest estimate the worst? 
+
+**YOUR ANSWER HERE**
+
+* Which source seems more accurate?
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 4: Variable types (25 points)
+
+In this question, we will consider a toy dataset of 100 people with the following variables:
+
+* `hair`: The hair color of each person (black, brown, blonde, red, or other).
+
+* `age`: Number of years this person has been alive
+
+* `income`: Measured in US dollars.
+
+* `children`: Number of children this person has.
+
+* `opinion`: Response to the statement: "There shouldn't be any 36-315 homework." Here, 3 = agree, 2 = not sure, 1 = disagree.
+
+The toy dataset can be viewed [here](https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/data-types.csv).
+
+## A (5pts) 
+
+Below is some code to read in the dataset:
+
+```{r}
+# reading in the data
+dataset <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/data-types.csv")
+# names of the variables
+names(dataset)
+# classes of the variables
+class(dataset$hair)
+```
+
+**You do not have to turn in any code for this question.** Just answer the two prompts below for each of the five variables.
+
+For each of the five variables, write down:
+
+1) Whether the variable is categorical (nominal), categorical (ordinal), quantitative (discrete), or quantitative (continuous).
+
+2) The class of the variable according to `R`. (Hint: You can use the `class()` function to figure this out, as shown for the `hair` variable below. We can see that the class of the `hair` variable is "character", so already you have one of the answers!) (Note: For some versions of `R`, the class for `hair` may appear as `"factor"` instead of `"character"`, which is fine.)
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+In `R`, quantitative variables should usually have class `"numeric"` or `"integer"`, while categorical variables should usually have class `"factor"` or `"character"`. Given this and your answer in Part A, which variables in the dataset have un-intuitive classes? Explain your answer in 1--2 sentences.
+
+**YOUR ANSWER HERE**
+
+## C (5pts) 
+
+For this part, use `ggplot()` to make a scatterplot where:
+
+* `age` is on the x-axis
+
+* `income` is on the y-axis
+
+* The points are colored by `opinion`
+
+You should be able to use code very similar to Question 4 to do this. Your scatterplot should have a color legend for the `opinion` variable on the right-hand side. From this legend, how many possible values does there appear to be for the `opinion` variable?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## D (5pts) 
+
+It's often helpful to change the class of variables using functions like `as.numeric()` and `as.factor()`. Luckily, `ggplot()` makes it very easy to convert variables to factors: Simply place `factor()` "around" a variable name within `ggplot()`.
+
+Now make the same scatterplot from Part C, but with `opinion` converted to a factor by using `factor(opinion)`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Your scatterplot should still have a color legend for the `opinion` variable on the right-hand side. From this legend, how many possible values does there appear to be for the `opinion` variable? Which scatterplot do you think is more intuitive - the one in this part, or the one in Part C? Explain your answer in 1--2 sentences.
+
+**YOUR ANSWER HERE**
+
+## E (5pts) 
+
+The color legend in your Part D probably looks a bit ugly, in the sense that people not familiar with this dataset may have trouble understanding it. For this part, first copy-and-paste your code from Part D and place it here. Then, to make the color legend more understandable, make the following changes to your plot:
+
+* Notice that your color legend displays `factor(opinion)`, which doesn't look too great. Change this to "Opinion" instead of `factor(opinion)`.
+
+* Notice that your color legend just has the labels 1, 2, and 3, which readers not familiar with this dataset won't understand. Change these labels to something more meaningful based on the definition of `opinion` given at the beginning of this problem. (**Hint**: Use `scale_color_discrete()`.)
+
+```{r}
+# YOUR CODE HERE
+```

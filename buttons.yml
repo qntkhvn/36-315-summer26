@@ -1,0 +1,9 @@
+- button: Syllabus
+  link: syllabus.qmd
+  color: "#0072B2"
+- button: Setup
+  link: setup.qmd
+  color: "#009E73"
+- button: Gradescope
+  link: https://www.gradescope.com
+  color: "#D55E00"

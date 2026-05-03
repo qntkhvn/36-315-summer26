@@ -1,25 +1,19 @@
 project:
   type: website
-
-website:
-  title: "36-315"
-  navbar:
-    background: "#f2f2f2"
-    right:
-      - href: index.qmd
-        text: "**Home**"
-      - href: syllabus.qmd
-        text: "**Syllabus**"
-      - href: setup.qmd
-        text: "**Setup**"
-      - href: lectures.qmd
-        text: "**Lectures**"
-
+  render: 
+    - "index.qmd"
+    - "syllabus.qmd"
+    - "setup.qmd"
+    - "lectures/"
+    - "!labs/"
+    - "!homework/"
+    - "!project/"
+  
 format:
   html:
-    theme: yeti
-    fontsize: 0.95em
+    theme: cosmo
     css: styles.css
+    toc: true
     
 execute:
   freeze: auto

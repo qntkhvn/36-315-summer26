@@ -120,7 +120,7 @@ You should get a message similar to the output below.
 library(tidyverse)
 ```
 
-## Customizing RStudio
+## Customize RStudio
 
 RStudio can be customized with different themes. To explore built-in themes,
 
