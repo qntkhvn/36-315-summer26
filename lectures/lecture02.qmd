@@ -1,0 +1,511 @@
+---
+title: "Visualizing 1D categorical data"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+```
+
+## Motivating data: [**Palmer Penguins**](https://allisonhorst.github.io/palmerpenguins/articles/intro.html)
+
+```{r}
+head(penguins)
+```
+
+* Reminder: tidy data
+
+  * Each row is an observation (penguin)
+
+  * Each column is a variable/measurement about about each observation
+
+* Two main variable types: quantitative and categorical
+
+## Data wrangling with `dplyr`
+
+* `dplyr` is a package within the `tidyverse` with functions for data wrangling
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+#| echo: false
+penguins <- as_tibble(penguins)
+```
+
+* The `dplyr` data verbs for manipulating data
+
+    * `select()`
+    
+    * `filter()`
+
+    * `arrange()`
+
+    * `mutate()`
+
+    * `group_by()`
+
+    * `summarize()`
+    
+## `select()`
+
+*  **Use `select()` to extract COLUMNS (variables) of interest**
+
+* **Just simply specify the column names...**
+
+```{r}
+penguins |> 
+  select(species, island, body_mass)
+```
+
+## `filter()`
+
+* **Use `filter()` to extract ROWS (observations) that meet certain conditions**
+
+. . .
+
+* **Need to specify a logical condition (aka boolean expression)**
+
+. . .
+
+::: columns
+::: {.column width="50%"}
+* `x < y`: less than
+* `x <= y`: less than or equal to
+* `x == y`: equal to
+* `x != y`: not equal to
+* `x > y`: greater than
+* `x >= y`: greater than or equal to
+:::
+
+::: {.column width="50%"}
+* `x %in% y`: whether the value is present in a given vector
+* `is.na(x)`: is missing
+* `!is.na(x)`: is not missing
+* `x & y`: and
+* `x | y`: or
+* `!x`: not
+:::
+:::
+
+## `filter()`
+
+Example: Extract features for female Adelie penguins only
+
+```{r}
+penguins |> 
+  filter(species == "Adelie" & sex == "female")
+```
+
+## `arrange()`
+
+* Arrange observations (rows) by variables (columns)
+
+  * Ascending order is the default (low to high for numeric columns, alphabetical order for character columns)
+
+. . .
+
+Example: Sort penguins by body mass (heaviest first)
+
+```{r}
+penguins |> 
+  arrange(desc(body_mass)) # desc() for descending order
+```
+
+## `arrange()`
+
+* Arrange by multiple columns (variable order matters)
+
+Example: Sort penguins by bill length (low to high, first sort), then flipper length (high to low, second sort)
+
+```{r}
+penguins |> 
+  arrange(bill_len, desc(flipper_len))
+```
+
+## `mutate()`
+
+* **Use `mutate()` to create new variables**
+
+* New variables created via `mutate()` are usually based on existing variables
+
+  * Make sure to give your new variable a name
+
+  * Note that naming the new variable the same as the existing variable will overwrite the original column
+
+## `mutate()`  
+  
+Example: Create a new column for bill ratio (bill length / bill depth), and a new column to categorize penguins as "Large" if they weigh more than 4.5kg
+
+```{r}
+penguins |> 
+  mutate(bill_ratio = bill_len / bill_dep,
+         is_large = ifelse(body_mass > 4500, 1, 0))
+```
+
+## `summarize()` (by itself)
+
+* Use `summarize()` to collapse the data down to a single row (per group) by aggregating variables into single values
+
+* Useful for computing summaries (e.g., mean, median, max, min, correlation, etc.)
+
+```{r}
+penguins |> 
+  summarize(median_bill_len = median(bill_len, na.rm = TRUE))
+```
+
+## `group_by()` and `summarize()`
+
+* `group_by()` converts the data into a grouped format where operations are performed by group
+
+* A group can be defined by one or more variables (columns)
+
+* `group_by()` becomes powerful when combining with `summarize()`
+
+* Use the pipe operator `|>` to perform multiple operations
+
+. . .
+
+Example: How many male and female Adelie penguins are in each island (Biscoe, Dream, Torgersen)?
+
+```{r}
+#| echo: true
+penguins |> 
+  filter(species == "Adelie", !is.na(sex)) |> 
+  group_by(sex, island) |> 
+  summarize(count = n())
+```
+
+## Variable types
+
+Most visualizations are about understanding the distribution of different variables (columns)
+
+The **variable type** usually dictates the type of graphs you should make
+
+. . .
+
+There are two main types of variables:
+
+**Quantitative**
+
+  * Discrete (i.e., counts, usually recorded as whole numbers), examples: number of likes/retweets, number of times word is used
+  
+  * Continuous (any real number), examples: income, age, miles run, heart rate
+
+**Categorical**
+
+  * Focus of today's lecture
+
+## Categorical data
+
+Two different versions of categorical data:
+
+. . .
+
+**Nominal**: categorical variables having unordered scales
+
+* Examples: race, gender, species, etc,
+
+. . .
+
+**Ordinal**: ordered categories; levels with a meaningful order
+
+* Examples: education level, grades, ranks
+
+## Factors in `R`
+
+* In `R`, factors are used to work with categorical variables
+
+. . .
+
+* `R` treats factors as ordinal; defaults to alphabetical
+
+  * May need to manually define the factor levels (e.g., the reference level)
+
+```{r}
+class(penguins$species)
+levels(penguins$species)
+```
+
+. . .
+
+* See the [`forcats`](https://forcats.tidyverse.org/) package (automatically loaded with `tidyverse`)
+
+## Summarizing 1D categorical data
+
+* Setup: a single column of categorical data (i.e., 1D categorical data)
+
+. . .
+
+* Frequency tables (counts) are the most common form of non-graphical EDA
+
+```{r}
+table(penguins$species)
+```
+
+. . .
+
+* Proportion tables
+
+```{r}
+prop.table(table(penguins$species))
+```
+
+## Visualizing 1D categorical data: Area plots
+
+```{r}
+#| echo: false
+knitr::include_graphics("https://clauswilke.com/dataviz/directory_of_visualizations_files/figure-html/proportions-1.png")
+```
+
+* Each area corresponds to one categorical level
+
+* Area is proportional to counts/frequencies/percentages
+
+* Differences between areas correspond to differences between counts/frequencies/percentages
+
+## Bar charts
+
+::: columns
+::: {.column}
+
+Create a bar chart with `geom_bar()`
+
+* Map `species` to the x-axis
+
+* Counts of each category are displayed on the y-axis
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = species)) +
+  geom_bar()
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 10
+penguins |> 
+  ggplot(aes(x = species)) +
+  geom_bar()
+```
+:::
+:::
+
+## Behind the scenes of `geom_bar()`
+
+* Start with the data
+
+* Aggregate and count the number of observations in each bar
+
+* Map to plot aesthetics
+
+<center>
+![](https://r4ds.hadley.nz/images/visualization-stat-bar.png){width=1300}
+</center>
+
+## Flip your bar charts!
+
+::: columns
+::: {.column}
+
+Just simply replace `x` with `y` (Quang prefers this way)
+
+```{r}
+#| eval: false
+penguins |>
+  ggplot(aes(y = species)) +
+  geom_bar()
+```
+
+Or use `coord_flip()`
+
+```{r}
+#| eval: false
+#| fig-height: 10
+penguins |> 
+  ggplot(aes(x = species)) +
+  geom_bar() +
+  coord_flip()
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig.height: 8
+penguins |> 
+  ggplot(aes(x = species)) +
+  geom_bar() +
+  coord_flip()
+```
+:::
+:::
+
+## Crimes against bar charts
+
+<center>
+![](https://venngage-wordpress.s3.amazonaws.com/uploads/2021/01/womenicons.jpg){height=700}
+</center>
+
+
+## Crimes against bar charts
+
+<center>
+![](https://external-preview.redd.it/VZba9uBFSw_Z_8eCF_XV_NYnQjfCm87Org180UEDiog.jpg?auto=webp&s=e6c4ae8f40a55dffb8dc0d2c7f73e8e3b845200d){height=700}
+</center>
+
+## Spine charts
+
+A single bar, with height/width divided into different categories
+
+::: columns
+::: {.column width="45%"}
+
+* Height is proportional to counts (proportions)
+
+```{r}
+#| fig-height: 7
+penguins |> 
+  ggplot(aes(fill = species, x = "")) +
+  geom_bar()
+```
+
+:::
+
+::: {.column width="55%"}
+
+* Width is proportional to counts (proportions)
+
+```{r}
+#| fig-height: 3
+penguins |> 
+  ggplot(aes(fill = species, y = "")) +
+  geom_bar()
+```
+
+:::
+
+:::
+
+## Pie charts
+
+::: columns
+::: {.column}
+
+* Circle is divided up into (pie) slices
+
+* One slice for each category
+
+* $\text{Area}_{\text{ total}}= \pi r^2$
+
+* $\displaystyle \text{Area}_{\text{ slice}}= \frac{\pi r^2 \theta}{360^\circ}$
+
+* Angle $\theta$ is proportional is counts (proportions)
+
+* What about radius?
+
+* **Why are pie charts bad in general?**
+
+:::
+
+::: {.column}
+
+```{r}
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(fill = species, x = "")) +
+  geom_bar() +
+  coord_polar(theta = "y")
+```
+
+:::
+
+:::
+
+## [**Friends Don't Let Friends Make Pie Chart**](https://github.com/cxli233/FriendsDontLetFriends#10-friends-dont-let-friends-make-pie-chart)
+
+<center>
+![](https://raw.githubusercontent.com/cxli233/FriendsDontLetFriends/refs/heads/main/Results/dont_pie_chart.png){height=700}
+</center>
+
+## Ugh...
+
+<center>
+![](https://flowingdata.com/wp-content/uploads/2009/11/Fox-News-pie-chart.png){height=600}
+</center>
+
+## :)
+
+<center>
+![](https://jr.co.il/humor/humor105.jpg){height=600}
+</center>
+
+## Rose diagrams
+
+::: columns
+::: {.column}
+
+* Circle sections for each category (like pie charts)
+
+* All sections ("petals") have the same width/arc/angle
+
+* Radius of each section is proportional to category frequency
+
+* Made popular by [Florence Nightingale](https://en.wikipedia.org/wiki/Florence_Nightingale)
+
+* **Only use circular plots if circular context has actual meaning**
+
+:::
+
+::: {.column}
+
+```{r}
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = species)) +
+  geom_bar(fill = "midnightblue") +
+  coord_polar()
+```
+
+:::
+
+:::
+
+## [**Florence Nightingale's**](https://www.datavis.ca/gallery/flo.php) Rose Diagram 
+
+<center>
+![](https://daily.jstor.org/wp-content/uploads/2020/08/florence_nightingagle_data_visualization_visionary_1050x700.jpg){height=700}
+</center>
+
+## Graphic critique
+
+<https://www.nytimes.com/interactive/2024/05/13/climate/home-insurance-profit-us-states-weather.html>

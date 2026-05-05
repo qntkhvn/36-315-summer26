@@ -59,7 +59,7 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 **Anscombe's quartet**
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -77,7 +77,7 @@ anscombe |>
 ```
 :::
 
-::: {.column width="50%"}
+::: {.column}
 
 <br>
 
@@ -133,7 +133,7 @@ datasauRus::datasaurus_dozen |>
 
 <center>![](https://raw.githubusercontent.com/ryurko/SURE22-examples/main/figures/lecture_examples/nyt_ex.png){width="1400"}</center>
 
-## [The grammar of graphics](https://link.springer.com/book/10.1007/0-387-28695-0)
+## [**The grammar of graphics**](https://link.springer.com/book/10.1007/0-387-28695-0)
 
 * Key idea: specify plotting "layers" and combine them to produce a graphic
 * `ggplot2` provides an implementation of the grammar of graphics, with the following layers 
@@ -194,7 +194,7 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 <br>
 
 ```{r}
@@ -217,7 +217,7 @@ mpg |>
 So far, nothing is displayed
 :::
 
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -229,7 +229,7 @@ ggplot(data = mpg)
 ## Specifying variables and geometric object
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 
 ```{r}
 #| eval: false
@@ -244,7 +244,7 @@ mpg |>
 
 :::
 
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -289,7 +289,7 @@ mpg |>
 Remember: one scale for each mapped variable
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 <br>
 
 ```{r}
@@ -311,7 +311,7 @@ mpg |>
 
 :::
 
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -329,7 +329,7 @@ mpg |>
 ## Always label your plots! (seriously...)
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 <br>
 
 ```{r}
@@ -352,7 +352,7 @@ mpg |>
 * Each mapped aesthetic can be labeled
 :::
 
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -376,7 +376,7 @@ mpg |>
 ## Changing aesthetics without mapping variables
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 <br>
 
 ```{r}
@@ -389,7 +389,7 @@ mpg |>
 * Manually set the `color`, `size`, and `alpha` (transparency) of the point layer
 :::
 
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 9
@@ -444,7 +444,7 @@ mpg |>
 ## Faceting
 
 ::: columns
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| eval: false
 mpg |> 
@@ -459,7 +459,7 @@ mpg |>
 
 :::
 
-::: {.column width="50%"}
+::: {.column}
 ```{r}
 #| echo: false
 #| fig-height: 10

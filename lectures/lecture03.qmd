@@ -1,0 +1,655 @@
+---
+title: "Statistical inference for 1D categorical data"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+```
+
+## What does a bar chart show?
+
+**Marginal distribution**: probability that a categorical variable $X$ (e.g., `species`) takes each particular category value $x$ (`Adelie`, `Chinstrap`, `Gentoo`)
+
+* Frequency bar charts give info about sample size
+
+```{r}
+table(penguins$species)
+```
+
+* Now, we create a proportion/percent bar chart to display the individual probabilities
+
+* This shows the probability mass function (PMF) for discrete variables
+
+  * e.g., $P($`species` $=$ `Adelie`$)$
+  
+```{r}
+prop.table(table(penguins$species))
+```
+
+## Proportion bar charts
+
+::: columns
+::: {.column}
+
+* Compute proportions "by hand" with `count()` and `mutate()`
+
+* Use the pipe operator `|>` to perform multiple operations
+
+* Use `geom_col()`, since we want the heights of the bars to represent values in the data
+
+```{r}
+library(tidyverse)
+penguins |>
+  count(species) |> 
+  mutate(prop = n / sum(n))
+```
+
+:::
+
+::: {.column}
+
+```{r}
+#| fig-height: 8
+penguins |>
+  count(species) |> 
+  mutate(prop = n / sum(n)) |> 
+  ggplot(aes(x = species, y = prop)) +
+  geom_col()
+```
+:::
+:::
+
+## Statistical inference for proportions
+
+* Estimate $P($`species` = $C_j$ ) with $\hat p_j$ for each category $C_j$ ( $\hat p_\texttt{Adelie}$, $\hat p_\texttt{Chinstrap}$, $\hat p_\texttt{Gentoo}$ )
+
+```{r}
+prop.table(table(penguins$species))
+```
+
+* Quantify uncertainty for $\displaystyle \hat p_j = \frac{n_j}{n}$ with the standard error $$\textsf{se}(\hat{p}_j) = \sqrt{\frac{\hat{p}_j(1 - \hat{p}_j)}{n}}$$
+
+* Compute $\alpha$-level **confidence interval** $\hat{p}_j \pm z_{1 - \alpha / 2} \cdot \textsf{se}(\hat{p}_j)$
+
+* Good rule-of-thumb: construct 95% confidence interval using $\hat{p}_j \pm 2 \cdot \textsf{se}(\hat{p}_j)$
+
+:::aside
+The CI is based on a normal approximation justfied by the Central Limit Theorem. (Note: the CI could include values outside of $[0,1]$...)<br>To get CI for counts, just multiply $\hat p$ by $n$.
+:::
+
+## Adding confidence intervals to bar chart
+
+::: columns
+::: {.column}
+<br>
+
+```{r}
+#| eval: false
+penguins |> 
+  count(species) |> 
+  mutate(prop = n / sum(n),
+         se = sqrt(prop * (1 - prop) / sum(n)),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se) |> 
+  ggplot(aes(x = prop, y = species)) +
+  geom_col() +
+  geom_errorbar(aes(xmin = lower, xmax = upper), 
+                color = "blue", 
+                width = 0.2, 
+                linewidth = 1)
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 10
+penguins |> 
+  count(species) |> 
+  mutate(prop = n / sum(n),
+         se = sqrt(prop * (1 - prop) / sum(n)),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se) |> 
+  ggplot(aes(x = prop, y = species)) +
+  geom_col() +
+  geom_errorbar(aes(xmin = lower, xmax = upper), 
+                color = "blue", width = 0.2, linewidth = 1)
+```
+:::
+:::
+
+## Ordering factors in a bar chart
+
+::: columns
+::: {.column}
+Order the bars by proportion
+
+```{r}
+#| eval: false
+penguins |> 
+  count(species) |> 
+  mutate(prop = n / sum(n),
+         se = sqrt(prop * (1 - prop) / sum(n)),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se,
+         species = fct_reorder(species, prop)) |> 
+  ggplot(aes(x = prop, y = species)) +
+  geom_col() +
+  geom_errorbar(aes(xmin = lower, xmax = upper), 
+                color = "blue", 
+                width = 0.2, 
+                linewidth = 1)
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 10
+penguins |> 
+  count(species) |> 
+  mutate(prop = n / sum(n),
+         se = sqrt(prop * (1 - prop) / sum(n)),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se,
+         species = fct_reorder(species, prop)) |> 
+  ggplot(aes(x = prop, y = species)) +
+  geom_col() +
+  geom_errorbar(aes(xmin = lower, xmax = upper), 
+                color = "blue", 
+                width = 0.2, 
+                linewidth = 1)
+```
+:::
+:::
+
+## Don't do this... (Look closely...)
+
+<center>
+![](https://retractionwatch.com/wp-content/uploads/2022/12/3802603.fig_.009-768x512.png){height=700}
+<center>
+
+## Statistical inference: hypothesis testing in general
+
+Computing $p$-values works like this:
+
+* Choose a test statistic
+
+* Compute the test statistic using the data
+
+* Is test statistic "unusual" compared to what we would expect under the null?
+
+* Compare $p$-value to the target error rate ("significance level") $\alpha$
+
+  * Typically choose $\alpha = 0.05$ ([the origins of 0.05](https://www2.psych.ubc.ca/~schaller/528Readings/CowlesDavis1982.pdf))
+  
+  * In other words, if we reject the null hypothesis at $\alpha = 0.05$, then, assuming $H_0$ is true, there is a 5% chance it is a false positive (also known as Type 1 error)
+
+## Chi-squared test for 1D categorical data
+
+::: columns
+::: {.column}
+
+* Null hypothesis: $H_0$: $p_1 = p_2 = \cdots = p_K$
+
+* Test statistic: $\displaystyle \chi^2 = \sum_{j=1}^K \frac{(O_j - E_j)^2}{E_j}$, where
+
+  * $O_j$: observed counts in category $j$
+
+  * $E_j$ : expected counts under $H_0$<br>(each category is equally likely to occur with probability $n/K = p_1 = p_2 = \cdots = p_K$)
+  
+:::
+
+::: {.column}
+
+<br>
+
+```{r}
+chisq.test(table(penguins$species))
+```
+
+:::
+:::
+
+## Graphics versus statistical inference
+
+::: columns
+::: {.column width="57%"}
+
+Reminder: **Anscombe’s Quartet**
+
+```{r}
+#| echo: false
+#| fig-height: 8
+anscombe |> 
+  pivot_longer(everything(),
+               cols_vary = "slowest",
+               names_to = c(".value", "set"),
+               names_pattern = "(.)(.)") |> 
+  ggplot(aes(x, y)) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkorange", fullrange = TRUE) +
+  geom_point(size = 4) +
+  facet_wrap(~ set) +
+  theme_light(base_size = 20)
+```
+
+:::
+
+::: {.column width="43%"}
+
+<br>
+
+* Statistical inference is the same,<br>but the graphics are very different
+
+* The opposite can be true!
+
+* Graphics can be the same,<br>but statistical inference is very different
+
+:::
+:::
+
+
+## Toy example: 3 categories, $p_1 = 1/2,\ p_2 = p_3 = 1/4$
+
+```{r}
+#| echo: false
+#| fig-width: 7
+fake_counts <- tibble(fake_group = c("A", "A", "B", "C"))
+fake_chisq_test_results <- chisq.test(table(fake_counts$fake_group))
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue") +
+  scale_y_continuous(breaks = c(0, 1, 2)) +
+  coord_flip() +
+  labs(title = paste0("n = ", nrow(fake_counts),
+                      "; p-value = ",
+                      signif(fake_chisq_test_results$p.value, digits = 2))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 22, hjust = 0.5, color = NA),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 16))
+```
+
+## Toy example: 3 categories, $p_1 = 1/2,\ p_2 = p_3 = 1/4$
+
+```{r}
+#| echo: false
+#| fig-width: 7
+# Init the fake data
+fake_counts <- tibble(fake_group = c("A", "A", "B", "C"))
+# Run and store the chi-square test:
+fake_chisq_test_results <- chisq.test(table(fake_counts$fake_group))
+# Create the plot
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue") +
+  scale_y_continuous(breaks = c(0, 1, 2)) +
+  coord_flip() +
+  labs(title = paste0("n = ", nrow(fake_counts),
+                      "; p-value = ",
+                      signif(fake_chisq_test_results$p.value, digits = 2))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 16))
+```
+
+
+## Toy example: 3 categories, $p_1 = 1/2,\ p_2 = p_3 = 1/4$
+
+```{r}
+#| echo: false
+#| fig-width: 7
+fake_counts <- tibble(fake_group = c(rep("A", 8), 
+                                     rep("B", 4), rep("C", 4)))
+# Run and store the chi-square test:
+fake_chisq_test_results <- chisq.test(table(fake_counts$fake_group))
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue") +
+  coord_flip() +
+  labs(title = paste0("n = ", nrow(fake_counts),
+                      "; p-value = ",
+                      signif(fake_chisq_test_results$p.value, digits = 2))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 16))
+```
+
+## Toy example: 3 categories, $p_1 = 1/2,\ p_2 = p_3 = 1/4$
+
+```{r}
+#| echo: false
+#| fig-width: 7
+# Init the fake data
+fake_counts <- tibble(fake_group = c(rep("A", 32), 
+                                     rep("B", 16), rep("C", 16)))
+# Run and store the chi-square test:
+fake_chisq_test_results <- chisq.test(table(fake_counts$fake_group))
+# Create the plot
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue") +
+  scale_y_continuous(breaks = c(0, 8, 16, 24, 32)) +
+  coord_flip() +
+  labs(title = paste0("n = ", nrow(fake_counts),
+                      "; p-value = ",
+                      signif(fake_chisq_test_results$p.value, digits = 2))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 16))
+```
+
+## Power under this scenario: $2n/4, n/4, n/4$
+
+```{r}
+#| echo: false
+# Iterate through a sequence of sample sizes to compute the pvalue:
+chisq_power_table <- map(
+  seq(4, 100, by = 4),
+  # Apply the following function to each value
+  function(x) {
+    # Init the fake data:
+    fake_data <- tibble(fake_group = c(rep("A", 2 * x / 4),
+                                       rep("B", x / 4), rep("C", x / 4)))
+    
+    # Run and store the chi-square test:
+    fake_results <- chisq.test(table(fake_data$fake_group))
+    
+    # Return a table with the p-value and n:
+    tibble("n" = x, "pval" = fake_results$p.value)
+  }
+) |>
+  list_rbind()
+
+# Plot the results:
+chisq_power_table |>
+  # Note the use of 
+  ggplot(aes(x = n, y = pval)) +
+  # Draw a line layer to connect the points 
+  geom_line(color = "gray", linewidth = 1.5) +
+  geom_point(color = "black", size = 3) +
+  # Add a horizontal line at 0.05:
+  geom_hline(yintercept = 0.05, linetype = "dashed", 
+             color = "darkorange", linewidth = 1.5) +
+  scale_x_continuous(breaks = seq(0, 100, by = 20)) +
+  theme_light() +
+  labs(x = "Sample size", y = "p-value") +
+  theme(axis.title = element_text(size = 16),
+        axis.text = element_text(size = 15))
+```
+
+## How do we combine graphics with inference?
+
+* Simply add $p$-values (or other info) to graph via text
+
+* Add confidence intervals to the graph
+
+  * Need to remember what each CI is for
+  
+  * The CIs on previous slides are for each $\hat{p}_j$ marginally, **NOT** jointly
+
+  * Have to be careful with **multiple testing**
+
+## Confidence intervals visually capture uncertainty
+
+::: columns
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+# Init the fake data
+fake_counts <- tibble(fake_group = c("A", "A", "B", "C"))
+# Compute the summary with standard errors:
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  group_by(fake_group) |>
+  summarize(count = n(), .groups = "drop") |>
+  mutate(total = sum(count),
+         prop = count / total,
+         se = sqrt(prop * (1 - prop) / total),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se) |>
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue",
+           aes(y = prop),
+           stat = "identity") +
+  geom_errorbar(aes(ymin = lower,
+                    ymax = upper),
+                color = "darkorange",
+                width = 0.25, 
+                linewidth = 2) +
+  coord_flip() +
+  labs(title = paste0("n = ", nrow(fake_counts))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 32, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 25))
+```
+
+:::
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+# Init the fake data
+fake_counts <- tibble(fake_group = c(rep("A", 32), 
+                                     rep("B", 16), rep("C", 16)))# Compute the summary with standard errors:
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  group_by(fake_group) |>
+  summarize(count = n(), .groups = "drop") |>
+  mutate(total = sum(count),
+         prop = count / total,
+         se = sqrt(prop * (1 - prop) / total),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se) |>
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue",
+           aes(y = prop),
+           stat = "identity") +
+  geom_errorbar(aes(ymin = lower,
+                    ymax = upper),
+                color = "darkorange",
+                width = 0.25, 
+                linewidth = 2) +
+  scale_y_continuous(limits = c(0, 1)) +
+  coord_flip() +
+  labs(title = paste0("n = ", nrow(fake_counts))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 32, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 25))
+```
+
+:::
+
+:::
+
+## (Rough) Rules-of-thumb for comparing CIs on bar charts
+
+Comparing overlap of two CIs is **NOT** exactly the same as directly testing for a significant difference...
+
+* Really we want CI( $\hat{p}_1 - \hat{p}_2$ ), not CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ )
+  
+* CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ ) not overlapping implies $0 \notin$ CI( $\hat{p}_1 - \hat{p}_2$ )
+
+* CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ ) overlapping **DOES NOT** imply $0 \in$ CI( $\hat{p}_1 - \hat{p}_2$ ) 
+
+. . .
+
+Roughly speaking:
+
+* If CIs don't overlap: significant difference
+  
+* If CIs overlap a little: ambiguous
+  
+* If CIs overlap a lot: no significant difference
+
+. . .
+
+But if we're comparing more than two CIs simultaneously, we need to account for **multiple testing**
+
+  * When you look for all non-overlapping CIs: implicitly making $\displaystyle \binom{K}{2}$ pairwise tests in your head
+
+## Corrections for multiple testing
+
+* In those bar plots, when we determine whether CIs overlap, we make 3 comparisons:
+
+  1. A vs B
+
+  2. A vs C
+
+  3. B vs C
+
+. . .
+  
+* **This is a multiple testing (or multiple comparison) problem**
+
+. . .
+
+* In short: we will make Type 1 errors (chance of false rejection) more than 5% of the time!
+
+* Type 1 error: reject $H_0$ when $H_0$ is true
+
+* e.g., CIs don't overlap but actually $H_0: p_A = p_B$ is true
+  
+* If only interested in A vs B and nothing else, then just construct 95% CI for A vs B and control error rate at 5%
+  
+* However, if we construct several CIs, where A vs B is just one comparison we make, our Type 1 error rate is > 5%!
+
+## Corrections for multiple testing
+
+Basic idea:
+
+* Corrections for multiple testing inflate $p$-values (i.e., make them bigger)
+
+* Equivalently, they inflate CIs (i.e., make them wider)
+
+* Goal: control Type 1 error rate $\leq 5\%$
+
+. . .
+
+**Bonferroni correction**, which inflates $p$-values the most but is simple and easy to implement
+
+. . .
+
+* We usually reject null hypothesis when $p$-value $\leq 0.05$
+
+* **Bonferroni**: if making $K$ comparisons, reject only if $p$-value $\leq 0.05/K$
+
+* For CIs: instead of plotting 95% CIs, we plot $(1 - 0.05/K)%$% CIs
+
+  * e.g., when $K = 3$, plot 98.33% CIs
+  
+
+## Impact of Bonferroni correction on confidence intervals
+
+::: columns
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+# Init the fake data
+fake_counts <- tibble(fake_group = c(rep("A", 32), 
+                                     rep("B", 16), rep("C", 16)))# Compute the summary with standard errors:
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  group_by(fake_group) |>
+  summarize(count = n(), .groups = "drop") |>
+  mutate(total = sum(count),
+         prop = count / total,
+         se = sqrt(prop * (1 - prop) / total),
+         lower = prop - 2 * se,
+         upper = prop + 2 * se) |>
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue",
+           aes(y = prop),
+           stat = "identity") +
+  geom_errorbar(aes(ymin = lower,
+                    ymax = upper),
+                color = "darkorange",
+                width = 0.25, 
+                linewidth = 2) +
+  scale_y_continuous(limits = c(0, 1)) +
+  coord_flip() +
+  labs(title = paste0("No correction; n = ", nrow(fake_counts))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 32, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 25))
+```
+
+
+:::
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+# Init the fake data
+fake_counts <- tibble(fake_group = c(rep("A", 32), 
+                                     rep("B", 16), rep("C", 16)))# Compute the summary with standard errors:
+fake_counts |>
+  mutate(fake_group = factor(fake_group, levels = c("C", "B", "A"))) |> 
+  group_by(fake_group) |>
+  summarize(count = n(), .groups = "drop") |>
+  mutate(total = sum(count),
+         prop = count / total,
+         se = sqrt(prop * (1 - prop) / total),
+         lower = prop - qnorm(1 - .05 / 3 / 2) * se,
+         upper = prop + qnorm(1 - .05 / 3 / 2) * se) |>
+  ggplot(aes(x = fake_group)) +
+  geom_bar(fill = "darkblue",
+           aes(y = prop),
+           stat = "identity") +
+  geom_errorbar(aes(ymin = lower,
+                    ymax = upper),
+                color = "darkorange",
+                width = 0.25, 
+                linewidth = 2) +
+  scale_y_continuous(limits = c(0, 1)) +
+  coord_flip() +
+  labs(title = paste0("Bonferroni correction; n = ", nrow(fake_counts))) +
+  theme_light() +
+  theme(plot.title = element_text(size = 32, hjust = 0.5),
+        axis.title = element_blank(),
+        axis.text = element_text(size = 25))
+```
+
+:::
+:::

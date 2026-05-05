@@ -23,7 +23,9 @@ format:
 
 * TBA
 
-<!-- * Lecture 1: The grammar of graphics and ggplot2 [slides](lectures/graphics.qmd) -->
+<!-- * Lecture 1: The grammar of graphics and ggplot2 [slides](lectures/lecture01.qmd) -->
+<!-- * Lecture 2: Visualizing 1D categorical data [slides](lectures/lecture02.qmd) -->
+<!-- * Lecture 3: Statistical inference for 1D categorical data  [slides](lectures/lecture03.qmd) -->
 
 ## Labs
 
