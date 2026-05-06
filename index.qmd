@@ -26,12 +26,15 @@ format:
 <!-- * Lecture 1: The grammar of graphics and ggplot2 [slides](lectures/lecture01.qmd) -->
 <!-- * Lecture 2: Visualizing 1D categorical data [slides](lectures/lecture02.qmd) -->
 <!-- * Lecture 3: Statistical inference for 1D categorical data  [slides](lectures/lecture03.qmd) -->
+<!-- * Lecture 4: Visualizations and inference for 2D categorical data  [slides](lectures/lecture04.qmd) -->
 
 ## Labs
 
 * TBA
 
 <!-- * Lab 1: [assignment](labs/lab1.qmd) -->
+<!-- * Lab 2: [assignment](labs/lab2.qmd) -->
+<!-- * Lab 3: [assignment](labs/lab3.qmd) -->
 
 ## Homework
 

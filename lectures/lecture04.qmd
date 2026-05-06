@@ -1,0 +1,472 @@
+---
+title: "Visualizations and inference for 2D categorical data"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+```
+
+## Summarizing 2D categorical data
+
+```{r}
+library(tidyverse)
+titanic <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/titanic.csv") |> 
+  filter(!is.na(Survived) & !is.na(Pclass)) |> 
+  mutate(Survived = factor(Survived),
+         Pclass = factor(Pclass))
+```
+
+Using the titanic data, let's look at:
+
+* `Survived`: survival outcome (0/1)
+
+```{r}
+table(titanic$Survived)
+```
+
+* `Class`: cabin class (1st/2nd/3rd)
+
+```{r}
+table(titanic$Pclass)
+```
+
+## Summarizing 2D categorical data
+
+Two-way table (or contingency table, cross tabulation, crosstab)
+
+<br>
+
+```{r}
+table("Survived" = titanic$Survived, "Pclass" = titanic$Pclass)
+```
+
+<br>
+
+```{r}
+xtabs(~ Survived + Pclass, data = titanic)
+```
+
+
+## Joint, marginal, and conditional distributions
+
+```{r}
+xtabs(~ Survived + Pclass, data = titanic) |> 
+  addmargins()
+```
+
+* Column and row sums: marginal distributions
+
+* Values within rows: conditional distribution for `Pclass` given `Survived`
+
+* Values within columns: conditional distribution for `Survived` given `Pclass`
+
+* Values within cells: joint distribution for `Survived` and `Pclass`
+
+* Bottom right: total number of observations
+
+## Joint, marginal, and conditional probabilities
+
+::: columns
+::: {.column}
+
+* Joint distribution: the intersection
+
+  * e.g., $P(\texttt{Survived} = 1, \texttt{Pclass} = 3)$
+
+* Marginal distribution: row sums or column sums
+
+  * e.g., $P(\texttt{Survived} = 1)$, $P(\texttt{Pclass} = 3)$
+
+* Conditional distribution:<br>probability of $\texttt{Survived}$ given $\texttt{Pclass}$
+
+  * e.g., $P(\texttt{Survived} = 1 \mid \texttt{Pclass} = 3)$
+
+    $\displaystyle \qquad \quad = \frac{P(\texttt{Survived} = 1, \texttt{Pclass} = 3)}{P(\texttt{Pclass} = 3)}$
+:::
+
+::: {.column}
+
+<br>
+
+```{r}
+table(titanic$Survived, titanic$Pclass)
+```
+
+<br>
+
+```{r}
+prop.table(table(titanic$Survived, titanic$Pclass))
+```
+
+:::
+:::
+
+
+## Connecting distributions to visualizations
+
+* For two categorical variables $A$ and $B$
+
+  * Marginal distributions: $P(A)$ and $P(B)$
+
+  * Conditional distributions: $P(A \mid B)$ and $P(B \mid A)$
+
+  * Joint distribution: $P(A, B)$
+  
+. . .
+
+* We use bar charts to visualize marginal distributions for categorical variables...
+
+. . . 
+
+* And we will use more bar charts (**stacked** and **side-by-side**) to visualize conditional and joint distributions
+
+## Stacked bar charts
+
+::: columns
+::: {.column}
+* Stacked bar chart: a bar chart of spine charts
+
+* Easy to see marginal of `Survived`
+
+  * i.e., $P($`x`$)$
+
+* Can see conditional of `Pclass` | `Survived` 
+
+  * i.e., $P($`fill` $\mid$ `x`$)$
+
+* Harder to see conditional of `Survived` | `Pclass`
+
+  * i.e., $P($`x` $\mid$ `fill`$)$
+
+```{r}
+#| eval: false
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) +
+  geom_bar() 
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) +
+  geom_bar() 
+```
+:::
+:::
+
+
+## Side-by-side bar charts
+
+::: columns
+::: {.column}
+* Side-by-side (grouped/dodged) bar chart: a bar chart of bar charts
+
+* Easy to see conditional of `Pclass` | `Survived` 
+
+  * i.e., $P($`fill` $\mid$ `x`$)$
+
+* Can see conditional of `Survived` | `Pclass` 
+
+  * i.e., $P($`x` $\mid$ `fill`$)$
+
+* Harder to see marginals...
+
+```{r}
+#| eval: false
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) +
+  geom_bar(position = "dodge")
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) +
+  geom_bar(position = "dodge")
+```
+:::
+:::
+
+## Which one do you prefer?
+
+::: columns
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) +
+  geom_bar() 
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) +
+  geom_bar(position = "dodge") 
+```
+:::
+:::
+
+## Categorical heatmaps
+
+::: columns
+::: {.column}
+
+* Use `geom_tile` to display joint distribution of two categorical variables
+
+* Annotate tiles with labels of percentages using `geom_text()`
+
+```{r}
+#| eval: false
+titanic |>
+  group_by(Survived, Pclass) |>
+  summarize(n = n(), 
+            joint = n() / nrow(titanic),
+            txt = paste(round(100 * joint, 2), "%")) |> 
+  ggplot(aes(x = Survived, y = Pclass)) +
+  geom_tile(aes(fill = n), color = "white") +
+  geom_text(aes(label = txt)) +
+  scale_fill_gradient2()
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 11
+titanic |>
+  group_by(Survived, Pclass) |>
+  summarize(n = n(), 
+            joint = n() / nrow(titanic),
+            txt = paste(round(100 * joint, 2), "%")) |> 
+  ggplot(aes(x = Survived, y = Pclass)) +
+  geom_tile(aes(fill = n), color = "white") +
+  geom_text(aes(label = txt)) +
+  scale_fill_gradient2()
+```
+:::
+:::
+
+## Inference for 2D categorical data: Chi-squared test
+
+::: columns
+::: {.column}
+* **Null hypothesis** ($H_0$) : variables $A$ and $B$ are independent of each other
+
+  * e.g., no association between<br>`Survived` and `Pclass`
+
+* Test statistic: $\displaystyle \chi^2 = \sum_i^{k_1} \sum_j^{k_2} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
+
+  * $O_{ij}$: observed counts in contingency table
+
+  * $E_{ij}$: expected counts under $H_0$
+
+$$
+\begin{aligned}
+E_{ij} &= n \cdot P(A = a_i, B = b_j) \\
+&= n \cdot P(A = a_i) P(B = b_j) \\
+&= n \cdot \left( \frac{n_{i \cdot}}{n} \right) \left( \frac{ n_{\cdot j}}{n} \right)
+\end{aligned}
+$$
+:::
+
+::: {.column}
+
+<br>
+<br>
+
+```{r}
+chisq.test(table(titanic$Survived, titanic$Pclass))
+```
+:::
+:::
+
+## Visualizing independence with mosaic plots
+
+Two variables are **independent** if knowing the level of one tells us nothing about the other<br>i.e., $P(A \mid B) = P(A)$, and $P(A, B) = P(A) \times P(B)$
+
+::: columns
+::: {.column}
+
+* Mosaic plots: a spine chart of spine charts
+
+* width: marginal distribution of `Survived` (columns)
+
+* height: conditional of `Pclass` | `Survived`<br>(rows | columns)
+
+* area: joint distribution
+
+**Use a mosaic plot to visually check for independence**: whether all proportions are the same<br>(the boxes line up in a grid)
+
+:::
+
+::: {.column}
+
+```{r}
+#| eval: false
+mosaicplot(table(titanic$Survived, titanic$Pclass),
+           main = "Relationship between survival and cabin class")
+```
+
+
+```{r}
+#| echo: false
+#| fig-height: 8
+par(cex.main = 2)
+mosaicplot(table(titanic$Survived, titanic$Pclass), cex = 2,
+           main = "Relationship between survival and cabin class")
+```
+
+:::
+:::
+
+## Residuals
+
+Recall the test statistic: $\displaystyle \chi^2 = \sum_i^{k_1} \sum_j^{k_2} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
+
+Define the Pearson residuals: $\displaystyle r_{ij} = \frac{O_{ij} - E_{ij}}{\sqrt{E_{ij}}}$
+
+Some rules of thumb:
+
+* $r_{ij} \approx 0$: observed counts are close to expected counts
+
+* $|r_{ij}| > 2$: significant at $\alpha = 0.05$
+
+* very positive $r_{ij}$: higher than expected
+
+* very negative $r_{ij}$: lower than expected
+
+:::aside
+In general, Pearson residuals are computed as $\displaystyle \frac{\text{residuals}}{\sqrt{\text{variance}}}$
+:::
+
+## Mosaic plots with residuals
+
+* Boxes are shaded by Pearson residuals (`shade = TRUE`), reveal which combinations of<br>2 categorical variables (cells) are higher/lower than expected
+
+* From Chi-squared test earlier: `Survival` and `Pclass` are associated. But how?
+
+```{r}
+#| eval: false
+mosaicplot(table(titanic$Survived, titanic$Pclass), shade = TRUE, main = "Relationship between survival and cabin class")
+```
+
+```{r}
+#| echo: false
+#| fig-width: 18
+#| fig-height: 9
+par(cex.main = 2)
+mosaicplot(table(titanic$Survived, titanic$Pclass), cex = 2,
+           shade = TRUE, main = "Relationship between survival and cabin class")
+```
+
+## Mosaic plots with residuals
+
+```{r}
+#| eval: false
+mosaicplot(table(titanic$Sex, titanic$Embarked), shade = TRUE, main = "Passenger sex appears independent of embarkation point")
+```
+
+```{r}
+#| echo: false
+#| fig-width: 18
+#| fig-height: 9
+par(cex.main = 2)
+mosaicplot(table(titanic$Sex, titanic$Embarked), cex = 2,
+           shade = TRUE, main = "Passenger sex appears independent of embarkation point")
+```
+
+## Beyond 2D: faceting
+
+```{r}
+#| fig-width: 16
+#| fig-height: 8
+titanic |> 
+  ggplot(aes(x = Survived, fill = Pclass)) + 
+  geom_bar(position = "dodge") +
+  facet_wrap(~ Sex)
+```
+
+## Mosaic plots in the wild
+
+1000 songs to hear before you die (Source: [The Guardian](https://www.theguardian.com/news/datablog/2009/mar/20/1))
+
+<center>
+![](https://upload.wikimedia.org/wikipedia/commons/8/84/Mosaic-big.png?20090726044211){height=700}
+</center>
+
+## Replication
+
+```{r}
+#| eval: false
+songs <- read_csv("https://raw.githubusercontent.com/ryurko/Spring23-36315-Data/master/1000songs.csv")
+
+songs <- songs |> 
+  mutate(
+    decade = case_when(
+      YEAR <= 1959 ~ "1910s-50s",
+      YEAR %in% 1960:1969 ~ "1960s",
+      YEAR %in% 1970:1979 ~ "1970s",
+      YEAR %in% 1980:1989 ~ "1980s",
+      YEAR %in% 1990:1999 ~ "1990s",
+      YEAR >= 2000 ~ "2000s"
+    )
+   )
+
+mosaicplot(table(songs$decade, songs$THEME), shade = TRUE, las = 1, main = "")
+```
+
+## Replication
+
+```{r}
+#| echo: false
+#| fig-height: 9
+#| fig-width: 15
+songs <- read_csv("https://raw.githubusercontent.com/ryurko/Spring23-36315-Data/master/1000songs.csv")
+
+songs <- songs |> 
+  mutate(
+    decade = case_when(
+      YEAR <= 1959 ~ "1910s-50s",
+      YEAR %in% 1960:1969 ~ "1960s",
+      YEAR %in% 1970:1979 ~ "1970s",
+      YEAR %in% 1980:1989 ~ "1980s",
+      YEAR %in% 1990:1999 ~ "1990s",
+      YEAR >= 2000 ~ "2000s"
+    )
+   )
+
+mosaicplot(table(songs$decade, songs$THEME), shade = TRUE, las = 1, main = "", cex = 1.5)
+```

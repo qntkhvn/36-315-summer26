@@ -30,6 +30,33 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 
 ## What does a bar chart show?
 
+::: columns
+::: {.column}
+
+```{r}
+#| eval: false
+library(tidyverse)
+penguins |>
+  ggplot(aes(y = species)) +
+  geom_bar()
+```
+
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 8
+library(tidyverse)
+penguins |>
+  ggplot(aes(y = species)) +
+  geom_bar()
+```
+:::
+:::
+
+## What does a bar chart show?
+
 **Marginal distribution**: probability that a categorical variable $X$ (e.g., `species`) takes each particular category value $x$ (`Adelie`, `Chinstrap`, `Gentoo`)
 
 * Frequency bar charts give info about sample size
@@ -60,7 +87,6 @@ prop.table(table(penguins$species))
 * Use `geom_col()`, since we want the heights of the bars to represent values in the data
 
 ```{r}
-library(tidyverse)
 penguins |>
   count(species) |> 
   mutate(prop = n / sum(n))

@@ -1,0 +1,299 @@
+---
+title: "Lab 2"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Inference for 1D categorical data (35pts)
+
+Bar charts are usually easier to read than spine charts, pie charts, and rose diagrams. There are several ways we can add even more useful information to bar charts, as we'll explore throughout this lab.
+
+In this problem, we'll use a dataset on IMDb rated movies, TV series, etc., which can be loaded with the code below.
+
+```{r}
+library(tidyverse)
+imdb <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/imdb.csv")
+```
+
+Here is a description of the variables:
+
+* `Title`: movie title
+* `Directors`: movie director(s)
+* `vote_date`: date of movie rating
+* `day_of_week`: day of week for `vote_date`
+* `weekend`: whether `vote_date` is on the weekend
+* `ratings`: Low (0--4), Med (4--7), or High (8--10)
+* `movie_period`: release period for movie: Retro (before 1981), Old (1981--2000), Modern (2001--2018)
+
+## A (5pts) 
+
+First, let us find the most frequent directors that appear in this dataset. Code is provided below.
+
+```{r}
+imdb |> 
+  group_by(Directors) |> 
+  summarize(count = n()) |> 
+  filter(count == max(count))
+```
+
+What is the above code doing? In particular, what is the purpose of `filter(count == max(count))`?
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+We now examine the marginal distributions of the `movie_period` and `duration` variables. (A marginal distribution shows how a single variable is distributed on its own, ignoring any other variables in the dataset.)
+
+First, let's calculate the counts, proportions, and percentages of each variable. 
+
+The following code is provided for `duration`:
+
+```{r}
+# Get counts, proportions, and percentages for duration
+duration_marginal <- imdb |>
+  group_by(duration) |>
+  summarize(count = n(), 
+            total = nrow(imdb),
+            proportion = round(count / total, 4),
+            percentage = proportion * 100)
+duration_marginal
+```
+
+Notice that within the `summarize()` function, we can sequentially define a new variable, and then refer to that new variable later on. For example, within `summarize()`, we first define a variable `total`, and then we refer to `total` when defining `proportion`.
+
+Now write the same code for `movie_period`:
+
+```{r}
+# YOUR CODE HERE
+```
+
+Report your general observations in one sentence for each variable.
+
+**YOUR ANSWER HERE**
+
+## C (5pts) 
+
+Marginal distributions are usually communicated with proportions or percentages.
+The goal of this question is to make a bar chart of `duration` on the **percentage** scale instead of the count scale. In other words, we'd like to make a bar chart where `duration` is on the x-axis and the `percentage` of each duration is on the y-axis. Note that `duration_marginal` has exactly this information.
+
+Modify the template code below to create a bar chart with one bar for each `duration`, where the bar height corresponds to the `percentage` of each duration. After you've made the plot, add appropriate titles, labels, and a non-default color.
+
+Note that the code below uses `geom_col()`, since we want the heights of the bars to represent values in the data. Read more about the differences between `geom_bar()` and `geom_col()` [here](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+
+```{r}
+# fill in the ?s below to make the desired plot
+# ? |>
+#   ggplot(aes(x = ?, y = ?)) + 
+#   geom_col()
+```
+
+## D (5pts) 
+
+Your friend thinks there are equal proportions of short, medium, and long movies in this dataset. Using your bar chart from Part C, do you think your friend is right? (This time, just use your common statistical sense. Given the sample size and the difference in the bars, do you think there is probably a significant difference?)
+
+**YOUR ANSWER HERE**
+
+## E (10pts) 
+
+Let's test this statistically. Run a chi-squared test using `chisq.test(duration_marginal$?)` to check your friend's assertion. (Replace `?` with an appropriate variable.)
+
+```{r}
+# YOUR CODE HERE
+```
+
+After you run the test, answer the following questions:
+
++  What is the p-value for this test?  
+
+**YOUR ANSWER HERE**
+
++  What is your conclusion from this test (in the context of this problem)?
+
+**YOUR ANSWER HERE**
+
+## F (5pts) 
+
+It can be helpful to report p-values on graphs, so that it's clear whether what we're looking at is "statistically significant" in some sense. Now we will take the same plot you made in Part C, and report the p-value on top of the graph. For this part, follow these steps:
+
+* First, copy-and-paste your code from Part C.
+
+* Next, add the following line of code: `+ geom_text(x = ?, y = ?, label = ?)`. 
+
+  * Specify `x` and `y` as the x- and y-coordinates where you want your text, and `label` as the text itself in quotes. (Note: Because the x-axis is categorical, you can specify `x` as one of the categories or as a number.)
+
+  * Specify `label` as your p-value from your chi-squared test in Part E (e.g., `label = "Chi-squared test p-value = ?"`), with ? appropriately specified. If you got an extremely small p-value, it's fine if you just state `"Chi-squared test p-value approximately zero"`. If you need to put your text on two lines, you can use `\n` within your `label` to create a line break.
+
+```{r}
+# YOUR CODE HERE
+```
+
+\newpage
+
+# Problem 2: Faceting (20 points)
+
+In addition to visualizing a single categorical variable, we can also create the same visualization for different categories, thereby allowing for flexible multivariate graphics. This is known as "faceting," where the data is grouped according to some categorical variable, and then we create the same graphic for each group. The resulting graphs are typically displayed in a grid, where each graph is a single "facet" of the full graphic.
+
+This is a popular way to show how the features of the variable(s) being displayed in a particular graphic can change depending on some other variable (usually a categorical variable).
+
+## A (10pts) 
+
+To make a bar chart of `ratings` faceted by `weekend`, follow these steps:
+
+* First, make a bar chart of `ratings` the standard way (also use `royalblue` as the interior color for all bars).
+* Then, add `+ facet_grid(~ weekend)` to your existing line of code.
+
+```{r}
+# YOUR CODE HERE
+```
+
+You should see two bar charts graphed together, one for each value of `weekend`.
+In 2--3 sentences, briefly summarize the graph you just made.
+
+**YOUR ANSWER HERE**
+
+## B (10pts) 
+
+You can also display marginal distributions by adding `margin = TRUE` within `facet_grid()`. So, use code from Part A and then add `margin = TRUE` within `facet_grid()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Your plot should display a third facet with a bar chart, labeled as "(all)". This displays a marginal distribution for which variable?
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Baby names (15 points)
+
+The [`babynames`](https://hadley.github.io/babynames) package contains a dataset (also) named `babynames`, which contains information on baby names of each sex given each name from 1880 to 2017, provided by the United States Social Security Administration.
+
+```{r}
+# make sure to install the package by typing this into the Console
+# install.packages("babynames")
+library(babynames)
+head(babynames)
+```
+
+## A (5 points)
+
+Answer the following questions:
+
+* How many observations and variables are in this dataset?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+* How many columns are categorical? What are they?
+
+**YOUR ANSWER HERE**
+
+## B (10 points)
+
+Use what you've learned from lectures so far about data wrangling and visualization to make the following plot:
+
+* Display the popularity (in terms of frequency) of your own name (combination of first name and sex) over time.
+
+* On the same plot, stick a thick, red, vertical dashed line at your birth year (Hint: look up the help documentation for `geom_vline()`).
+
+```{r}
+# YOUR CODE HERE
+```
+
+\newpage
+
+# Problem 4: Functions (30 points)
+
+Functions can be very useful when making visualizations, especially as our data structures get more complex over the course of the semester. So, in this problem you will get practice writing functions in `R`.
+
+The structure of a function has three basic parts:
+
+* Inputs (or arguments)
+* Body (code that is executed)
+* Output (or return value)
+
+In `R`, a function can be created using the following template:
+
+```{r}
+#| eval: false
+name <- function(input1, input2, ...) {
+  # body with code statements
+  return(output)
+}
+```
+
+## A (5pts)
+
+Write an function called `abssum` that takes four inputs: `a`, `b`, `x`, and `y`, and returns the quantity $ax + b|y|$. Test your function and demonstrate that it works for three different combinations of the inputs.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (5pts)
+
+Type `abssum(x = 1, y = 1)` into the Console. What happens when you only specify these two arguments?
+
+**YOUR ANSWER HERE**
+
+## C (5pts)
+
+Create a new function, `abssum2`, that has default values for `a = 1`, `b = 1`. Type `abssum2(x = 1, y = 1)` into your code block. What happens when you only specify the two arguments now?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## D (5pts)
+
+Note that typing `1:10` in `R` produces a sequence of numbers from 1 to 10. (Try this in the Console.) What happens when you call the function with the following input: `abssum2(x = 1:10, y = 1:10)`? Why does this happen?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## E (5pts)
+
+Use `help(rnorm)` to learn about the function `rnorm`, which generates normal random variables. Generate 5000 independent standard normal random variables (i.e., a normal distribution with mean 0 and variance 1) and assign them to a variable called `Z`. Repeat the same procedure and assign the new values to `W`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Then, uncomment the following code (which uses the base `R` `plot()` function to produce a scatterplot):
+
+```{r}
+# plot(W, abssum2(x = Z, y = W), cex = 0.5, pch = 16, xlab = "W", ylab = "Z + |W|")
+```
+
+Describe the graph that shows up, and explain why this happens.
+
+**YOUR ANSWER HERE**
+
+## F (5pts)
+
+Now use `ggplot()` to create the same plot in Part E. Be sure to include a title and axis labels in your plot. All you need to submit for this part is the same scatterplot as Part E, but with `ggplot()`.
+
+**Hint**: The point of this exercise is to demonstrate how you make a plot with `ggplot()` after you've created several variables like `W` and `Z`. One specific thing about `ggplot()` is that it requires all variables to be contained in a single dataset. So, after you have defined `W` and `Z`, create a data frame `D` with `D <- data.frame(V1 = W, V2 = abssum2(x = Z, y = W))`. Then, you can use this to make the same scatterplot via `ggplot()`.
+
+```{r}
+# YOUR CODE HERE
+```

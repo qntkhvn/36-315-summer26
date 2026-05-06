@@ -1,0 +1,185 @@
+---
+title: "Lab 3"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Chi-squared tests for independence (30 points)
+
+In this lab we'll use a dataset about Twitter/X airline sentiment.
+First we'll read in the dataset and add some additional variables (see code below).
+
+```{r}
+library(tidyverse)
+
+# read in data
+tweets <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/tweets.csv")
+
+tweets <- tweets |>
+  # separate the tweet_created column into three useful variables
+  separate(tweet_created, c("date", "time", "zone"), sep = " ") |>
+  # create some columns about the time and length of tweet
+  mutate(
+    hour_of_day = as.integer(str_sub(time, 1, 2)),
+    time_of_day = case_when(
+      hour_of_day >= 5 & hour_of_day <= 12 ~ "Morning",
+      hour_of_day > 12 & hour_of_day <= 17 ~ "Afternoon",
+      TRUE ~ "Night"
+    ), 
+    time_of_day = fct_relevel(time_of_day, "Morning", "Afternoon", "Night"),
+    tweet_length = ifelse(str_length(as.character(text)) > 100, "Long", "Short")
+  )
+```
+
+This dataset contains information about tweets made about airlines (e.g., Delta, Southwest, etc.) Most of these tweets are made while someone is waiting to board a flight. This problem focuses on the following variables:
+
+* `time_of_day`: whether the tweet is made during the morning, afternoon, or night time.
+* `tweet_length`: whether the tweet is more (`Long`) or less (`Short`) than 100 characters.
+
+## A (20pts) 
+
+Create a contingency table of the `tweet_length` and `time_of_day` variables using the `table()` function, and store this in an object called `tweets_tab`.  Then, test to see if these two variables are independent using a chi-squared test with the following code:  `chisq.test(tweets_tab)`.  
+
+```{r}
+# YOUR CODE HERE
+```
+
+* What is the value of the observed chi-squared test statistic?
+
+**YOUR ANSWER HERE**
+
+* What is the p-value of the test? 
+
+**YOUR ANSWER HERE**
+
+* What is your conclusion. Is there enough evidence to reject the null hypothesis that the two variables are independent?
+
+**YOUR ANSWER HERE**
+
+## B (10pts) 
+
+Do you think the conclusion you made in Part A makes sense in the context of the problem? Explain your answer in 1-2 sentences.
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 2: Mosaic plots (40 points)
+
+In Problem 1, we tested independence among two variables: `time_of_day`, and `tweet_length`. In this problem, we'll make mosaic plots for these variables, and compare our findings here to our findings in Problem 1.
+
+## A (15pts) 
+
+For this part, the goal is to make a mosaic plot with `time_of_day` and `tweet_length`. The syntax for the `mosaicplot()` function is `mosaicplot(x = ?)`. Answer the following questions:
+
+* What kind of object should `x` be set to in `mosaicplot()`? **Hint**: Look at the help documentation for `mosaicplot()`. You used this exact same object when working with the chi-squared test in Problem 1.
+
+**YOUR ANSWER HERE**
+
+* Now that you know what to set `x` to within `mosaicplot()`, make a mosaic plot of `time_of_day` and `tweet_length`. Pick whichever order you'd like to display these variables. For now, keep the rectangles within the mosaic plot colored as gray.
+
+```{r}
+#| fig-height: 5
+# YOUR CODE HERE
+```
+
+* What do the widths of the rectangles in the mosaic plot correspond to? What do the heights of the rectangles in the mosaic plot correspond to? 
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+We now want to color the rows of a mosaic plot. For this part, use the mosaic plot you made in Part B, and color the rows with colors of your choice. To do this, within `mosaicplot()`, set `col` equal to a vector of colors, where the number of colors is equal to the number of rows.
+
+For example, if a mosaic plot has three rows, we could set `col = c("red", "blue", "green")` to color one row as red, another as blue, and another as green.
+
+For this part, all you need to make is a colored mosaic plot.
+
+```{r}
+#| fig-height: 5
+# YOUR CODE HERE
+```
+
+## C (5pts) 
+
+Now for this part, we will make a mosaic plot of `time_of_day` and `tweet_length` colored by Pearson residuals.
+
+To color by Pearson residuals, instead of setting `col` within `mosaicplot()`, set `shade = TRUE`. (Use your code from Part B as a starting point.)
+
+```{r}
+#| fig-height: 5
+# YOUR CODE HERE
+```
+
+## D (15pts) 
+
+Now we will interpret the mosaic plot you made in Part C.
+
+For the mosaic plots shaded by Pearson residuals, if any of the residuals are greater than 2 or less than -2, we can conclude that there is evidence against the null hypothesis of independence. A very positive residual denotes higher counts than we would expect under the null, and a very negative residual denotes lower counts than we would expect under the null. 
+
+Given this, answer the following question:
+
+* For the mosaic plot showing `time_of_day` and `tweet_length`: Which cells (or combinations of categories) have observed counts that are significantly higher than what we would expect under independence (if any)?  Which have observed counts that are significantly lower than what we would expect under independence (if any)?
+
+**YOUR ANSWER HERE**
+
+* Does the mosaic plot in Part C yield the same conclusion as the chi-squared test from Problem 1? State yes or no, and explain in 1--2 sentences.
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Conditional distributions for 2D bar charts (30 points)
+
+## A (15pts) 
+
+First, make a stacked bar chart that involves the variables `time_of_day` and `tweet_length`. In particular, make your stacked bar chart such that you think it's easiest to see the conditional distribution of `tweet_length` given `time_of_day`.
+
+Then, use your plot to describe the conditional distribution of `tweet_length` given `time_of_day`. In particular, for which what time of day do long tweets seem to be more common, for which time of day do short tweets seem to be more common, and for which times of day do they seem about equal?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## B (15pts) 
+
+When thinking about the conditional distribution of `tweet_length` given `time_of_day`, it's helpful to remember that `tweet_length` is a binary variable. Thus, for any fixed `time_of_day`, the distribution of `tweet_length` will just correspond to the proportion of AM tweets and the proportion of PM tweets. Because there are four times of day (as we defined), the conditional distribution of `tweet_length` given `time_of_day` can therefore be characterized by four *pairs* of proportions, where each pair adds up to 1.
+
+A function that can be useful for computing conditional distributions is `prop.table()`.
+First, consider the following proportion table.
+
+```{r}
+prop.table(table(tweets$tweet_length, tweets$time_of_day))
+```
+
+Note that the proportions add up to 1. This table displays the **joint** distribution of `tweet_length` and `time_of_day`, because it tells us the proportion of subjects (in this case, tweets) that belong to every joint combination of `tweet_length` and `time_of_day`.
+
+Given this, answer the following questions:
+
+* Use the above `prop.table()` code, but write `margin = 1` within `prop.table()`. You should get back a table of proportions where the rows add up to 1. Does this table display (a) the conditional distribution of `tweet_length` given `time_of_day`, or (b) the conditional distribution of `time_of_day` given `tweet_length`? Explain your answer in 1--2 sentences.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+* Use the above `prop.table()` code, but write `margin = 2` within `prop.table()`. You should get back a table of proportions where the columns add up to 1. Does this table display (a) the conditional distribution of `tweet_length` given `time_of_day`, or (b) the conditional distribution of `time_of_day` given `tweet_length`? Explain your answer in 1--2 sentences.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**

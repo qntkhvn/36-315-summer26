@@ -361,7 +361,7 @@ penguins |>
 ::: {.column}
 ```{r}
 #| echo: false
-#| fig.height: 8
+#| fig-height: 8
 penguins |> 
   ggplot(aes(x = species)) +
   geom_bar() +
@@ -382,6 +382,21 @@ penguins |>
 <center>
 ![](https://external-preview.redd.it/VZba9uBFSw_Z_8eCF_XV_NYnQjfCm87Org180UEDiog.jpg?auto=webp&s=e6c4ae8f40a55dffb8dc0d2c7f73e8e3b845200d){height=700}
 </center>
+
+## Statistical inference for 1D categorical data
+
+* Chi-squared test for 1D categorical data
+
+* Null hypothesis ($H_0$): all categories have equal proportions  (i.e., $p_\texttt{Adelie} = p_\texttt{Chinstrap} = p_\texttt{Gentoo}$)
+
+```{r}
+chisq.test(table(penguins$species))
+```
+
+* Since $p$-value $< 0.05$ (or any other reasonable significance level), we reject the null hypothesis at $\alpha = 0.05$
+
+* We have strong evidence that the proportions of penguins across all species are not the same
+
 
 ## Spine charts
 
@@ -432,8 +447,6 @@ penguins |>
 * Angle $\theta$ is proportional is counts (proportions)
 
 * What about radius?
-
-* **Why are pie charts bad in general?**
 
 :::
 
@@ -500,12 +513,54 @@ penguins |>
 
 :::
 
-## [**Florence Nightingale's**](https://www.datavis.ca/gallery/flo.php) Rose Diagram 
+## [**Florence Nightingale's**](https://www.datavis.ca/gallery/flo.php) rose diagram 
 
 <center>
 ![](https://daily.jstor.org/wp-content/uploads/2020/08/florence_nightingagle_data_visualization_visionary_1050x700.jpg){height=700}
 </center>
 
-## Graphic critique
+## Waffle charts are cooler anyway...
+
+::: columns
+::: {.column width="45%"}
+
+```{r}
+#| eval: false
+# install.packages("remotes")
+# remotes::install_github("hrbrmstr/waffle")
+library(waffle)
+penguins |>
+  count(species) |> 
+  ggplot(aes(fill = species, values = n)) +
+  geom_waffle(n_rows = 20, color = "white") +
+  coord_equal() +
+  theme_void()
+```
+
+:::
+
+::: {.column width="55%"}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+library(waffle)
+penguins |>
+  count(species) |> 
+  ggplot(aes(fill = species, values = n)) +
+  geom_waffle(n_rows = 20, color = "white") +
+  coord_equal() +
+  theme_void(base_size = 20)
+```
+
+:::
+
+:::
+
+:::aside
+Also known as square charts, or brick charts.
+:::
+
+## Graphic critique (if time permits)
 
 <https://www.nytimes.com/interactive/2024/05/13/climate/home-insurance-profit-us-states-weather.html>
