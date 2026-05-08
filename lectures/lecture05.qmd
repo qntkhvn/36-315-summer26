@@ -265,7 +265,9 @@ penguins |>
 
 Pros:
 
-* Displays all of your data at once
+* Displays all of the data (sorted)
+
+* Does NOT require any parameters to adjust
 
 * As $n \rightarrow \infty$, the ECDF $\hat F_n(x)$ converges to<br>the true CDF $F(x)$
 

@@ -1,0 +1,181 @@
+---
+title: "Lab 4"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Histograms and boxplots (35 points)
+
+In this problem, we'll use `mtcars`, which is a pre-loaded dataset in `R`.
+
+```{r}
+head(mtcars)
+```
+
+## A (5pts) 
+
+Create a histogram showing the marginal distribution of the `mpg` variable. Be sure that your graph has appropriate titles/labels, and set `color` and `fill` within `geom_histogram()` equal to colors of your preference.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (10pts) 
+
+When you make a histogram without anything in `geom_histogram()`, `R` still makes the plot, but will deliver this message: "`stat_bin()` using `bins = 30`. Pick better value with `binwidth`."
+
+There are two different arguments you can use within `geom_histogram()`: `bins` and `binwidth`
+
+First, make a histogram of `mpg` with `bins = 4`. Try making `bins` bigger and smaller, and choose an appropriate value for `bins`. Describe in one sentence what the `bins` argument does.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+Next, make a histogram of `mpg` with `binwidth = 4`. Try making `binwidth` bigger and smaller, and choose an appropriate value for `binwidth`. Describe in one sentence what the `binwidth` argument does.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## C (10pts) 
+
+Create another histogram of `mpg`, but this time, instead of specifying `bins` or `binwidth`, add the following within `geom_histogram()`: `breaks = seq(10, 35, by = 5), alpha = 0.1`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+* What did setting `breaks = seq(10, 35, by = 5)` do to the graph?
+
+**YOUR ANSWER HERE**
+
+* Now try a few new values of the `alpha` parameter.  What are the possible values you can use for `alpha`?  What happens when you decrease `alpha`?  What happens when you increase `alpha`?
+
+**YOUR ANSWER HERE**
+
+## D (10pts) 
+
+* Make a boxplot of `mpg` using your Part C code. Replace `geom_histogram()` with `geom_boxplot()`. Set `fill` within `geom_boxplot()` to a color of your choice.
+
+* Notice that the y-axis has numbers, but they don't actually mean anything. To fix this, add `y = ""` within `aes()`, and be sure to add the label `labs(y = "")`. (This should be a reminder to you that a single box-plot by itself is not worth making...)
+
+```{r}
+# YOUR CODE HERE
+```
+
+* Now make a side-by-side boxplot of `mpg`, with one box for each level of `gear` (3 total levels). The following code converts `gear` to a categorical variable (with `factor()`).
+
+```{r}
+mtcars$gear <- factor(mtcars$gear)
+```
+
+* Set `y` and `fill` equal to `gear`. This should give you a boxplot of `mpg` for each level of `gear`. The use of `fill` is redundant here since the same variable is mapped to the `y`-axis already, but this is just to demonstrate to you how to use the `fill` aesthetic for boxplots.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Note that we created the above boxplots horizontally by mapping `mpg` to the `x`-axis, but we could easily make vertical boxplots by mapping it to the `y`-axis instead (and thus changing the `x`-axis to be the gear). 
+
+\newpage
+
+# Problem 2: Continuous density (30 points)
+
+## A (10pts) 
+
+Let's now make a histogram of `mpg`, but on the **density** scale. To do this, use your histogram code from Problem 1A, and add `aes(y = after_stat(density))` within `geom_histogram()`. Then, choose a `bins` or `binwidth` you think is most appropriate (similar to Problem 1B).
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (10pts) 
+
+Now we will add a couple of more components to the histogram from part A.
+
+* Overlay a density estimate on top of your histogram. To do this, add `+ geom_density()` in your `ggplot` code.
+
+* Add a "rug" to your plot by adding `+ geom_rug()` to your code. A "rug plot" shows where individual values occur just below the x-axis. Rug plots are often helpful when we're working with small datasets, where histograms and density estimates often over- or under-smooth the data.
+
+Your final plot should have both a smoothed density and rug added to it.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (10pts) 
+
+Recreate the graph in 2B, but this time, change the `adjust` argument within the `geom_density()` function.  Try a few different values, such as 1/10, 1/2, 1, 2, 10. Pick a value that you think best displays the distribution of `mpg`, and only include that version of the graph in your output.
+
+```{r}
+# YOUR CODE HERE
+```
+
+What happens as we decrease `adjust`? What happens as we increase `adjust`?
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Conditional distributions (35 points)
+
+In this problem, we'll explore different plots that visualize the conditional distribution of `mpg` given `gear`.
+
+## A (10pts)
+
+First, we'll create a *stacked histogram* of `mpg`, stacked by `gear`).
+
+* Create a histogram of `mpg` the typical way, using `ggplot()` and `geom_histogram()`. Choose a `bins` or `binwidth` you think is most appropriate.
+
+* Within `aes()`, set `fill = gear`.
+
+Note that the counts are *stacked on top of each other*. 
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (10pts)
+
+The stacked histogram above *technically* shows the conditional distribution `mpg` given `gear`, but it's difficult to see. The reason is that the bars for each `gear` don't all start at the x-axis.
+
+It can be helpful to instead make transparent histograms. To do this, use your code from Part A, and then specify `alpha = 0.5, position = "identity"` within `geom_histogram()`. Note that the default for `position` is `"stack"`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (10pts)
+
+Now we'll use a conditional density plot to visualize the conditional distribution of `mpg` given `gear`.  To do this, use your code from Part A, and change `geom_histogram()` to `geom_density(alpha = 0.5)`.
+
+Feel free to change the `adjust` or `alpha` parameters to your liking in order to better display the conditional distributions. Note that *not* setting an `alpha` value makes it almost impossible to see the different distributions.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## D (5pts)
+
+Now use your code from Part C, but replace `fill = gear` with `color = gear`. What changed?
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**

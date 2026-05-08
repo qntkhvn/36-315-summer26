@@ -1,0 +1,709 @@
+---
+title: "Comparing distributions"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+library(tidyverse)
+```
+
+## Review: density estimation
+
+Smoothed densities are good for visualizing the shape of a distribution
+
+There are two ways to produce smoothed densities:
+
+* **Nonparametric** (previous lecture)
+
+  * Pick a bandwidth and kernel, then fit a kernel-smoothed density
+
+* **Parametric** (this lecture) 
+
+  * Specify a distribution (e.g., normal), estimate the parameters, and fit the corresponding pdf
+
+## Review: display full distribution with ECDF plots
+
+::: columns
+::: {.column}
+
+Pros:
+
+* Displays all of the data (sorted)
+
+* Does NOT require any parameters to adjust
+
+* As $n \rightarrow \infty$, the ECDF $\hat F_n(x)$ converges to<br>the true CDF $F(x)$
+
+Cons:
+
+* What are the cons?
+
+
+:::
+
+::: {.column}
+
+```{r}
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = flipper_len)) +
+  stat_ecdf()
+```
+
+:::
+:::
+
+## What is the relationship between these two figures?
+
+```{r}
+#| echo: false
+#| fig-height: 9
+#| fig-width: 18
+library(patchwork)
+pens_hist <- penguins |>
+  ggplot(aes(x = flipper_len)) +
+  geom_histogram(bins = 25, aes(y = after_stat(density))) +
+  geom_density(color = "darkblue", linewidth = 1.5)
+pens_ecdf <- penguins |>
+  ggplot(aes(x = flipper_len)) + 
+  stat_ecdf()
+pens_hist + pens_ecdf
+```
+
+<!-- ## What about comparing to theoretical distributions? -->
+
+<!-- Example: normal/Gaussian distribution -->
+
+<!-- ::: columns -->
+<!-- ::: {.column} -->
+
+<!-- ![](https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Normal_Distribution_PDF.svg/960px-Normal_Distribution_PDF.svg.png) -->
+
+<!-- ::: -->
+
+<!-- ::: {.column} -->
+
+<!-- ![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Normal_Distribution_CDF.svg/960px-Normal_Distribution_CDF.svg.png) -->
+
+<!-- ::: -->
+<!-- ::: -->
+
+## Probability distributions
+
+A distribution is a mathematical function $f(x \mid \theta)$ where
+
+* $x$ may take on continuous or discrete values over the domain (i.e. all possible inputs) of $f(x \mid \theta)$
+* $\theta$ is a set of parameters governing the shape of the distribution
+    * e.g. $\theta = \{\mu, \sigma ^2 \}$ for a normal/Gaussian distribution
+* the $\mid$ symbol means that the shape of the distribution is conditional on the values of $\theta$
+
+. . .
+
+Let $f$ denote the distribution for its
+
+* **probability density function (PDF)** if $x$ is continuous
+* **probability mass function (PMF)** if $x$ is discrete
+
+. . .
+
+Note:
+
+* $f(x \mid \theta) \geq 0$ for all $x$
+* $\displaystyle \sum_x f(x \mid \theta) = 1$ (discrete case) or $\displaystyle \int_x f(x \mid \theta) = 1$ (continuous case)
+
+## Example: Normal distribution
+
+::: columns
+::: {.column}
+
+* Given $X \sim N(\mu, \sigma^2)$
+
+* PDF: $\displaystyle{f}(x \mid \mu, \sigma^2) = \frac{1}{\sigma\sqrt{2\pi}} \exp \left\{ -\frac{1}{2} \left(\frac{x-\mu}{\sigma}\right)^2 \right\}$ for  $x \in (- \infty, \infty)$
+
+* Standard normal distribution: $N(0, 1)$
+
+```{r}
+#| eval: false
+tibble(x = c(-5, 5)) |> 
+  ggplot(aes(x)) +
+  stat_function(fun = dnorm, color = "blue",
+                args = list(mean = 0, sd = 1)) +
+  stat_function(fun = dnorm, color = "red",
+                args = list(mean = -2, sd = sqrt(0.5)))
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 8
+tibble(x = c(-5, 5)) |> 
+  ggplot(aes(x)) +
+  stat_function(fun = dnorm, color = "blue",
+                args = list(mean = 0, sd = 1)) +
+  stat_function(fun = dnorm, color = "red",
+                args = list(mean = -2, sd = sqrt(0.5)))
+```
+:::
+:::
+
+## Parametric density estimation
+
+* Instead of trying to estimate the whole $f(x)$ non-parametrically, assume a particular distribution $f(x)$ and estimate its parameters
+
+* For example, assume $X_i \sim N(\mu, \sigma^2)$. Then use the observed data to estimate the parameters $$\hat{\mu} = \bar{x} = \frac{1}{n} \sum_{i=1}^n x_i \quad \text{and} \quad \hat{\sigma}^2 = \frac{1}{n-1} \sum_{i=1}^n (x_i - \bar{x})^2$$
+
+* The (plug-in) density estimate is $$\hat f(x) = \frac{1}{\hat\sigma\sqrt{2\pi}} \exp \left\{ -\frac{1}{2} \left(\frac{x-\hat\mu}{\hat\sigma}\right)^2 \right\}$$
+
+## One-sample Kolmogorov-Smirnov test
+
+* Compare the ECDF $\hat{F}(x)$ to the CDF $F(x)$ of a theoretical distribution
+
+* Null hypothesis: the observed data follow a particular theoretical distribution
+
+* Test statistic: $\displaystyle \quad \max_x |\hat{F}(x) - F(x)|$
+
+* If $\hat{F}(x)$ is far away from $F(x)$, reject the null hypothesis
+
+![](https://upload.wikimedia.org/wikipedia/commons/c/cf/KS_Example.png){fig-align="center" width=80%}
+
+## One-sample Kolmogorov-Smirnov test example
+
+* What if we assume `flipper_len` follows Normal distribution? (i.e., $H_0:$ `flipper_len` $\sim N(\mu, \sigma^2)$)
+
+. . .
+
+* Need estimates for mean $\mu$ and standard deviation $\sigma$:
+
+```{r}
+fl_mean <- mean(penguins$flipper_len, na.rm = TRUE)
+fl_mean
+fl_sd <- sd(penguins$flipper_len, na.rm = TRUE)
+fl_sd
+```
+
+. . .
+
+* One-sample KS test: There is strong evidence that `flipper_len` is not normally distributed
+
+```{r}
+ks.test(x = penguins$flipper_len, y = "pnorm", mean = fl_mean, sd = fl_sd)
+```
+
+## Visualizing empirical and parametric densities
+
+::: columns
+::: {.column}
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = flipper_len)) + 
+  geom_density(color = "blue") +
+  stat_function(fun = dnorm, linetype = "dashed", color = "black",
+                args = list(mean = fl_mean, sd = fl_sd))
+```
+
+:::
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = flipper_len)) + 
+  geom_density(color = "blue") +
+  stat_function(fun = dnorm, linetype = "dashed", color = "black",
+                args = list(mean = fl_mean, sd = fl_sd))
+```
+
+:::
+:::
+
+## Visualizing empirical and parametric CDF
+
+See Appendix for code
+
+```{r}
+#| echo: false
+#| fig-height: 8
+#| fig-width: 12
+# create the ECDF function
+fl_ecdf <- ecdf(penguins$flipper_len)
+
+# compute absolute value of the differences between ECDF and theoretical (normal distribution)
+abs_ecdf_diff <- abs(fl_ecdf(penguins$flipper_len) - pnorm(penguins$flipper_len, mean = fl_mean, sd = fl_sd))
+
+# find the maximum difference value
+max_fl_diff <- penguins$flipper_len[which.max(abs_ecdf_diff)]
+
+penguins |>
+  ggplot(aes(x = flipper_len)) +
+  stat_ecdf(color = "darkblue") +
+  # display normal ECDF
+  stat_function(fun = pnorm, args = list(mean = fl_mean, sd = fl_sd), color = "black", linetype = "dashed") +
+  # display KS test line
+  geom_vline(xintercept = max_fl_diff, color = "red") +
+  # add text with the test results
+  annotate(geom = "text", x = 215, y = 0.25, label = "KS test stat = 0.12428\np-value = 5.163e-05") + 
+  labs(x = "Flipper length (mm)", y = "Fn(x)")
+```
+
+## Comparing multiple empirical distributions
+
+* Goal: determine whether a quantitative variable depends on a categorical variable
+
+. . .
+
+* Examples:
+
+  * clinical trials with multiple treatments
+  
+  * assessing differences across race, gender, socioeconomic status, etc.
+  
+  * industrial experiments, A/B testing
+
+. . .
+  
+* Graphical comparison: overlayed densities, side-by-side violin plots, faceted histograms, etc.
+
+. . .
+
+* Remember:
+
+  * It’s useful to visualize and compare conditional distributions
+  
+  * But when are differences in a graphic **statistically significant**?
+  
+  * We need formal statistical inference (e.g., hypothesis tests)
+
+## Example: Spotify songs duration by genre
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-width: 14
+spotify_songs <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv') |> 
+  mutate(duration = duration_ms / 60000)
+
+spotify_songs |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  geom_density() +
+  ggthemes::scale_color_colorblind() +
+  labs(x = "Duration (minutes)",
+       color = "Genre")
+```
+
+## Example: Spotify songs duration by genre
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-width: 14
+
+spotify_songs |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  stat_ecdf() +
+  ggthemes::scale_color_colorblind() +
+  labs(x = "Duration (minutes)",
+       color = "Genre",
+       y = "Fn(x)")
+```
+
+## Do rap and rock songs differ in duration?
+
+```{r}
+#| echo: false
+#| fig-height: 7.5
+#| fig-width: 18
+
+spotify_dens <- spotify_songs |>
+  filter(playlist_genre %in% c("rap", "rock")) |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  geom_density(linewidth = 1.5) +
+  scale_color_manual(values = c("#F0E442", "#0072B2")) +
+  labs(x = "Duration (minutes)",
+       color = "Genre") +
+  theme(legend.position = "none")
+
+spotify_ecdf <- spotify_songs |>
+  filter(playlist_genre %in% c("rap", "pop")) |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  stat_ecdf(linewidth = 1.5) +
+  scale_color_manual(values = c("#F0E442", "#0072B2")) +
+  labs(x = "Duration (minutes)",
+       color = "Genre",
+       y = "Fn(x)")
+
+spotify_dens + spotify_ecdf + plot_layout(guides = "collect")
+```
+
+## Two-sample Kolmogorov-Smirnov test
+
+* Use a two-sample KS to compare two empirical distributions $\hat{F}_A(x)$ and $\hat{F}_B$
+
+* Null hypothesis: two samples $A$ and $B$ follow the same distribution
+
+* Test statistic: $\displaystyle \quad \max_x |\hat{F}_A(x) - \hat{F}_B(x)|$
+
+* If $\hat F_A$ and $\hat F_B$ are far away from each other, reject the null hypothesis
+
+## Two-sample Kolmogorov-Smirnov test example
+
+```{r}
+spotify_songs <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv") |> 
+  mutate(duration = duration_ms / 60000)
+
+rap_duration <- spotify_songs |> filter(playlist_genre == "rap") |> pull(duration)
+rock_duration <- spotify_songs |> filter(playlist_genre == "rock") |> pull(duration)
+
+ks.test(rap_duration, y = rock_duration)
+```
+
+* We have strong evidence that the duration distributions differ between rap and rock songs.
+
+## Statistical tests for comparing distributions
+
+* **Any difference at all**: two-sample KS test
+
+* **Difference in means**
+
+  * Null hypothesis: $H_0: \mu_1 = \mu_2 = \cdots = \mu_K$ (use `t.test()`)
+  
+  * Can assume the variances are all the same or differ
+  
+  * If $H_0$ is rejected, can only conclude **not all means are equal**
+  
+* **Difference in variances**
+
+  * Null hypothesis: $H_0: \sigma^2_1 = \sigma^2_2 = \cdots = \sigma^2_K$ (use `bartlett.test()`)
+  
+  * If $H_0$ is rejected, can only conclude **not all variances are equal**
+  
+Note: unlike the KS test, **difference in means and variances are sensitive to non-normality**
+
+  * Different distributions can yield insignificant results
+
+## What about the difference between pop and rap?
+
+```{r}
+#| echo: false
+#| fig-height: 7.5
+#| fig-width: 18
+
+spotify_dens <- spotify_songs |>
+  filter(playlist_genre %in% c("rap", "pop")) |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  geom_density(linewidth = 1.5) +
+  scale_color_manual(values = c("#56B4E9", "#F0E442")) +
+  labs(x = "Duration (minutes)",
+       color = "Genre") +
+  theme(legend.position = "none")
+
+spotify_ecdf <- spotify_songs |>
+  filter(playlist_genre %in% c("rap", "pop")) |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  stat_ecdf(linewidth = 1.5) +
+  scale_color_manual(values = c("#56B4E9", "#F0E442")) +
+  labs(x = "Duration (minutes)",
+       color = "Genre",
+       y = "Fn(x)")
+
+spotify_dens + spotify_ecdf + plot_layout(guides = "collect")
+```
+
+## Comparison using full data
+
+```{r}
+table(spotify_songs$playlist_genre)
+
+rap_duration <- spotify_songs |> filter(playlist_genre == "rap") |> pull(duration)
+pop_duration <- spotify_songs |> filter(playlist_genre == "pop") |> pull(duration)
+
+ks.test(rap_duration, y = pop_duration)
+```
+
+**There is a statistically significant difference in duration between rap and pop songs** (given large sample size)
+
+## Comparison using a smaller subset of data 
+
+```{r}
+set.seed(2017)
+subset_songs <- spotify_songs |>
+  group_by(playlist_genre) |> 
+  slice_sample(n = 100)
+
+table(subset_songs$playlist_genre)
+subset_rap_duration <- subset_songs |> filter(playlist_genre == "rap") |> pull(duration)
+subset_pop_duration <- subset_songs |> filter(playlist_genre == "pop") |> pull(duration)
+
+ks.test(subset_rap_duration, y = subset_pop_duration)
+```
+
+**There is NO statistically significant difference in duration between rap and pop songs**
+
+## But it still looks different visually???
+
+```{r}
+#| echo: false
+#| fig-height: 8
+#| fig-width: 18
+
+spotify_dens <- subset_songs |>
+  filter(playlist_genre %in% c("rap", "pop")) |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  geom_density(linewidth = 1.5) +
+  scale_color_manual(values = c("#56B4E9", "#F0E442")) +
+  labs(x = "Duration (minutes)",
+       color = "Genre") +
+  theme(legend.position = "none")
+
+spotify_ecdf <- subset_songs |>
+  filter(playlist_genre %in% c("rap", "pop")) |>
+  ggplot(aes(x = duration, color = playlist_genre)) +
+  stat_ecdf(linewidth = 1.5) +
+  scale_color_manual(values = c("#56B4E9", "#F0E442")) +
+  labs(x = "Duration (minutes)",
+       color = "Genre",
+       y = "Fn(x)")
+
+spotify_dens + spotify_ecdf + plot_layout(guides = "collect") +
+  plot_annotation(title = "Using a smaller subset of data")
+```
+
+## Test for difference in means
+
+Using a two-sample $t$-test
+
+Null hypothesis: the means of two groups (populations) are equal
+
+```{r}
+t.test(subset_rap_duration, subset_pop_duration)
+```
+
+## Test for difference in variances
+
+Using a Bartlett test
+
+Null hypothesis: all variances are equal
+
+```{r}
+bartlett.test(list(subset_rap_duration, subset_pop_duration))
+```
+
+**Rejects at $\alpha = 0.05$ even with this smaller sample size!**
+
+. . .
+
+<br>
+
+Why did the KS test reveals no differences while the graphs are clearly different? Two possible reasons:
+
+* The sample size might be too small to detect a difference
+  
+* The KS test is known to have low power
+
+## Statistical power
+  
+* **Statistical power** is key to really understanding graphics: whether we're seeing real effects versus noise
+
+. . .
+
+* Definition: $P(\text{p-value} \leq \alpha \mid H_0$ is false $)$<br>In words, the probability that we reject the null hypothesis when the null hypothesis is false
+
+. . .
+
+* Things that affect statistical power:
+
+  * Larger differences in the data $\rightarrow$ more power
+  
+  * Smaller variance/error in differences $\rightarrow$ more power
+  
+  * Larger sample size $\rightarrow$ more power
+  
+  * More appropriate statistical test $\rightarrow$ more power
+  
+. . .
+
+* Remember: Type 1 error is falsely rejecting; Type 2 error is falsely failing to reject
+
+## Toy example: power of a $t$-test
+
+* Consider two samples $\mathbf{X} = (X_1,\dots,X_n) \sim N(0, 1)$ and $\mathbf{Y} = (Y_1,\dots,Y_n) \sim N(\delta, 1)$
+
+* Use a $t$-test for difference in means between $\mathbf{X}$ and $\mathbf{Y}$
+
+* Simulate $\mathbf{X}$ and $\mathbf{Y}$ 1000 times for some $n$ and $\delta > 0$
+
+* Count the number of rejections
+
+$$
+\begin{aligned}
+\textsf{power}
+    &= P(p\text{-value} \leq \alpha \mid H_0 \text{ is false}) \\
+    &= P(p\text{-value} \leq \alpha \mid \delta > 0) \\
+    &\approx \frac{\text{# rejections}}{1000}
+\end{aligned}
+$$
+            
+* Consider $n = 10, 20, \dots, 1000$ and $\delta = 0.1$ or $\delta = 0.25$
+
+## Toy example: power of a $t$-test
+
+```{r}
+#| echo: false
+# set.seed(100)
+# ttest_power <-
+#   map_dfr(c(.1, .25), function(effect_size) {
+#     map_dfr(seq(10, 1000, by = 10), function(n_i) {
+#       map_dfr(1:1000, function(sim_i) {
+#         x <- rnorm(n_i, 0, 1)
+#         y <- rnorm(n_i, effect_size, 1)
+#         ttest_result <- t.test(x, y)
+#         tibble(delta = effect_size,
+#                sample_size = n_i,
+#                is_rej = as.numeric(ttest_result$p.value <= 0.05),
+#                sim_id = sim_i)
+#       })
+#     })
+#   }) |>
+#   group_by(delta, sample_size) |>
+#   summarize(power = mean(is_rej))
+
+# ttest_power |> write_csv("data/ttest-power.csv")
+```
+
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-width: 14
+library(latex2exp)
+read_csv("../data/ttest-power.csv") |>
+  ggplot(aes(x = sample_size, y = power, color = as.factor(delta))) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  labs(x = "Sample size n", y = "Power (across 1000 simulations)",
+       color = TeX(r'(Mean shift $\delta$)'))
+```
+
+## Another toy example: power for different tests
+
+* Consider two samples: $\mathbf{X} = (X_1,\dots,X_n) \sim N(0, 1)$ and $\mathbf{Y} = (Y_1,\dots,Y_n) \sim N(0, 1.5)$
+
+* Consider three ways to test differences between $\mathbf{X}$ and $\mathbf{Y}$
+
+  1. $t$-test
+
+  2. Bartlett test
+
+  3. KS test
+
+* Simulate $\mathbf{X}$ and $\mathbf{Y}$ 1000 times for samples sizes $n = 10, 20, \dots, 1000$
+
+**What do you think the power curves will look like for these methods?**
+
+## Another toy example: power for different tests
+
+```{r}
+#| echo: false
+# set.seed(101)
+# comparison_power <-
+#   map_dfr(seq(10, 1000, by = 10), function(n_i) {
+#     map_dfr(1:1000, function(sim_i) {
+#       x <- rnorm(n_i, 0, 1)
+#       y <- rnorm(n_i, 0, sqrt(1.5))
+#       ttest_result <- t.test(x, y)
+#       bartlett_result <- bartlett.test(list(x, y))
+#       ks_result <- ks.test(x, y)
+#       tibble(test_type = c("t-test", "Bartlett's test", "KS test"),
+#              pval = c(ttest_result$p.value, bartlett_result$p.value, ks_result$p.value)) |>
+#         mutate(is_rej = as.numeric(pval <= 0.05),
+#                sample_size = n_i,
+#                sim_id = sim_i)
+#     })
+#   }) |>
+#   group_by(test_type, sample_size) |>
+#   summarize(power = mean(is_rej))
+
+# comparison_power |> write_csv("data/comparison-power.csv")
+```
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-width: 14
+read_csv("../data/comparison-power.csv") |>
+  ggplot(aes(x = sample_size, y = power, color = test_type)) +
+  geom_point(size = 1.5) +
+  geom_line() +
+  ggthemes::scale_color_colorblind() +
+  labs(x = "Sample size n", y = "Power (across 1000 simulations)", color = NULL)
+```
+
+## Takeaways
+
+* Graphics should be paired with statistical analyses to determine if a *true effect* versus noise is displayed
+
+* **Even if there is a true effect, there may be limited power to detect it** (some effects are easier to detect than others)
+
+* **Remember: Power is the probability of rejecting when the null is false**
+
+* Things that increase statistical power:
+
+  * Increase sample size
+
+  * Reduce variance/error
+
+  * Increase differences/effects
+
+  * Choose appropriate tests!
+
+## Appendix: visualizing empirical and parametric CDF
+
+```{r}
+#| eval: false
+# create the ECDF function
+fl_ecdf <- ecdf(penguins$flipper_len)
+
+# compute absolute value of the differences between ECDF and theoretical (normal distribution)
+abs_ecdf_diff <- abs(fl_ecdf(penguins$flipper_len) - pnorm(penguins$flipper_len, mean = fl_mean, sd = fl_sd))
+
+# find the maximum difference value
+max_fl_diff <- penguins$flipper_len[which.max(abs_ecdf_diff)]
+
+penguins |>
+  ggplot(aes(x = flipper_len)) +
+  stat_ecdf(color = "darkblue") +
+  # display normal ECDF
+  stat_function(fun = pnorm, args = list(mean = fl_mean, sd = fl_sd), color = "black", linetype = "dashed") +
+  # display KS test line
+  geom_vline(xintercept = max_fl_diff, color = "red") +
+  # add text with the test results
+  annotate(geom = "text", x = 215, y = 0.25, label = "KS test stat = 0.12428\np-value = 5.163e-05") +
+  labs(x = "Flipper length (mm)", y = "Fn(x)")
+```
+
