@@ -169,6 +169,26 @@ tibble(x = c(-5, 5)) |>
 :::
 :::
 
+## Distribution functions in `R` 
+
+Example: normal distribution
+
+* `dnorm()`: normal density function
+
+* `pnorm()`: normal cumulative distribution function (fraction of values smaller than)
+
+* `qnorm()`: normal quantile function (inverse of cumulative distribution)
+
+* `rnorm()`: generate normal random variables
+
+. . .
+
+Note: Replace "norm" with the name of another distribution, all the same functions apply
+
+* e.g., "t", "exp", "gamma", "chisq", "binom", "pois", "unif", etc.
+
+See [this manual](https://rstudio.github.io/r-manuals/r-intro/Probability-distributions.html) for more details
+
 ## Parametric density estimation
 
 * Instead of trying to estimate the whole $f(x)$ non-parametrically, assume a particular distribution $f(x)$ and estimate its parameters
@@ -532,7 +552,9 @@ Why did the KS test reveals no differences while the graphs are clearly differen
 
 . . .
 
-* Definition: $P(\text{p-value} \leq \alpha \mid H_0$ is false $)$<br>In words, the probability that we reject the null hypothesis when the null hypothesis is false
+* Definition: $\quad \textsf{power} = P(p\text{-value} \leq \alpha \mid H_0 \text{ is false})$
+  
+  * In words: the probability that null hypothesis is rejected when it is false
 
 . . .
 

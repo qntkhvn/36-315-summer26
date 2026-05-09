@@ -148,13 +148,15 @@ Throughout this course (and programming in general), search engines like Google 
 
 In `R`, there are many packages that are not permanently stored in `R`, so we have to load them when we want to use them. You can load an `R` package by typing `library(package_name)`. (Sometimes we need to install the package first, as seen earlier.)
 
-There are many functions that are only available *after* you load a package. Throughout 36-315, please remember to load packages by including `library(package_name)` **within a code chunk in an .qmd file** to load the functions you need; otherwise, you'll get an error saying that the function is undefined. For example, the following code chunk loads the `datasets` package:
+There are many functions that are only available *after* a package is loaded. Please always be sure to load packages by including `library(package_name)` **within a code chunk in an .qmd file** to load the functions you need; otherwise, you'll get an error saying that the function is undefined.
+
+For example, the following code chunk loads the `datasets` package.
 
 ```{r}
 library(datasets)
 ```
 
-This loads many datasets in `R`; we'll consider one of them, called `trees`.
+This loads many datasets in `R`. We'll consider one of them, called `trees`.
 
 ## A (5pts) 
 
@@ -193,11 +195,11 @@ What is the 50\% quantile and standard deviation for each of the three variables
 
 # Problem 4: Reading, manipulating, and plotting data (50 points)
 
-Throughout this course, we will use the [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) function to read in a dataset.
+The [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html) function can be used to read in a dataset in `R`.
 
-We'll use the Pittsburgh bridges dataset [available here](https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/bridges-pgh.csv) for this lab.
+We'll use the Pittsburgh bridges dataset available [here](https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/bridges-pgh.csv) for this lab.
 
-Here's the line of code that first loads the `tidyverse` library and and then reads the dataset into `R`, defining it as `bridges`:
+The following code first loads the `tidyverse` package and then reads the dataset into `R`, defining it as `bridges`.
 
 ```{r}
 library(tidyverse)
@@ -206,11 +208,9 @@ bridges <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/r
 
 All we did was copy-and-paste the URL into the `read_csv()` function (with quotation marks).
 
-Now we're going to use what we learned in this lab to create some visuals for this dataset.
+## A (10pts)
 
-## A (10pts) 
-
-The `bridges` dataset contains information on different bridges in Pittsburgh. In this part, write code that displays the column names of `bridges`. Also include in your code `head(bridges)` to get an idea of what these variables look like. Which variables are quantitative, and which are categorical?
+The `bridges` dataset contains information on different bridges in Pittsburgh. In this part, write code to display the column names of `bridges`. Also include in your code `head(bridges)` to get a glimpse of these variables. Which variables are quantitative, and which are categorical?
 
 ```{r}
 # YOUR CODE HERE
@@ -220,7 +220,7 @@ The `bridges` dataset contains information on different bridges in Pittsburgh. I
 
 ## B (10pts) 
 
-Now we'll use the `ggplot()` function to create a **bar plot** of the `river` variable. The `river` variable is either "A" (for Allegheny), "M" (for Monongahela), or "O" (for Ohio). To make things easier, we provide the code for you to do this below; just uncomment the code and render your .qmd file accordingly to create the bar plot. **Note that the code will not run unless you've loaded the `tidyverse` library in your .qmd file!** In what follows, you must answer some questions about the code and plot.
+Now we'll create a **bar chart** of the `river` variable. The `river` variable is either "A" (for Allegheny), "M" (for Monongahela), or "O" (for Ohio). To make things easier, we provide the code for you to do this below; just uncomment the code and render your .qmd file accordingly to create the bar chart. **Note that the code will not run unless you've loaded the `tidyverse` library in your .qmd file!** In what follows, you must answer some questions about the code and plot.
 
 ```{r}
 # bridges |>
@@ -234,11 +234,11 @@ Now we'll use the `ggplot()` function to create a **bar plot** of the `river` va
 
 Answer the following questions about the code and plot:
 
-* In general, `ggplot()` code takes the following format: `ggplot(blank1, aes(x = blank2))` or `blank1 |> ggplot(aes(x = blank2))`. Looking at the above code, what kind of `R` object should `blank1` be, and what should `blank2` be?
+* In general, `ggplot()` code takes the following format: `blank1 |> ggplot(aes(x = blank2))`. From the above code, what kind of `R` object should `blank1` be, and what should `blank2` be?
 
 **YOUR ANSWER HERE**
 
-* What do you think the line `geom_bar(fill = "darkblue")` does?
+* What do you think `geom_bar(fill = "darkblue")` does?
 
 **YOUR ANSWER HERE**
 
@@ -246,30 +246,29 @@ Answer the following questions about the code and plot:
 
 **YOUR ANSWER HERE**
 
-
 ## C (15pts) 
 
-Now we'll make a few other **area plots** that we will discuss later this week:
+Now we'll make a few other **area plots** that we will discuss later:
 
 * spine chart
 * pie chart
 * rose diagram
 
-Your goal for this part is to create each of these plots. These plots can be created by copy-and-pasting the bar plot code from Part C and modifying it slightly. Follow these directions to create each of these plots:
+Follow these directions to create each of these plots:
 
-* **spine chart**: First, copy-and-paste the bar plot code from Part C. Then, delete the `fill = "darkblue"` within `geom_bar()`. Finally, within `ggplot()`, replace `aes(x = river)` with `aes(x = "", fill = river)`. Also, change the labels in `labs()` if necessary.
-
-```{r}
-# YOUR CODE HERE
-```
-
-* **pie chart**: First, copy-and-paste the **spine chart code** you just made. Then, after `geom_bar()`, "add" `coord_polar("y")`. Be sure to put plus signs before and after `coord_polar("y")`. Also, change the labels in `labs()` if necessary.
+* **spine chart**: First, copy-and-paste the bar chart code from Part C. Then, delete the `fill = "darkblue"` within `geom_bar()`. Finally, within `ggplot()`, replace `aes(x = river)` with `aes(x = "", fill = river)`. Also, change the labels in `labs()` if necessary.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
-* **rose diagram**: First, copy-and-paste the bar plot code from Part C. Then, after `geom_bar(fill = "darkblue")`, "add" `coord_polar() + scale_y_sqrt()`. Be sure to put plus signs before and after `coord_polar() + scale_y_sqrt()`. Also, change the labels in `labs()` if necessary. After you make the rose diagram: In 1-2 sentences, what do you think  `scale_y_sqrt()` does, and what is a benefit to including `scale_y_sqrt()` when making the rose diagram?
+* **pie chart**: First, copy-and-paste the **spine chart code** you just made. Then, after `geom_bar()`, add `coord_polar("y")`. Be sure to include `+` before and after `coord_polar("y")`. Also, change the labels in `labs()` if necessary.
+
+```{r}
+# YOUR CODE HERE
+```
+
+* **rose diagram**: First, copy-and-paste the bar chart code from Part C. Then, after `geom_bar(fill = "darkblue")`, add `coord_polar() + scale_y_sqrt()`. Also, change the labels in `labs()` if necessary. In 1--2 sentences, what do you think  `scale_y_sqrt()` does, and what is a benefit to including `scale_y_sqrt()` when making the rose diagram?
 
 ```{r}
 # YOUR CODE HERE
@@ -284,9 +283,9 @@ Sometimes datasets don't have every variable you want to visualize, in which cas
 * `over_allegheny`: indicates whether the bridge crosses the Allegheny River (`"yes"` or `"no"`)
 * `length_binary`: indicates whether the bridge is at least 1000 feet long (`"long"` or `"short"`)
 
-Here's some "template code" you can use to create these columns.
+Here's some template code you can use to create these columns.
 
-Notice that there are some `?` that you need to fill in appropriately. Use the definitions for `over_allegheny` and `length_binary` to figure out what those should be. Consult the help documentation for `ifelse()` to figure out what the other two arguments of this function are. After you’ve filled in the blanks, be sure to uncomment the code above and make sure that it runs appropriately
+Notice that there are some `?` that you need to fill in appropriately. Use the definitions for `over_allegheny` and `length_binary` to figure out what those should be. Consult the help documentation for `ifelse()` to figure out what the other two arguments of this function are. After you’ve filled in the blanks, be sure to uncomment the code above and make sure that it runs.
 
 ```{r}
 # bridges <- bridges |> 
@@ -298,17 +297,22 @@ Notice that there are some `?` that you need to fill in appropriately. Use the d
 
 ## E (10pts) 
 
-The most common kind of summary statistic for a categorical variable is the counts of each category, often displayed as a **contingency table** (also known as a frequency table). To make a contingency table in `R`, you use the `table()` function. The following code should display a contingency table for the `length_binary` variable (after you've completed Part F):
+The most common kind of summary statistic for a categorical variable is the counts of each category, often displayed as a **frequency table**.
+
+To make a frequency table in `R`, you use the `table()` function. The following code should display a frequency table for the `length_binary` variable (after you've completed Part F):
 
 ```{r}
 # table(bridges$length_binary)
 ```
 
-Uncomment and run the above code and make sure a contingency table displays. Are there more `"long"` bridges or `"short"` bridges?
+Uncomment and run the above code to display a frequency table. Are there more "long" or "short" bridges?
 
 **YOUR ANSWER HERE**
 
-It can also be helpful to create a table of proportions, instead of a table of counts. Write a line of code that displays a table of proportions for the `bridges$length_binary` variable. In other words, your table should display the proportion of "short" and "long" bridges. To do this, you can either use the `prop.table()` function or the `table()` function (appropriately divided by a number).
+Instead of a table of counts, it can also be helpful to create a table of proportions.
+Write a line of code to display the proportions for `bridges$length_binary`. To do this, you can either use the `prop.table()` function or the `table()` function (appropriately divided by a number).
+
+Your table should show the proportion of "long" and "short" bridges.
 
 ```{r}
 # YOUR CODE HERE

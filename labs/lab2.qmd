@@ -83,12 +83,11 @@ Report your general observations in one sentence for each variable.
 
 ## C (5pts) 
 
-Marginal distributions are usually communicated with proportions or percentages.
-The goal of this question is to make a bar chart of `duration` on the **percentage** scale instead of the count scale. In other words, we'd like to make a bar chart where `duration` is on the x-axis and the `percentage` of each duration is on the y-axis. Note that `duration_marginal` has exactly this information.
+Besides frequency bar charts, marginal distributions are often communicated with proportions or percentages.
 
-Modify the template code below to create a bar chart with one bar for each `duration`, where the bar height corresponds to the `percentage` of each duration. After you've made the plot, add appropriate titles, labels, and a non-default color.
+Modify the template code below to create a bar chart with one bar for each `duration`, where the bar length corresponds to the `percentage` of each duration. (Note that from part B, the percentages are stored in `duration_marginal`.)
 
-Note that the code below uses `geom_col()`, since we want the heights of the bars to represent values in the data. Read more about the differences between `geom_bar()` and `geom_col()` [here](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+After you've made the plot, add appropriate titles, labels, and a non-default color.
 
 ```{r}
 # fill in the ?s below to make the desired plot
@@ -96,6 +95,8 @@ Note that the code below uses `geom_col()`, since we want the heights of the bar
 #   ggplot(aes(x = ?, y = ?)) + 
 #   geom_col()
 ```
+
+Note that the code above uses `geom_col()`, since we want the lengths of the bars to represent values in the data. Read more about the differences between `geom_bar()` and `geom_col()` [here](https://ggplot2.tidyverse.org/reference/geom_bar.html).
 
 ## D (5pts) 
 
@@ -123,15 +124,13 @@ After you run the test, answer the following questions:
 
 ## F (5pts) 
 
-It can be helpful to report p-values on graphs, so that it's clear whether what we're looking at is "statistically significant" in some sense. Now we will take the same plot you made in Part C, and report the p-value on top of the graph. For this part, follow these steps:
+It can be helpful to report p-values on graphs, so that it's clear whether what we're looking at is "statistically significant" in some sense. We will annotate the p-value on the plot from Part C.
 
-* First, copy-and-paste your code from Part C.
+* Copy-and-paste the code from Part C and add the following: `+ geom_text(x = ?, y = ?, label = ?)`. 
 
-* Next, add the following line of code: `+ geom_text(x = ?, y = ?, label = ?)`. 
+* Specify `x` and `y` as the x- and y-coordinates for the text, and `label` as the text itself in quotes. (Note: If one axis is categorical, specify the text coordinate as either one of the categories or as a number.)
 
-  * Specify `x` and `y` as the x- and y-coordinates where you want your text, and `label` as the text itself in quotes. (Note: Because the x-axis is categorical, you can specify `x` as one of the categories or as a number.)
-
-  * Specify `label` as your p-value from your chi-squared test in Part E (e.g., `label = "Chi-squared test p-value = ?"`), with ? appropriately specified. If you got an extremely small p-value, it's fine if you just state `"Chi-squared test p-value approximately zero"`. If you need to put your text on two lines, you can use `\n` within your `label` to create a line break.
+* Specify `label` as your p-value from your chi-squared test in Part E (e.g., `label = "Chi-squared test p-value = ?"`), with ? appropriately specified. If the p-value is extremely small, it's fine to simply state `"Chi-squared test p-value approximately zero"`. If the text is too long, simply add `\n` somewhere inside the string to create a line break.
 
 ```{r}
 # YOUR CODE HERE
@@ -169,7 +168,7 @@ You can also display marginal distributions by adding `margin = TRUE` within `fa
 # YOUR CODE HERE
 ```
 
-Your plot should display a third facet with a bar chart, labeled as "(all)". This displays a marginal distribution for which variable?
+Your plot should display a third facet with a bar chart, labeled as `(all)`. This displays the marginal distribution for which variable?
 
 **YOUR ANSWER HERE**
 
