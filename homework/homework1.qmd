@@ -15,6 +15,20 @@ execute:
 
 \newpage
 
+# General instructions for all lab and homework assignments
+
+* To preview this file, click the "Render" button in RStudio. (The Shortcut for rendering/knitting in RStudio is Command + Shift + K for macOS users, or Ctrl + Shift + K for Windows users.)
+
+* **All lab and homework assignments should be submitted on Gradescope as a pdf from rendering your Quarto file.**
+
+* Do not worry about the long file URLs that run off the page.
+
+* Each answer must be supported by written statements (unless otherwise specified). **Thus, even if your code output is self-explanatory, be sure to answer questions with written statements outside of code blocks.**
+
+* Be sure to include all code to show your work. Your file should contain the code to answer each question in its own code block. Your code should produce plots/output that will be automatically embedded in the output file.
+
+\newpage
+
 # Problem 1: Graphic critique (15 points)
 
 As part of your course grade for 36-315, you must submit two graphic critiques. In this question, you will get practice doing this, so that expectations for these are clear. Note that the following is for homework credit. You CANNOT use the graphic you discuss here for your two separate graphic critique submissions.
