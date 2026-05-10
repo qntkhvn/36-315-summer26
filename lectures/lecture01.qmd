@@ -46,13 +46,15 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 
   * numerically (tables, descriptive statistics,...)
   
-  * **visually** (graphics; focus of this course)
+  * visually (graphics)
   
 . . .
 
-* EDA is NOT a replacement for statistical inference and modeling
+* EDA complements statistical inference and modeling
 
 * EDA is an important and necessary step to build intuition
+
+* EDA is NOT a replacement for statistical inference and modeling
 
 ## ALWAYS visualize your data
 
@@ -305,7 +307,7 @@ mpg |>
 
 * Flip the x-axis scale
 
-* Change y-axis label breaks and limits
+* Change y-axis breaks and limits
 
 * Change color palette
 
@@ -377,7 +379,6 @@ mpg |>
 
 ::: columns
 ::: {.column}
-<br>
 
 ```{r}
 #| eval: false
@@ -387,6 +388,13 @@ mpg |>
 ```
 
 * Manually set the `color`, `size`, and `alpha` (transparency) of the point layer
+
+* Important notes:
+
+  * Inside `aes()`: map a visual property (e.g., `color`, `size`, `shape`) to a variable in the data
+  
+  * Outside `aes()`: set a visual property to a constant value for all elements in a layer (e.g., `color = "darkblue"`)
+
 :::
 
 ::: {.column}
@@ -396,6 +404,117 @@ mpg |>
 mpg |> 
   ggplot(aes(x = displ, y = hwy)) + 
   geom_point(color = "darkblue", size = 3, alpha = 0.4)
+```
+:::
+:::
+
+## Global and local aesthetics
+
+::: columns
+::: {.column width="42%"}
+
+```{r}
+#| eval: false
+mpg |>
+  # x and y are shared across layers
+  ggplot(aes(x = displ, y = hwy)) + 
+  # geom_point() uses shared x and y and local color
+  geom_point(aes(color = class)) +
+  # geom_smooth() uses only shared x and y
+  geom_smooth()
+```
+
+* Set `x` and `y` globally inside `ggplot()`
+
+  * `geom_point()` and `geom_smooth()` inherit global aesthetics
+
+* Set `color` locally at the `geom_point()` layer
+
+:::
+
+::: {.column width="58%"}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point(aes(color = class)) +
+  geom_smooth()
+```
+:::
+:::
+
+## Global and local aesthetics
+
+* Global aesthetics `ggplot(aes(...))`
+
+  * Scope: applies to all layers
+  
+  * Best for: variables used by multiple layers
+  
+. . .
+  
+* Local aesthetics `geom_*(aes(...))`
+
+  * Scope: applies only to a specific `geom_*` layer
+  
+  * Best for: unique mappings (also overriding shared aesthetics)
+
+
+## Faceting
+
+::: columns
+::: {.column}
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_wrap(~ class)
+```
+
+* Create a multi-panel plot faceted by a conditioning variable (`class`)
+
+* These facet/panel plots are sometimes called lattice plots or trellis plots
+
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 10
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_wrap(~ class)
+```
+:::
+:::
+
+
+## Themes
+
+::: columns
+::: {.column}
+```{r}
+#| eval: false
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  theme_light()
+```
+
+* For more theme options, check out the [ggthemes](https://jrnold.github.io/ggthemes/) and [hrbrthemes](https://github.com/hrbrmstr/hrbrthemes) packages
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+mpg |> 
+  ggplot(aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  theme_light(base_size = 20)
 ```
 :::
 :::
@@ -439,34 +558,3 @@ mpg |>
   theme(axis.title = element_text(face = "bold"),
         plot.title = element_text(hjust = 0.5, face = "bold"))
 ```
-
-
-## Faceting
-
-::: columns
-::: {.column}
-```{r}
-#| eval: false
-mpg |> 
-  ggplot(aes(x = displ, y = hwy)) + 
-  geom_point() + 
-  facet_wrap(~ class)
-```
-
-* Create a multi-panel plot faceted by a conditioning variable (in our case, `class`)
-
-* These facet/panel plots are sometimes called lattice plots or trellis plots
-
-:::
-
-::: {.column}
-```{r}
-#| echo: false
-#| fig-height: 10
-mpg |> 
-  ggplot(aes(x = displ, y = hwy)) + 
-  geom_point() + 
-  facet_wrap(~ class)
-```
-:::
-:::
