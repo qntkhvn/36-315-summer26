@@ -1,0 +1,199 @@
+---
+title: "Lab 5"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Transformations and changing smoothed densities (30 points)
+
+In this lab, we will work with a dataset about food around the word, obtained and modified from Kaggle (see [here](https://www.kaggle.com/openfoodfacts/world-food-facts) for more information).
+
+```{r}
+library(tidyverse)
+food <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/food.csv")
+```
+
+
+## A (10pts) 
+
+* First, create a histogram of the `energy_100g` variable on the **density scale**. There's no need to specify a `binwidth` for this part, but fill the bars with a non-gray color. Finally, add a smoothed density curve to your plot using `geom_density()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+* Now create a histogram of the *square root* of `energy_100g`, with an overlayed density. Luckily, it's really easy to make transformations of variables in `ggplot`: simply replace `energy_100` with `sqrt(energy_100g)` within `ggplot()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+
+## B (10pts) 
+
+It can be helpful to understand what bandwidth is being estimated in the density curve from Part A.
+
+To check what the bandwidth is, write a line of code that applies the `density()` function to `sqrt(food$energy_100g)`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+What bandwidth is being estimated? State the bandwidth value.
+
+**YOUR ANSWER HERE**
+
+Next, use the histogram code from Part A for `sqrt(energy_100)` and set `binwidth` equal to the above bandwidth value within `geom_histogram()`. (This is another way to automatically pick the `binwidth` for histograms!)
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (10pts) 
+
+Finally, use the code from Part B and make the following changes:
+
+* Change the `kernel` argument within `geom_density()`. Try a few different values, such as `kernel = "rectangular"`, `kernel = "triangular"`, etc. To see different options for `kernel`, see `kernel` within `help(density)`. Pick a non-Gaussian kernel for the plot.
+
++ Within `geom_density()`, specify a `color`, and set `linewidth = 2`. This will make the density curve better.
+
+```{r}
+# YOUR CODE HERE
+```
+
+\newpage
+
+# Problem 2: Comparing conditional distributions (25 points) 
+
+## A (5pts) 
+
+Make a conditional smoothed density plot of `sqrt(energy_100g)` given `nutrition_grade_fr` using `geom_density()` with `color = nutrition_grade_fr`.
+
+(There should be a separate density curve of `sqrt(energy_100g)` for each level of `nutrition_grade_fr`, each with its own color. There should NOT be any histograms on your plot, just smoothed density curves.)
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (20pts) 
+
+* Test whether `sqrt(energy_100g)` has the same variance across different values of `nutrition_grade_fr`.
+
+To test whether different groups have the same variance, perform a Bartlett's test using `bartlett.test(outcome ~ group, data = food)`, where `outcome` is the numeric variable `sqrt(energy_100g)` and `group` is the categorical variable `nutrition_grade_fr`.
+
+```{r}
+# PUT YOUR CODE HERE
+```
+
+State your formal conclusion (in context) from this test, and explain how you arrived at your answer. Also, be sure to state the null hypothesis for this test in your answer.
+
+**YOUR ANSWER HERE**
+
++ Test whether `sqrt(energy_100g)` has the same mean across different values of `nutrition_grade_fr`.
+
+To do this, perform a one-way ANOVA using `oneway.test(outcome ~ group, data = food)`, where `outcome` and `group` are properly specified. Furthermore, within `oneway.test()`, specify either `var.equal = TRUE` or `var.equal = FALSE` to indicate whether the variances are equal (using the conclusions from the Bartlett's test above).
+
+```{r}
+# PUT YOUR CODE HERE
+```
+
+State your formal conclusion (in context) from this test, and explain how you arrived at your answer. Also, be sure to state the null hypothesis for this test in your answer.
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Kolmogorov–Smirnov test (45 points)
+
+## A (10pts) 
+
+Use the Kolmogorov-Smirnov (KS) test to assess if `energy_100g` for Grade D foods follows a Normal distribution.
+
+First, let's define a dataset, `food_d`, which contains only the Nutrition Grade D foods.
+
+```{r}
+food_d <- food |> 
+  filter(nutrition_grade_fr == "d")
+```
+
+Then, fill in the following template code to run the test.
+
+```{r}
+# mean_est <- ?
+# sd_est <- ?
+# ks.test(food_d$energy_100g, "pnorm", mean = mean_est, sd = sd_est)
+```
+
+State the p-value and your formal conclusion (in context) from this test.
+
+**YOUR ANSWER HERE**
+
+## B (20pts) 
+
+The KS test relies on the empirical cumulative distribution functions (ECDFs).
+
+The following code generates the ECDF for `energy_100g` with the `food_d` dataset.
+
+```{r}
+food_d |>
+  ggplot(aes(x = energy_100g)) +
+  stat_ecdf()
+```
+
+Notice that the ECDF looks like a step function. Here, steps are quite small, because the sample size of `food_d` is pretty large (about 600).
+
+We can update this figure to include a comparison with the normal CDF using `stat_function()`.
+
+```{r}
+# food_d |>
+#   ggplot(aes(x = energy_100g)) +
+#   stat_ecdf() +
+#   # plot the normal distribution CDF with the mean and sd estimates
+#   stat_function(fun = pnorm, args = list(mean = mean_est, sd = sd_est),
+#                 color = "red", linetype = "dashed")
+```
+
+In 1--2 sentences: How would you use the plot above to report the median of `energy_100g` for Grade D foods? To help answer this question, draw a horizontal line on your ECDF plot by adding `+ geom_hline(yintercept = ?)` to your code, where `?` is filled in with an appropriate value to answer this question.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+## C (10pts) 
+
+Finally, test whether `energy_100g` has a different distribution for Grade B and Grade D foods using a two-sample KS test.
+
+Fill in the following template code (where you must properly define `food_b`) to run a two-sample KS test.
+
+```{r}
+# food_b <- ?
+# ks.test(food_b$energy_100g, food_d$energy_100g)
+```
+
+State your formal conclusion (in context) from this test. Be sure to mention what the null hypothesis is for this test.
+
+**YOUR ANSWER HERE**
+
+## D (5pts) 
+
+Now let's visualize what the two-sample KS test is doing.
+
+* First, use your code from Part B, but remove the `geom_hline()` layer, and update the input dataset to be `food` instead of `food_d`.
+
+* Then, update the ECDF layer to be `stat_ecdf(aes(color = nutrition_grade_fr))`.
+
+```{r}
+# YOUR CODE HERE
+```

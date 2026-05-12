@@ -411,7 +411,7 @@ ks.test(rap_duration, y = rock_duration)
 
 * **Difference in means**
 
-  * Null hypothesis: $H_0: \mu_1 = \mu_2 = \cdots = \mu_K$ (use `t.test()`)
+  * Null hypothesis: $H_0: \mu_1 = \mu_2 = \cdots = \mu_K$ (use `t.test()` or `oneway.test()`)
   
   * Can assume the variances are all the same or differ
   
