@@ -275,10 +275,9 @@ prop.table(table(penguins$species))
 
 ## Visualizing 1D categorical data: Area plots
 
-```{r}
-#| echo: false
-knitr::include_graphics("https://clauswilke.com/dataviz/directory_of_visualizations_files/figure-html/proportions-1.png")
-```
+<center>
+![](https://clauswilke.com/dataviz/directory_of_visualizations_files/figure-html/proportions-1.png)
+</center>
 
 * Each area corresponds to one categorical level
 
@@ -380,7 +379,7 @@ penguins |>
 ## Crimes against bar charts
 
 <center>
-![](https://external-preview.redd.it/VZba9uBFSw_Z_8eCF_XV_NYnQjfCm87Org180UEDiog.jpg?auto=webp&s=e6c4ae8f40a55dffb8dc0d2c7f73e8e3b845200d){height=700}
+![](https://i.chzbgr.com/full/8970041856/h79823132/funny-fail-image-news-graph-on-zika-virus-is-not-how-math-works){height=700}
 </center>
 
 ## Statistical inference for 1D categorical data
