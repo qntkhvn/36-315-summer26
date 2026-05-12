@@ -29,9 +29,8 @@ format:
 
 ## Labs
 
-* TBA
+* Lab 1: [assignment](labs/lab1.qmd)
 
-<!-- * Lab 1: [assignment](labs/lab1.qmd) -->
 <!-- * Lab 2: [assignment](labs/lab2.qmd) -->
 <!-- * Lab 3: [assignment](labs/lab3.qmd) -->
 
