@@ -16,12 +16,11 @@ execute:
 
 # Problem 1: Inference for 1D categorical data (35pts)
 
-Bar charts are usually easier to read than spine charts, pie charts, and rose diagrams. There are several ways we can add even more useful information to bar charts, as we'll explore throughout this lab.
-
-In this problem, we'll use a dataset on IMDb rated movies, TV series, etc., which can be loaded with the code below.
+We will consider a dataset on IMDb rated movies, TV series, etc., which can be loaded with the code below.
 
 ```{r}
 library(tidyverse)
+theme_set(theme_light()) # feel free to set another theme
 imdb <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/imdb.csv")
 ```
 
@@ -87,7 +86,7 @@ Besides frequency bar charts, marginal distributions are often communicated with
 
 Modify the template code below to create a bar chart with one bar for each `duration`, where the bar length corresponds to the `percentage` of each duration. (Note that from part B, the percentages are stored in `duration_marginal`.)
 
-After you've made the plot, add appropriate titles, labels, and a non-default color.
+Also, add appropriate titles, labels, and a non-default color.
 
 ```{r}
 # fill in the ?s below to make the desired plot
@@ -100,7 +99,7 @@ Note that the code above uses `geom_col()`, since we want the lengths of the bar
 
 ## D (5pts) 
 
-Your friend thinks there are equal proportions of short, medium, and long movies in this dataset. Using your bar chart from Part C, do you think your friend is right? (This time, just use your common statistical sense. Given the sample size and the difference in the bars, do you think there is probably a significant difference?)
+Your friend thinks there are equal proportions of short, medium, and long movies in this dataset. Using your bar chart from Part C, do you think your friend is right? (Use your common statistical sense. Given the sample size and the difference in the bars, is there possibly a significant difference?)
 
 **YOUR ANSWER HERE**
 
@@ -112,25 +111,25 @@ Let's test this statistically. Run a chi-squared test using `chisq.test(duration
 # YOUR CODE HERE
 ```
 
-After you run the test, answer the following questions:
-
-+  What is the p-value for this test?  
+* What is the p-value for this test?  
 
 **YOUR ANSWER HERE**
 
-+  What is your conclusion from this test (in the context of this problem)?
+* What is the formal conclusion (in-context) from this test?
 
 **YOUR ANSWER HERE**
 
 ## F (5pts) 
 
-It can be helpful to report p-values on graphs, so that it's clear whether what we're looking at is "statistically significant" in some sense. We will annotate the p-value on the plot from Part C.
+It can be helpful to report p-values on graphs so it is clear whether the observed differences are statistically significant.
 
-* Copy-and-paste the code from Part C and add the following: `+ geom_text(x = ?, y = ?, label = ?)`. 
+To annotate the p-value on the plot from Part C:
+
+* Add `geom_text(x = ?, y = ?, label = ?)`. 
 
 * Specify `x` and `y` as the x- and y-coordinates for the text, and `label` as the text itself in quotes. (Note: If one axis is categorical, specify the text coordinate as either one of the categories or as a number.)
 
-* Specify `label` as your p-value from your chi-squared test in Part E (e.g., `label = "Chi-squared test p-value = ?"`), with ? appropriately specified. If the p-value is extremely small, it's fine to simply state `"Chi-squared test p-value approximately zero"`. If the text is too long, simply add `\n` somewhere inside the string to create a line break.
+* Specify `label` as the p-value from Part E (e.g., `label = "Chi-squared test p-value = ?"`), with ? appropriately specified. If the p-value is extremely small, it is fine to simply state `"Chi-squared test p-value approximately zero"`. If the text is too long, simply add `\n` somewhere inside the string to create a line break.
 
 ```{r}
 # YOUR CODE HERE
@@ -146,29 +145,29 @@ This is a popular way to show how the features of the variable(s) being displaye
 
 ## A (10pts) 
 
-To make a bar chart of `ratings` faceted by `weekend`, follow these steps:
+To create a bar chart of `ratings` faceted by `weekend`:
 
-* First, make a bar chart of `ratings` the standard way (also use `royalblue` as the interior color for all bars).
-* Then, add `+ facet_grid(~ weekend)` to your existing line of code.
+* First, create a bar chart of `ratings` the standard way (also use `royalblue` as the interior color for all bars).
+
+* Then, add `facet_grid(~ weekend)`.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
-You should see two bar charts graphed together, one for each value of `weekend`.
-In 2--3 sentences, briefly summarize the graph you just made.
+In 2--3 sentences, briefly summarize the graph.
 
 **YOUR ANSWER HERE**
 
 ## B (10pts) 
 
-You can also display marginal distributions by adding `margin = TRUE` within `facet_grid()`. So, use code from Part A and then add `margin = TRUE` within `facet_grid()`.
+Next, use the code from Part A and add `margin = TRUE` within `facet_grid()`.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
-Your plot should display a third facet with a bar chart, labeled as `(all)`. This displays the marginal distribution for which variable?
+The resulting plot should display a third facet with a bar chart, labeled as `(all)`. This displays the marginal distribution for which variable?
 
 **YOUR ANSWER HERE**
 
@@ -185,7 +184,7 @@ library(babynames)
 head(babynames)
 ```
 
-## A (5 points)
+## A (5pts)
 
 Answer the following questions:
 
@@ -201,11 +200,11 @@ Answer the following questions:
 
 **YOUR ANSWER HERE**
 
-## B (10 points)
+## B (10pts)
 
 Use what you've learned from lectures so far about data wrangling and visualization to make the following plot:
 
-* Display the popularity (in terms of frequency) of your own name (combination of first name and sex) over time.
+* Display the popularity (in terms of frequency) of your own name (combination of first name and sex) over time. (Hint: use `geom_point()` and `geom_line()`).
 
 * On the same plot, stick a thick, red, vertical dashed line at your birth year (Hint: look up the help documentation for `geom_vline()`).
 
@@ -217,7 +216,7 @@ Use what you've learned from lectures so far about data wrangling and visualizat
 
 # Problem 4: Functions (30 points)
 
-Functions can be very useful when making visualizations, especially as our data structures get more complex over the course of the semester. So, in this problem you will get practice writing functions in `R`.
+Functions can be very useful when making visualizations, especially as the data structures get more complex.
 
 The structure of a function has three basic parts:
 
@@ -237,7 +236,7 @@ name <- function(input1, input2, ...) {
 
 ## A (5pts)
 
-Write an function called `abssum` that takes four inputs: `a`, `b`, `x`, and `y`, and returns the quantity $ax + b|y|$. Test your function and demonstrate that it works for three different combinations of the inputs.
+Write a function called `abssum` that takes four inputs: `a`, `b`, `x`, and `y`, and returns the quantity $ax + b|y|$. Test your function and demonstrate that it works for three different combinations of the inputs.
 
 ```{r}
 # YOUR CODE HERE
@@ -271,13 +270,21 @@ Note that typing `1:10` in `R` produces a sequence of numbers from 1 to 10. (Try
 
 ## E (5pts)
 
-Use `help(rnorm)` to learn about the function `rnorm`, which generates normal random variables. Generate 5000 independent standard normal random variables (i.e., a normal distribution with mean 0 and variance 1) and assign them to a variable called `Z`. Repeat the same procedure and assign the new values to `W`.
+Use `help(rnorm)` to learn about the function `rnorm`, which generates normal random variables.
+
+First, generate 5000 independent standard normal random variables (i.e., a normal distribution with mean 0 and variance 1) and assign them to a variable called `Z`.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
-Then, uncomment the following code (which uses the base `R` `plot()` function to produce a scatterplot):
+Next, repeat the same procedure and generate another 5000 independent standard normal random variables. Assign them to a variable called `W`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Then, uncomment the following code, which uses the base `R` `plot()` function to produce a scatterplot.
 
 ```{r}
 # plot(W, abssum2(x = Z, y = W), cex = 0.5, pch = 16, xlab = "W", ylab = "Z + |W|")
@@ -289,9 +296,9 @@ Describe the graph that shows up, and explain why this happens.
 
 ## F (5pts)
 
-Now use `ggplot()` to create the same plot in Part E. Be sure to include a title and axis labels in your plot. All you need to submit for this part is the same scatterplot as Part E, but with `ggplot()`.
+Now use `ggplot()` to create the same plot in Part E. Be sure to include a proper title and axis labels in your plot.
 
-**Hint**: The point of this exercise is to demonstrate how you make a plot with `ggplot()` after you've created several variables like `W` and `Z`. One specific thing about `ggplot()` is that it requires all variables to be contained in a single dataset. So, after you have defined `W` and `Z`, create a data frame `D` with `D <- data.frame(V1 = W, V2 = abssum2(x = Z, y = W))`. Then, you can use this to make the same scatterplot via `ggplot()`.
+**Hint**: `ggplot()` requires all variables to be contained in a single dataset. So, create a data frame `D` with `D <- data.frame(V1 = W, V2 = abssum2(x = Z, y = W))`. Then, use this to make the scatterplot with `ggplot()`.
 
 ```{r}
 # YOUR CODE HERE
