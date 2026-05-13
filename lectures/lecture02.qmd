@@ -25,7 +25,6 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.align = "center"
 )
-ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 ```
 
 ## Motivating data: [**Palmer Penguins**](https://allisonhorst.github.io/palmerpenguins/articles/intro.html)
@@ -157,7 +156,7 @@ penguins |>
 
 ## `mutate()`  
   
-Example: Create a new column for bill ratio (bill length / bill depth), and a new column to categorize penguins as "Large" if they weigh more than 4.5kg
+Example: Create a new column for bill ratio (bill length / bill depth), and a new column to categorize penguins as "large" if they weigh more than 4.5kg
 
 ```{r}
 penguins |> 
@@ -167,7 +166,7 @@ penguins |>
 
 ## `summarize()` (by itself)
 
-* Use `summarize()` to collapse the data down to a single row (per group) by aggregating variables into single values
+* Use `summarize()` to collapse the data down to a single row (per group)<br>by aggregating variables into single values
 
 * Useful for computing summaries (e.g., mean, median, max, min, correlation, etc.)
 
@@ -210,9 +209,9 @@ There are two main types of variables:
 
 **Quantitative**
 
-  * Discrete (i.e., counts, usually recorded as whole numbers), examples: number of likes/retweets, number of times word is used
+  * Discrete (i.e., counts, usually recorded as whole numbers)<br>Examples: number of likes/retweets, number of times word is used
   
-  * Continuous (any real number), examples: income, age, miles run, heart rate
+  * Continuous (any real number)<br>Examples: income, age, miles run, heart rate
 
 **Categorical**
 
@@ -298,6 +297,12 @@ Create a bar chart with `geom_bar()`
 
 ```{r}
 library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
 ```
 
 ```{r}
@@ -494,8 +499,6 @@ penguins |>
 
 * Made popular by [Florence Nightingale](https://en.wikipedia.org/wiki/Florence_Nightingale)
 
-* **Only use circular plots if circular context has actual meaning**
-
 :::
 
 ::: {.column}
@@ -517,6 +520,14 @@ penguins |>
 <center>
 ![](https://daily.jstor.org/wp-content/uploads/2020/08/florence_nightingagle_data_visualization_visionary_1050x700.jpg){height=700}
 </center>
+
+## Tips for visualizing 1D categorical data
+
+* You should pretty much always just make a bar chart
+
+* Spine charts will be more useful with more variables
+
+* Only use circular plots if circular/temporal context has actual meaning
 
 ## Waffle charts are cooler anyway...
 
