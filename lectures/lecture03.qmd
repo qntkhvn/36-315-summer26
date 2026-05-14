@@ -697,3 +697,15 @@ fake_counts |>
   * But can be complicated, especially with respect to multiple testing
   
 * Graphs with the same trends can display very different statistical significance (largely due to sample size)
+
+## Do it live: data viz replication
+
+```{r}
+nwsl <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/nwsl.csv")
+```
+
+<center>
+![](https://www.googleapis.com/download/storage/v1/b/kaggle-user-content/o/inbox%2F6967664%2F2a420c9a9541200de2a761ffa2316406%2Fnwsl_2023_schedule.png?generation=1677547877296471&alt=media){height=750}
+</center>
+
+
