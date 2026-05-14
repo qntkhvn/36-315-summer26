@@ -25,7 +25,6 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.align = "center"
 )
-ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 ```
 
 ## What does a bar chart show?
@@ -36,6 +35,8 @@ ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 ```{r}
 #| eval: false
 library(tidyverse)
+theme_set(theme_light())
+
 penguins |>
   ggplot(aes(y = species)) +
   geom_bar()
@@ -48,6 +49,7 @@ penguins |>
 #| echo: false
 #| fig-height: 8
 library(tidyverse)
+theme_set(theme_light(base_size = 20))
 penguins |>
   ggplot(aes(y = species)) +
   geom_bar()
@@ -101,7 +103,7 @@ penguins |>
 penguins |>
   count(species) |> 
   mutate(prop = n / sum(n)) |> 
-  ggplot(aes(x = species, y = prop)) +
+  ggplot(aes(x = prop, y = species)) +
   geom_col()
 ```
 :::
@@ -123,6 +125,8 @@ prop.table(table(penguins$species))
 
 :::aside
 The CI is based on a normal approximation justfied by the Central Limit Theorem. (Note: the CI could include values outside of $[0,1]$...)<br>To get CI for counts, just multiply $\hat p$ by $n$.
+
+There are [more](https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval) confidence intervals for proportions.
 :::
 
 ## Adding confidence intervals to bar chart
@@ -217,17 +221,29 @@ penguins |>
 ![](https://retractionwatch.com/wp-content/uploads/2022/12/3802603.fig_.009-768x512.png){height=700}
 <center>
 
-## Statistical inference: hypothesis testing in general
+## Hypothesis testing in general
 
-Computing $p$-values works like this:
+* Define the null and alternative hypotheses
 
-* Choose a test statistic
+. . .
 
-* Compute the test statistic using the data
+* Construct the test statistic
 
-* Is test statistic "unusual" compared to what we would expect under the null?
+. . .
 
-* Compare $p$-value to the target error rate ("significance level") $\alpha$
+* Compute the $p$-value
+  
+  * The $p$-value is the probability of observing a test statistic
+at least as extreme as the observed statistic, under the
+assumption that null is true
+
+  * Is test statistic "unusual" compared to what we would expect under the null?
+
+. . .
+
+* Decide whether to reject the null hypothesis
+
+  * Compare $p$-value to the target error rate (or significance level) $\alpha$
 
   * Typically choose $\alpha = 0.05$ ([the origins of 0.05](https://www2.psych.ubc.ca/~schaller/528Readings/CowlesDavis1982.pdf))
   
@@ -394,36 +410,22 @@ fake_counts |>
         axis.text = element_text(size = 16))
 ```
 
-## Power under this scenario: $2n/4, n/4, n/4$
+## Test results for different sample sizes
 
 ```{r}
 #| echo: false
-# Iterate through a sequence of sample sizes to compute the pvalue:
-chisq_power_table <- map(
-  seq(4, 100, by = 4),
-  # Apply the following function to each value
-  function(x) {
-    # Init the fake data:
-    fake_data <- tibble(fake_group = c(rep("A", 2 * x / 4),
-                                       rep("B", x / 4), rep("C", x / 4)))
-    
-    # Run and store the chi-square test:
-    fake_results <- chisq.test(table(fake_data$fake_group))
-    
-    # Return a table with the p-value and n:
-    tibble("n" = x, "pval" = fake_results$p.value)
-  }
-) |>
+chisq_table <- seq(4, 100, by = 4) |> 
+  map(function(x) {
+    fake <- c(rep("A", 2 * x / 4), rep("B", x / 4), rep("C", x / 4))
+    tibble(n = x, p = chisq.test(table(fake))$p.value)
+    }
+  ) |>
   list_rbind()
 
-# Plot the results:
-chisq_power_table |>
-  # Note the use of 
-  ggplot(aes(x = n, y = pval)) +
-  # Draw a line layer to connect the points 
+chisq_table |>
+  ggplot(aes(x = n, y = p)) +
   geom_line(color = "gray", linewidth = 1.5) +
   geom_point(color = "black", size = 3) +
-  # Add a horizontal line at 0.05:
   geom_hline(yintercept = 0.05, linetype = "dashed", 
              color = "darkorange", linewidth = 1.5) +
   scale_x_continuous(breaks = seq(0, 100, by = 20)) +
@@ -526,7 +528,7 @@ fake_counts |>
 
 ## (Rough) Rules-of-thumb for comparing CIs on bar charts
 
-Comparing overlap of two CIs is **NOT** exactly the same as directly testing for a significant difference...
+Comparing overlap of two CIs is **NOT** exactly the same as directly testing for a significant difference
 
 * Really we want CI( $\hat{p}_1 - \hat{p}_2$ ), not CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ )
   
@@ -572,7 +574,7 @@ But if we're comparing more than two CIs simultaneously, we need to account for 
 
 * e.g., CIs don't overlap but actually $H_0: p_A = p_B$ is true
   
-* If only interested in A vs B and nothing else, then just construct 95% CI for A vs B and control error rate at 5%
+* If we are only interested in comparing A vs B and nothing else, then just construct 95% CI for A vs B and control error rate at 5%
   
 * However, if we construct several CIs, where A vs B is just one comparison we make, our Type 1 error rate is > 5%!
 
@@ -679,3 +681,19 @@ fake_counts |>
 
 :::
 :::
+
+## Takeaways
+
+* Graphics for 1D categorical data (e.g., bar charts) show the empirical distribution<br>of the categorical variable ( $\hat{p}_1, \dots, \hat{p}_K$ )
+
+* Chi-squared test is a common test for 1D categorical data, testing $H_0 : p_1 = \cdots = p_K$
+
+* However, from this (global) test alone, we can’t tell which probabilities differ
+
+* We can compute individual confidence intervals for each $\hat{p}_1, \cdots, \hat{p}_K$
+
+  * Allows for easy visualization
+  
+  * But can be complicated, especially with respect to multiple testing
+  
+* Graphs with the same trends can display very different statistical significance (largely due to sample size)

@@ -431,7 +431,7 @@ titanic |>
 
 ```{r}
 #| eval: false
-songs <- read_csv("https://raw.githubusercontent.com/ryurko/Spring23-36315-Data/master/1000songs.csv")
+songs <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/songs.csv")
 
 songs <- songs |> 
   mutate(
@@ -454,7 +454,7 @@ mosaicplot(table(songs$decade, songs$THEME), shade = TRUE, las = 1, main = "")
 #| echo: false
 #| fig-height: 9
 #| fig-width: 15
-songs <- read_csv("https://raw.githubusercontent.com/ryurko/Spring23-36315-Data/master/1000songs.csv")
+songs <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/songs.csv")
 
 songs <- songs |> 
   mutate(
