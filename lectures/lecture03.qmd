@@ -92,7 +92,7 @@ prop.table(table(penguins$species))
 
 * Use the pipe operator `|>` to perform multiple operations
 
-* Use `geom_col()`, since we want the heights of the bars to represent values in the data
+* Use `geom_col()`, since we want the bar length to represent values in the data
 
 ```{r}
 penguins |>
@@ -152,9 +152,7 @@ penguins |>
   ggplot(aes(x = prop, y = species)) +
   geom_col() +
   geom_errorbar(aes(xmin = lower, xmax = upper), 
-                color = "blue", 
-                width = 0.2, 
-                linewidth = 1)
+                color = "blue",  width = 0.2, linewidth = 1)
 ```
 :::
 
@@ -194,9 +192,7 @@ penguins |>
   ggplot(aes(x = prop, y = species)) +
   geom_col() +
   geom_errorbar(aes(xmin = lower, xmax = upper), 
-                color = "blue", 
-                width = 0.2, 
-                linewidth = 1)
+                color = "blue", width = 0.2, linewidth = 1)
 ```
 :::
 
@@ -214,9 +210,7 @@ penguins |>
   ggplot(aes(x = prop, y = species)) +
   geom_col() +
   geom_errorbar(aes(xmin = lower, xmax = upper), 
-                color = "blue", 
-                width = 0.2, 
-                linewidth = 1)
+                color = "blue", width = 0.2, linewidth = 1)
 ```
 :::
 :::
@@ -226,6 +220,10 @@ penguins |>
 <center>
 ![](https://retractionwatch.com/wp-content/uploads/2022/12/3802603.fig_.009-768x512.png){height=700}
 <center>
+
+:::aside
+[Retraction Watch](https://retractionwatch.com/2022/12/05/a-paper-used-capital-ts-instead-of-error-bars-but-wait-theres-more/)
+:::
 
 ## Hypothesis testing in general
 
@@ -253,7 +251,7 @@ assumption that null is true
 
   * Typically choose $\alpha = 0.05$ ([the origins of 0.05](https://www2.psych.ubc.ca/~schaller/528Readings/CowlesDavis1982.pdf))
   
-  * In other words, if we reject the null hypothesis at $\alpha = 0.05$, then, assuming $H_0$ is true, there is a 5% chance it is a false positive (also known as Type 1 error)
+  * In other words, if we reject the null hypothesis at $\alpha = 0.05$, then, assuming $H_0$ is true, there is a 5% chance it is a false positive (also known as Type I error)
 
 ## Chi-squared test for 1D categorical data
 
@@ -534,29 +532,32 @@ fake_counts |>
 
 ## (Rough) Rules-of-thumb for comparing CIs on bar charts
 
-Comparing overlap of two CIs is **NOT** exactly the same as directly testing for a significant difference
+Comparing overlap between two CIs is **NOT** exactly the same as directly testing for a significant difference
 
-* Really we want CI( $\hat{p}_1 - \hat{p}_2$ ), not CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ )
+. . .
+
+* What we really want is a CI for the difference $\textsf{CI}(\hat{p}_1 - \hat{p}_2)$, rather than $\textsf{CI}(\hat{p}_1)$ and $\textsf{CI}(\hat{p}_2)$ separately
   
-* CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ ) not overlapping implies $0 \notin$ CI( $\hat{p}_1 - \hat{p}_2$ )
+* If $\textsf{CI}(\hat{p}_1)$ and $\textsf{CI}(\hat{p}_2)$ do not overlap, then $0 \notin$ $\textsf{CI}(\hat{p}_1 - \hat{p}_2)$
 
-* CI( $\hat{p_1}$ ) and CI( $\hat{p_2}$ ) overlapping **DOES NOT** imply $0 \in$ CI( $\hat{p}_1 - \hat{p}_2$ ) 
+* However, $\textsf{CI}(\hat{p}_1)$ and $\textsf{CI}(\hat{p}_2)$ overlapping does not necessarily imply that $0 \in$ $\textsf{CI}(\hat{p}_1 - \hat{p}_2)$ 
 
 . . .
 
 Roughly speaking:
 
-* If CIs don't overlap: significant difference
-  
-* If CIs overlap a little: ambiguous
-  
-* If CIs overlap a lot: no significant difference
+* If CIs do not overlap: evidence of a significant difference
+
+* If CIs overlap slightly: ambiguous
+
+* If CIs overlap substantially: likely no significant difference
 
 . . .
 
-But if we're comparing more than two CIs simultaneously, we need to account for **multiple testing**
+If we compare more than two CIs simultaneously, we must account for **multiple testing**
 
-  * When you look for all non-overlapping CIs: implicitly making $\displaystyle \binom{K}{2}$ pairwise tests in your head
+* Looking for all non-overlapping CIs among $K$ groups implicitly involves $\displaystyle \binom{K}{2}$ pairwise comparisons
+  
 
 ## Corrections for multiple testing
 
@@ -574,40 +575,40 @@ But if we're comparing more than two CIs simultaneously, we need to account for 
 
 . . .
 
-* In short: we will make Type 1 errors (chance of false rejection) more than 5% of the time!
+* Making multiple comparisons increases the probability of a Type I error beyond 5%
 
-* Type 1 error: reject $H_0$ when $H_0$ is true
+  * Type I error: rejecting $H_0$ when $H_0$ is true
 
-* e.g., CIs don't overlap but actually $H_0: p_A = p_B$ is true
+  * Example: concluding that A and B differ because their CIs don't overlap, although $H_0: p_A = p_B$ is true
   
-* If we are only interested in comparing A vs B and nothing else, then just construct 95% CI for A vs B and control error rate at 5%
+. . .
   
-* However, if we construct several CIs, where A vs B is just one comparison we make, our Type 1 error rate is > 5%!
+* If we are only interested in comparing A vs B, then just construct 95% CI for A vs B and control error rate at 5%
+  
+* However, if we perform several comparisons simultaneously, the overall probability of making at least one Type I error becomes greater than 5%.
+
 
 ## Corrections for multiple testing
 
 Basic idea:
 
-* Corrections for multiple testing inflate $p$-values (i.e., make them bigger)
+* Multiple testing corrections make hypothesis tests more conservative (e.g., make $p$-values larger)
 
-* Equivalently, they inflate CIs (i.e., make them wider)
+* Equivalently, they produce wider CIs
 
-* Goal: control Type 1 error rate $\leq 5\%$
-
-. . .
-
-**Bonferroni correction**, which inflates $p$-values the most but is simple and easy to implement
+* Goal: control Type I error rate $\leq 5\%$
 
 . . .
 
-* We usually reject null hypothesis when $p$-value $\leq 0.05$
+**Bonferroni correction**: simple, easy to implement, but most conservative
 
-* **Bonferroni**: if making $K$ comparisons, reject only if $p$-value $\leq 0.05/K$
+* Normally, we reject $H_0$ when $p$-value $\leq 0.05$
 
-* For CIs: instead of plotting 95% CIs, we plot $(1 - 0.05/K)%$% CIs
+* If making $K$ comparisons, the Bonferroni correction rejects only if $\displaystyle p\text{-value} \leq \frac{0.05}{K}$
 
-  * e.g., when $K = 3$, plot 98.33% CIs
-  
+* Equivalently, instead of plotting 95% CIs, we plot $\displaystyle\left(1 - \frac{0.05}{K}\right) \times 100 \%$ CIs
+
+  * e.g., when $K = 3$, use 98.33% CIs
 
 ## Impact of Bonferroni correction on confidence intervals
 
