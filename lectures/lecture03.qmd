@@ -67,7 +67,7 @@ penguins |>
 
 ## What does a bar chart show?
 
-**Marginal distribution**: probability that a categorical variable $X$ (e.g., `species`) takes each particular category value $x$ (`Adelie`, `Chinstrap`, `Gentoo`)
+**Marginal distribution**: probability that a categorical variable $X$ (e.g., `species`) takes each particular category $x$ (`Adelie`, `Chinstrap`, `Gentoo`)
 
 * Frequency bar charts display sample size
 
@@ -75,9 +75,7 @@ penguins |>
 table(penguins$species)
 ```
 
-* Alternatively, proportion/percent bar charts display class probabilities
-
-* This shows the probability mass function (PMF) for discrete variables
+* Proportion/percent bar charts display class probabilities
 
   * e.g., $P($`species` $=$ `Adelie`$)$
   
