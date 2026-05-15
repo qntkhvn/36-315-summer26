@@ -57,17 +57,25 @@ penguins |>
 :::
 :::
 
+## New discovery
+
+<center>
+
+<blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:hteqb5kexacboniwpiznwhya/app.bsky.feed.post/3mlszuiz6ns22" data-bluesky-cid="bafyreigzlhj2efwe6mgcs4ocuueh5afupu2uj4kopagldpkmzdc56okyki" data-bluesky-embed-color-mode="light"><p lang="en">Not only messing up orinithology, but also making a mockery of R tutorials. #Rstats<br><br><a href="https://bsky.app/profile/did:plc:hteqb5kexacboniwpiznwhya/post/3mlszuiz6ns22?ref_src=embed">[image or embed]</a></p>&mdash; brucy (<a href="https://bsky.app/profile/did:plc:hteqb5kexacboniwpiznwhya?ref_src=embed">@realbrucy.bsky.social</a>) <a href="https://bsky.app/profile/did:plc:hteqb5kexacboniwpiznwhya/post/3mlszuiz6ns22?ref_src=embed">10:31 AM · May 14, 2026</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+
+</center>
+
 ## What does a bar chart show?
 
 **Marginal distribution**: probability that a categorical variable $X$ (e.g., `species`) takes each particular category value $x$ (`Adelie`, `Chinstrap`, `Gentoo`)
 
-* Frequency bar charts give info about sample size
+* Frequency bar charts display sample size
 
 ```{r}
 table(penguins$species)
 ```
 
-* Now, we create a proportion/percent bar chart to display the individual probabilities
+* Alternatively, proportion/percent bar charts display class probabilities
 
 * This shows the probability mass function (PMF) for discrete variables
 
