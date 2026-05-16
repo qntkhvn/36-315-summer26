@@ -25,20 +25,31 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.align = "center"
 )
-ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 ```
 
 ## Summarizing 2D categorical data
 
 ```{r}
 library(tidyverse)
+theme_set(theme_light())
+
 titanic <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/titanic.csv") |> 
   filter(!is.na(Survived) & !is.na(Pclass)) |> 
   mutate(Survived = factor(Survived),
          Pclass = factor(Pclass))
 ```
 
-Using the titanic data, let's look at:
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+<br>
+
+Using the titanic data, consider:
+
+::: columns
+::: {.column}
 
 * `Survived`: survival outcome (0/1)
 
@@ -46,11 +57,18 @@ Using the titanic data, let's look at:
 table(titanic$Survived)
 ```
 
+:::
+
+::: {.column}
+
 * `Class`: cabin class (1st/2nd/3rd)
 
 ```{r}
 table(titanic$Pclass)
 ```
+
+:::
+:::
 
 ## Summarizing 2D categorical data
 
@@ -78,11 +96,19 @@ xtabs(~ Survived + Pclass, data = titanic) |>
 
 * Column and row sums: marginal distributions
 
+. . .
+
 * Values within rows: conditional distribution for `Pclass` given `Survived`
+
+. . .
 
 * Values within columns: conditional distribution for `Survived` given `Pclass`
 
+. . .
+
 * Values within cells: joint distribution for `Survived` and `Pclass`
+
+. . .
 
 * Bottom right: total number of observations
 
@@ -95,9 +121,13 @@ xtabs(~ Survived + Pclass, data = titanic) |>
 
   * e.g., $P(\texttt{Survived} = 1, \texttt{Pclass} = 3)$
 
+<br>
+
 * Marginal distribution: row sums or column sums
 
   * e.g., $P(\texttt{Survived} = 1)$, $P(\texttt{Pclass} = 3)$
+  
+<br>
 
 * Conditional distribution:<br>probability of $\texttt{Survived}$ given $\texttt{Pclass}$
 
@@ -317,6 +347,8 @@ chisq.test(table(titanic$Survived, titanic$Pclass))
 
 Two variables are **independent** if knowing the level of one tells us nothing about the other<br>i.e., $P(A \mid B) = P(A)$, and $P(A, B) = P(A) \times P(B)$
 
+. . .
+
 ::: columns
 ::: {.column}
 
@@ -354,19 +386,23 @@ mosaicplot(table(titanic$Survived, titanic$Pclass), cex = 2,
 
 ## Residuals
 
-Recall the test statistic: $\displaystyle \chi^2 = \sum_i^{k_1} \sum_j^{k_2} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
+* Recall the test statistic: $\displaystyle \chi^2 = \sum_i^{k_1} \sum_j^{k_2} \frac{(O_{ij} - E_{ij})^2}{E_{ij}}$
 
-Define the Pearson residuals: $\displaystyle r_{ij} = \frac{O_{ij} - E_{ij}}{\sqrt{E_{ij}}}$
+. . .
 
-Some rules of thumb:
+* Define the Pearson residuals: $\displaystyle r_{ij} = \frac{O_{ij} - E_{ij}}{\sqrt{E_{ij}}}$
 
-* $r_{ij} \approx 0$: observed counts are close to expected counts
+. . .
 
-* $|r_{ij}| > 2$: significant at $\alpha = 0.05$
+* Some rules of thumb:
 
-* very positive $r_{ij}$: higher than expected
+  * $r_{ij} \approx 0$: observed counts are close to expected counts
 
-* very negative $r_{ij}$: lower than expected
+  * $|r_{ij}| > 2$: significant at $\alpha = 0.05$
+
+  * very positive $r_{ij}$: higher than expected
+
+  * very negative $r_{ij}$: lower than expected
 
 :::aside
 In general, Pearson residuals are computed as $\displaystyle \frac{\text{residuals}}{\sqrt{\text{variance}}}$
