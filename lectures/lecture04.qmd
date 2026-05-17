@@ -343,7 +343,7 @@ chisq.test(table(titanic$Survived, titanic$Pclass))
 :::
 :::
 
-## Visualizing independence with mosaic plots
+## Visualizing independence with mosaic plots (marimekko)
 
 Two variables are **independent** if knowing the level of one tells us nothing about the other<br>i.e., $P(A \mid B) = P(A)$, and $P(A, B) = P(A) \times P(B)$
 
@@ -444,6 +444,42 @@ mosaicplot(table(titanic$Sex, titanic$Embarked), cex = 2,
            shade = TRUE, main = "Passenger sex appears independent of embarkation point")
 ```
 
+## Mosaic plots, `ggplot2` version
+
+::: columns
+::: {.column}
+
+Check out the [`marimekko`](https://gogonzo.github.io/marimekko) package
+
+```{r}
+#| eval: false
+# install.packages("marimekko")
+library(marimekko)
+titanic |> 
+  count(Survived, Pclass) |> 
+  ggplot(aes(fill = Survived, weight = n)) +
+  geom_marimekko(formula = ~ Pclass | Survived)
+```
+
+
+:::
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+# install.packages("marimekko")
+library(marimekko)
+titanic |> 
+  count(Survived, Pclass) |> 
+  ggplot(aes(fill = Survived, weight = n)) +
+  geom_marimekko(formula = ~ Pclass | Survived)
+```
+
+
+:::
+:::
+
 ## Beyond 2D: faceting
 
 ```{r}
@@ -506,3 +542,15 @@ songs <- songs |>
 
 mosaicplot(table(songs$decade, songs$THEME), shade = TRUE, las = 1, main = "", cex = 1.5)
 ```
+
+## Do it live: data viz replication
+
+```{r}
+bechdel <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/bechdel.csv")
+```
+
+<br>
+
+<center>
+![](https://platform.vox.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/3332436/hickey-bechdel-11.0.png){height=600}
+</center>
