@@ -55,7 +55,7 @@ format:
 
 *(subject to change; all times ET)*
 
-<details open>
+<details>
 <summary><strong>Week 1</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
@@ -66,7 +66,7 @@ format:
 | May 15 (Friday)     | Lecture 3    | Homework 1 @ 11:59pm |
 </details>
 
-<details>
+<details open>
 <summary><strong>Week 2</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
