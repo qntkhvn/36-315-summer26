@@ -36,13 +36,12 @@ format:
 ## Homework
 
 * Homework 1: [assignment](homework/homework1.qmd)
+* Homework 2: [assignment](homework/homework2.qmd)
 
 ## Graphic Critiques
 
-* TBA
-
-<!-- * Critique 1: [template](critiques/critique1.qmd) -->
-<!-- * Critique 2: [template](critiques/critique2.qmd) -->
+* Critique 1: [template](critiques/critique1.qmd)
+* Critique 2: [template](critiques/critique2.qmd)
 
 ## Final Project
 
