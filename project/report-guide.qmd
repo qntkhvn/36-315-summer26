@@ -34,7 +34,7 @@ Examples of reports from previous semesters can be found [here](https://www.stat
 
 The final report is worth **100pts** total and will be graded based on: 
 
-* **Basic items (60pts)** will be graded in an all-or-nothing fashion.<br>For example, the first _basic item_, "Does the report provide a description of the dataset?", is worth 5pts. If the answer to that question is **Yes**, you get 5pts; if the answer is **No**, you get 0pts. The basic items are meant to set a minimum grade you should receive based on very minimum effort.
+* **Basic items (60pts)** will be graded in an all-or-nothing fashion.<br>For example, the first basic item, "Does the report provide a description of the dataset?", is worth 5pts. If the answer to that question is **Yes**, you get 5pts; if the answer is **No**, you get 0pts. The basic items are meant to set a minimum grade you should receive based on very minimum effort.
 
 * **Detailed items (40pts)** will be graded on a 0--5 scale. Each **detailed item** is under a **basic item** and is worth 5pts each.
 
