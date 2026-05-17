@@ -26,19 +26,13 @@ titanic <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/r
 
 ## A (5pts) 
 
-First, create a graph that shows the marginal distribution of the `Pclass` (cabin class) variable. Make sure that:
-
-* Your axes are properly labeled
-
-* The graph has a proper title
-
-* Change the color of your plot so that it doesn't use default colors (automatically chosen by `R`).
+First, create a graph that shows the marginal distribution of the `Pclass` (cabin class) variable. Be sure the graph is properly titled and labeled, and choose a non-default color.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
-Next, describe the marginal distribution of `Pclass` in 1--2 sentences. In your answer, do not simply refer to "1", "2", and "3". Figure out what these categories mean using the data dictionary [here](https://www.kaggle.com/c/titanic/data).
+Next, describe the marginal distribution of `Pclass` in 1--2 sentences. Be sure to mention the actual meaning of the values "1", "2", and "3". Figure out what these categories mean using the data dictionary [here](https://www.kaggle.com/c/titanic/data).
 
 **YOUR ANSWER HERE**
 
@@ -52,31 +46,27 @@ From the graph alone, are you able to definitively state whether or not there is
 
 ## C (8pts) 
 
-To provide more explicit evidence of statistical significance, what kind of statistical test could you use to show that the passengers are not equally likely to belong to any of the three classes?
+To provide more explicit evidence of statistical significance, what kind of statistical test could be used to show that the passengers are not equally likely to belong to any of the three classes?
 
 **YOUR ANSWER HERE**
 
-Now perform the statistical test, and formally interpret the results (in context). In particular:
-
-* Display the code to run the test
-
-* State the p-value from the test
-
-* State your formal conclusion (in context) in 1--3 sentences.
+Next, write code to perform the statistical test.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
+Interpret the test results. In particular, state the p-value and the formal conclusion (in context) in 1--3 sentences.
+
 **YOUR ANSWER HERE**
 
 ## D (8pts) 
 
-Now we wil make a couple of improvements to your graph in Part A. Using the code from Part A, make the following two changes:
+Using the code from Part A, make the following two changes:
 
-* Annotate the p-value from Part C somewhere on your graph other than the title. If you got an extremely small p-value, it's fine if you describe the p-value as "Chi-squared test p-value approximately zero."
+* Annotate the p-value from Part C somewhere on the graph other than the title. If the p-value is extremely small, it is fine to put "Chi-squared test p-value approximately zero."
 
-* Currently, your graph likely has the labels 1, 2, 3, which denote the levels for `Pclass`. Change these to "Upper", "Middle", "Lower", respectively, which are the proper class names.
+* Change the labels for `Pclass` to "Upper", "Middle", "Lower", which are the proper class names.
 
 ```{r}
 # YOUR CODE HERE
@@ -86,7 +76,7 @@ Now we wil make a couple of improvements to your graph in Part A. Using the code
 
 # Problem 2: Visualizing uncertainty (49 points)
 
-In this problem, we will work with a dataset of cereals manufactured in the United States. For a description of the variables, see [here](https://www.rdocumentation.org/packages/MASS/versions/7.3-65/topics/cereal).
+In this problem, we will work with a dataset of cereals manufactured in the United States. For a description of the variables, see [here](https://cran.r-project.org/web/packages/MASS/refman/MASS.html#UScereal).
 
 ```{r}
 cereal <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/cereal.csv")
@@ -94,33 +84,39 @@ cereal <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/re
 
 ## A (5pts) 
 
-For this problem, we will focus on the manufacturer variable, `mfr`. First, produce a frequency table for the cereal manufacturers in the dataset. Then, answer the following: Which manufacturer is the most frequent, and which is the least frequent? In your answer, please include the names of the actual manufacturers, rather than just the initials.
+First, produce a frequency table for the cereal manufacturers (`mfr`).
 
 ```{r}
 # YOUR CODE HERE
 ```
+
+Which manufacturer appears the most and least frequent in the data? Be sure to mention the full names of the actual manufacturers, rather than just the initials.
 
 **YOUR ANSWER HERE**
 
 ## B (5pts) 
 
-Create a frequency bar chart for `mfr`. Make the color of the bars something other than gray. Add appropriate labels and a title to your plot. Also, center the title by adding `+ theme(plot.title = element_text(hjust = 0.5))`. After making your plot, summarize it in 1--2 sentences.
+Create a frequency bar chart for `mfr`. Make the color of the bars something other than gray. Add appropriate labels and a title to your plot. Also, center the title by adding `theme(plot.title = element_text(hjust = 0.5))`.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
+Next, summarize the plot in 1--2 sentences.
+
 **YOUR ANSWER HERE**
 
 ## C (10pts) 
 
-Now let's add confidence intervals to the plot in Part B. Write a function called `get_prop_ci()` that computes the 95% confidence intervals for the *proportion* of each manufacturer. Your function should take in a table object `freq_table` produced by the `table()` function.
+Now let's add confidence intervals to the plot in Part B.
+
+Write a function called `get_prop_ci()` that computes the 95% confidence intervals for the *proportion* of each manufacturer. The function should take in a table object `freq_table` produced by the `table()` function.
 
 ```{r}
 freq_table <- table(cereal$mfr)
 ```
 
-To get you started, below is some template code. You need to fill in three lines of code for `get_prop_ci()` to do the following:
+Fill in the template code below for `get_prop_ci()` to do the following:
 
 * Compute the sample size
 
@@ -144,21 +140,21 @@ get_prop_ci <- function(freq_table, alpha = 0.05) {
 }
 ```
 
-After you've written `get_prop_ci()`, uncomment the following line of code to display confidence intervals.
+Finally, uncomment the following line of code to display confidence intervals.
 
 ```{r}
 # get_prop_ci(freq_table)
 ```
 
-Is there anything non-intuitive with any of the confidence intervals above? State Yes or No, and give a 1--2 sentence explanation.
+Is there anything non-intuitive with any of the confidence intervals above? State yes or no, and give a 1--2 sentence explanation.
 
 **YOUR ANSWER HERE**
 
 ## D (3pts) 
 
-Based on Part C, write one line of code that displays the 95% confidence intervals for the *counts* of each `mfr`.
+Based on Part C, write one line of code that displays the 95% confidence intervals for the **frequency** of each `mfr`.
 
-(**Hint**: Remember that the proportion for any category $j$ is defined as $p_j = n_j / n$, where $n_j$ is the number of category $j$ and $n$ is the total sample size. You already have the confidence interval for $p_j$ and just need the confidence interval for $n_j$.)
+(**Hint**: The proportion for any category $j$ is defined as $p_j = n_j / n$, where $n_j$ is the number of category $j$ and $n$ is the total sample size.)
 
 ```{r}
 # YOUR CODE HERE
@@ -166,72 +162,58 @@ Based on Part C, write one line of code that displays the 95% confidence interva
 
 ## E (10pts) 
 
-Create a bar chart with the 95% confidence intervals.
+Create a bar chart with the 95% confidence intervals, which ultimately displays four pieces of information for each category: name, frequency, lower and upper bounds for the 95% confidence interval.
 
-Note that a bar chart with 95% confidence intervals ultimately displays only four pieces of information:
+First, create a new table that summarizes the data for the desired plot by filling the `?` below.
 
-* The name of each category
+Note: Don't just hard code the name and frequency of each manufacturer. Figure out a way to use the code from earlier to define these variables. Because there are six manufacturers in the data, `cereal_ci` should only have six rows, one for each manufacturer.
 
-* The counts of each category
-
-* The lower bound of the 95% confidence interval for each category
-
-* The upper bound of the 95% confidence interval for each category
-
-Thus, first, we're going to make a new `data.frame` that appropriately summarizes the data we need for our plot:
+(**Hint**: `mfr` and `frequency` can be obtained from Part A, and `lower` and `upper` can be obtained from Part D.)
 
 ```{r}
 # store your answer to part D
-# count_ci <- ?
+# freq_ci <- ?
 
 # cereal_ci <- data.frame(mfr = ?, # name of each manufacturer
-#                         counts = ?, # counts for each manufacturer
+#                         frequency = ?, # frequency for each manufacturer
 #                         lower = ?, # lower bound of 95% CI
 #                         upper = ?) # upper bound of 95% CI
 ```
 
-Your main goal for this part is to appropriately fill in the above "?". Don't just hard code the names/counts of each manufacturer. Figure out a way to use the code you've already written to define these variables. Because there are six manufacturers in the data, `cereal_ci` should only have six rows (one for each manufacturer).
-
-(**Hint**: Part A should give you everything you need for `mfr` and `counts`, and Part D should give you everything you need for `lower` and `upper`.)
-
-Once you've defined `cereal_ci` correctly, the following code should produce the desired bar chart. Uncomment the code, and also add color, appropriate labels, and a title to the bar chart.
+Once `cereal_ci` is defined, modify the following code to produce the desired bar chart. Also, add color, appropriate labels, and a title to the bar chart.
 
 ```{r}
 # cereal_ci |>
-#   ggplot(aes(x = counts, y = mfr)) +
+#   ggplot(aes(x = ?, y = ?)) +
 #   geom_col() +
-#   geom_errorbar(aes(xmin = lower, xmax = upper))
+#   geom_errorbar(aes(xmin = ?, xmax = ?))
 ```
 
 ## F (6pts) 
 
-Now we're going to interpret the confidence intervals you visualized in Part E. Let's say that Professor Aretrash asks the following questions:
+To interpret the confidence intervals visualized in Part E, answer the following questions. For now, ignore issues of multiple testing. For each question, explain your reasoning in 1--3 sentences.
 
-* Does it appear that there are any significant differences in counts among manufacturers that *are not* General Mills or Kellogg's?
-
-**YOUR ANSWER HERE**
-
-* For which manufacturers does General Mills appear to have significantly different counts?
+* Does it appear that there are any significant differences in frequency among manufacturers that *are not* General Mills or Kellogg's?
 
 **YOUR ANSWER HERE**
 
-For the above questions, ignore issues of multiple testing; we will address that in the next part. And for each question, explain your reasoning in 1--3 sentences. **Hint**: When answering these questions, it may be helpful to look at the actual confidence intervals you computed in Part D.
+* For which manufacturers does General Mills appear to have significantly different frequency?
+
+**YOUR ANSWER HERE**
 
 ## G (10pts) 
 
-In Part F, Professor Aretrash asked you to make several pairwise comparisons between one manufacturer and another. You can find that there are 15 different pairwise comparisons you could make from your bar chart. As a result, if we attempt to make multiple pairwise comparisons from a single graph with 95% confidence intervals, our chance of making a Type 1 error is greater than 5%.
+Suppose we want to make pairwise comparisons between one manufacturer and another. There are 15 total comparisons to be made from the bar chart above. If the 95% confidence intervals are used for pairwise comparisons, the chance of making a Type I error is greater than 5%.
 
-To address this issue: 
+To address this issue, create a bar chart similar to Part E, but with confidence intervals that incorporate the Bonferroni correction for 15 comparisons. In other words, the graph here should be exactly the same as the graph in Part E, but with wider confidence intervals due to Bonferroni correction.
 
-* **Make a bar chart similar to Part E, but with confidence intervals that incorporate the Bonferroni correction for 15 comparisons**. In other words, your graph here should be exactly the same as the graph in Part E, but with wider confidence intervals that incorporate the Bonferroni correction. 
-
-* **Then, outside of your code, discuss (in 1-2 sentences) how you constructed the Bonferroni confidence intervals. After you've done that, answer the same two questions from Professor Aretrash's in Part F**, but using the graph you've made here.
-
-**Hint**: In general, $\alpha$-level confidence intervals are constructed using the Normal quantile $z_{1-\alpha/2}$. When we construct 95\% confidence intervals, $\alpha = 0.05$, and thus we use $z_{1 - \alpha/2} = z_{0.975}$ (computed with `qnorm(0.975)`). This is exactly what we did with `get_prop_ci()` in Part C, where we set `alpha = 0.05` by default. When we use the Bonferroni correction, $\alpha$ is instead set to $0.05/k$, where $k$ is equal to the number of comparisons. For this part you need appropriately use `get_prop_ci()`, which you've already written, and then make a new graph.
+**Hint**: In general, $\alpha$-level confidence intervals are constructed using the Normal quantile $z_{1-\alpha/2}$. For 95% confidence intervals, $\alpha = 0.05$, so $z_{1 - \alpha/2} = z_{0.975}$ is used (computed with `qnorm(0.975)`). This is exactly what we did with `get_prop_ci()` in Part C, where `alpha = 0.05` by default. With the Bonferroni correction. $\alpha$ is adjusted to $0.05/k$, where $k$ is the number of comparisons. **For this part, use `get_prop_ci()` with the Bonferroni-adjusted $\alpha$ and create a new graph.**
 
 ```{r}
 # YOUR CODE HERE
 ```
+
+Finally, based on the Bonferroni-adjusted confidence intervals, answer the same two questions from Part F.
 
 **YOUR ANSWER HERE**
 
@@ -247,7 +229,7 @@ The code below loads the data, then uses the [`unnest`](https://tidyr.tidyverse.
 
 ```{r}
 starwars_character_films <- starwars |>
-  dplyr::select(name, films) |>
+  select(name, films) |>
   unnest(films)
 ```
 
@@ -255,13 +237,13 @@ We will focus on the `films` variable, which indicates the film a particular cha
 
 ## A (5pts)
 
-First, make a bar chart that displays the frequency on the x-axis and `films` on the y-axis. Make sure your plot is properly titled and labeled, and choose a non-default color.
-
-What is the default plotting order for categorical ("character" or "factor") variables in `R`?  (You should be able to determine this from glancing at the order of the categories in your plot, which starts from the bottom.)
+First, make a bar chart that displays the frequency on the x-axis and `films` on the y-axis. Make sure the plot is properly titled and labeled, and choose a non-default color.
 
 ```{r}
 # YOUR CODE HERE
 ```
+
+What is the default plotting order for categorical ("character" or "factor") variables in `R`? (Look at the order of the categories in the bar chart, which starts from the bottom.)
 
 **YOUR ANSWER HERE**
 
