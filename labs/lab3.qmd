@@ -16,8 +16,9 @@ execute:
 
 # Problem 1: Chi-squared tests for independence (30 points)
 
-In this lab we'll use a dataset about Twitter/X airline sentiment.
-First we'll read in the dataset and add some additional variables (see code below).
+In this lab, we will use a dataset about Twitter/X airline sentiment.
+
+Here is the code to read in the dataset and add some additional variables.
 
 ```{r}
 library(tidyverse)
@@ -48,7 +49,13 @@ This dataset contains information about tweets made about airlines (e.g., Delta,
 
 ## A (20pts) 
 
-Create a contingency table of the `tweet_length` and `time_of_day` variables using the `table()` function, and store this in an object called `tweets_tab`.  Then, test to see if these two variables are independent using a chi-squared test with the following code:  `chisq.test(tweets_tab)`.  
+Create a two-way table for `tweet_length` and `time_of_day` and store it in an object called `tweets_tab`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Then, test to see if these two variables are independent using a chi-squared test.
 
 ```{r}
 # YOUR CODE HERE
@@ -68,7 +75,7 @@ Create a contingency table of the `tweet_length` and `time_of_day` variables usi
 
 ## B (10pts) 
 
-Do you think the conclusion you made in Part A makes sense in the context of the problem? Explain your answer in 1-2 sentences.
+Do you think the conclusion you made in Part A makes sense in the context of the problem? Explain your answer in 1--2 sentences.
 
 **YOUR ANSWER HERE**
 
@@ -76,17 +83,15 @@ Do you think the conclusion you made in Part A makes sense in the context of the
 
 # Problem 2: Mosaic plots (40 points)
 
-In Problem 1, we tested independence among two variables: `time_of_day`, and `tweet_length`. In this problem, we'll make mosaic plots for these variables, and compare our findings here to our findings in Problem 1.
-
 ## A (15pts) 
 
-For this part, the goal is to make a mosaic plot with `time_of_day` and `tweet_length`. The syntax for the `mosaicplot()` function is `mosaicplot(x = ?)`. Answer the following questions:
+For this part, the goal is to make a mosaic plot with `time_of_day` and `tweet_length`. The syntax for the `mosaicplot()` function is `mosaicplot(x = ?)`.
 
-* What kind of object should `x` be set to in `mosaicplot()`? **Hint**: Look at the help documentation for `mosaicplot()`. You used this exact same object when working with the chi-squared test in Problem 1.
+* What kind of object should `x` be in `mosaicplot()`? Look at the help documentation for `mosaicplot()`.
 
 **YOUR ANSWER HERE**
 
-* Now that you know what to set `x` to within `mosaicplot()`, make a mosaic plot of `time_of_day` and `tweet_length`. Pick whichever order you'd like to display these variables. For now, keep the rectangles within the mosaic plot colored as gray.
+* Now make a mosaic plot of `time_of_day` and `tweet_length`. Pick whichever order you'd like to display these variables. For now, keep the rectangles within the mosaic plot colored as gray.
 
 ```{r}
 #| fig-height: 5
@@ -99,11 +104,7 @@ For this part, the goal is to make a mosaic plot with `time_of_day` and `tweet_l
 
 ## B (5pts) 
 
-We now want to color the rows of a mosaic plot. For this part, use the mosaic plot you made in Part B, and color the rows with colors of your choice. To do this, within `mosaicplot()`, set `col` equal to a vector of colors, where the number of colors is equal to the number of rows.
-
-For example, if a mosaic plot has three rows, we could set `col = c("red", "blue", "green")` to color one row as red, another as blue, and another as green.
-
-For this part, all you need to make is a colored mosaic plot.
+Use the mosaic plot from Part B and color the rows with colors of your choice. To do this, within `mosaicplot()`, set `col` equal to a vector of colors, where the number of colors is equal to the number of rows.
 
 ```{r}
 #| fig-height: 5
@@ -112,9 +113,7 @@ For this part, all you need to make is a colored mosaic plot.
 
 ## C (5pts) 
 
-Now for this part, we will make a mosaic plot of `time_of_day` and `tweet_length` colored by Pearson residuals.
-
-To color by Pearson residuals, instead of setting `col` within `mosaicplot()`, set `shade = TRUE`. (Use your code from Part B as a starting point.)
+Create a mosaic plot of `time_of_day` and `tweet_length` colored by Pearson residuals. Here, instead of setting `col` within `mosaicplot()`, set `shade = TRUE`.
 
 ```{r}
 #| fig-height: 5
@@ -122,8 +121,6 @@ To color by Pearson residuals, instead of setting `col` within `mosaicplot()`, s
 ```
 
 ## D (15pts) 
-
-Now we will interpret the mosaic plot you made in Part C.
 
 For the mosaic plots shaded by Pearson residuals, if any of the residuals are greater than 2 or less than -2, we can conclude that there is evidence against the null hypothesis of independence. A very positive residual denotes higher counts than we would expect under the null, and a very negative residual denotes lower counts than we would expect under the null. 
 
@@ -143,19 +140,19 @@ Given this, answer the following question:
 
 ## A (15pts) 
 
-First, make a stacked bar chart that involves the variables `time_of_day` and `tweet_length`. In particular, make your stacked bar chart such that you think it's easiest to see the conditional distribution of `tweet_length` given `time_of_day`.
-
-Then, use your plot to describe the conditional distribution of `tweet_length` given `time_of_day`. In particular, for which what time of day do long tweets seem to be more common, for which time of day do short tweets seem to be more common, and for which times of day do they seem about equal?
+First, make a stacked bar chart that involves the variables `time_of_day` and `tweet_length`, so that it is easiest to visualize the conditional distribution of `tweet_length` given `time_of_day`.
 
 ```{r}
 # YOUR CODE HERE
 ```
 
+Describe the conditional distribution of `tweet_length` given `time_of_day`. In particular, for which what time of day do long tweets seem to be more common, for which time of day do short tweets seem to be more common, and for which times of day do they seem about equal?
+
 **YOUR ANSWER HERE**
 
 ## B (15pts) 
 
-When thinking about the conditional distribution of `tweet_length` given `time_of_day`, it's helpful to remember that `tweet_length` is a binary variable. Thus, for any fixed `time_of_day`, the distribution of `tweet_length` will just correspond to the proportion of AM tweets and the proportion of PM tweets. Because there are four times of day (as we defined), the conditional distribution of `tweet_length` given `time_of_day` can therefore be characterized by four *pairs* of proportions, where each pair adds up to 1.
+When thinking about the conditional distribution of `tweet_length` given `time_of_day`, it is helpful to remember that `tweet_length` is a binary categorical variable. Thus, for any fixed `time_of_day`, the distribution of `tweet_length` will just correspond to the proportion of AM tweets and the proportion of PM tweets. Because there are four times of day (as defined), the conditional distribution of `tweet_length` given `time_of_day` can therefore be characterized by four pairs of proportions, where each pair adds up to 1.
 
 A function that can be useful for computing conditional distributions is `prop.table()`.
 First, consider the following proportion table.
@@ -168,18 +165,22 @@ Note that the proportions add up to 1. This table displays the **joint** distrib
 
 Given this, answer the following questions:
 
-* Use the above `prop.table()` code, but write `margin = 1` within `prop.table()`. You should get back a table of proportions where the rows add up to 1. Does this table display (a) the conditional distribution of `tweet_length` given `time_of_day`, or (b) the conditional distribution of `time_of_day` given `tweet_length`? Explain your answer in 1--2 sentences.
+* Use the above `prop.table()` code, but write `margin = 1` within `prop.table()`. This should return a table of proportions where the rows add up to 1.
 
 ```{r}
 # YOUR CODE HERE
 ```
+
+* Does this table display (a) the conditional distribution of `tweet_length` given `time_of_day`, or (b) the conditional distribution of `time_of_day` given `tweet_length`? Explain your answer in 1--2 sentences.
 
 **YOUR ANSWER HERE**
 
-* Use the above `prop.table()` code, but write `margin = 2` within `prop.table()`. You should get back a table of proportions where the columns add up to 1. Does this table display (a) the conditional distribution of `tweet_length` given `time_of_day`, or (b) the conditional distribution of `time_of_day` given `tweet_length`? Explain your answer in 1--2 sentences.
+* Use the above `prop.table()` code, but write `margin = 2` within `prop.table()`. This should return a table of proportions where the columns add up to 1.
 
 ```{r}
 # YOUR CODE HERE
 ```
+
+* Does this table display (a) the conditional distribution of `tweet_length` given `time_of_day`, or (b) the conditional distribution of `time_of_day` given `tweet_length`? Explain your answer in 1--2 sentences.
 
 **YOUR ANSWER HERE**
