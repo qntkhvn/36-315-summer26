@@ -530,6 +530,8 @@ songs <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/ref
 
 * With `ggplot2`
 
+* Check out [this blog post](https://qntkhvn.netlify.app/posts/2026-05-17-mosaic-ggplot2/)
+
 * See also: [`ggmosaic`](https://haleyjeppson.github.io/ggmosaic/) (has recurring issues) and [`marimekko`](https://gogonzo.github.io/marimekko)
 
 
