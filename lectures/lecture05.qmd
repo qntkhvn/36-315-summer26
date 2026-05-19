@@ -583,6 +583,10 @@ penguins |>
 
 ## Notes on KDE
 
+* **KDE is nonparametric: pick a bandwidth and kernel, then fit a kernel-smoothed density**
+
+. . .
+
 * In KDE, the bandwidth parameter is analogous to the binwidth in histograms
 
   * Too small bandwidth: density estimate can become overly peaky, main trends in the data may be obscured
@@ -603,7 +607,7 @@ penguins |>
   
 . . .
     
-**Density plots are often reliable and informative for large datasets but can be misleading for smaller ones.**
+* **Density plots are often reliable and informative for large datasets but can be misleading for smaller ones.**
 
 ## Conditional distributions: quantitative by categorical
 
@@ -825,8 +829,6 @@ penguins |>
   geom_boxplot(width = 0.2)
 ```
 
-
-  
 :::
 ::: {.column width="60%"}
 ```{r} 
@@ -843,9 +845,11 @@ penguins |>
 ::: columns
 ::: {.column width="40%"}
 
-* Check out the [`ggridges`](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html) package for a variety of customization options
+* See the [`ggridges`](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html) package for a variety of customization options
 
 * Useful for displaying conditional distributions across many levels
+
+* See also: [`ggdist`](https://mjskay.github.io/ggdist)
 
 ```{r}
 #| label: ridges
