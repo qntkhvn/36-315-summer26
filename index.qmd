@@ -25,7 +25,7 @@ format:
 * Lecture 2: Visualizing 1D categorical data [slides](lectures/lecture02.qmd)
 * Lecture 3: Statistical inference for 1D categorical data [slides](lectures/lecture03.qmd)
 * Lecture 4: Visualizations and inference for 2D categorical data [slides](lectures/lecture04.qmd)
-* Lecture 5: Visualizing 1D quantitative dat [slides](lectures/lecture05.qmd)
+* Lecture 5: Visualizing 1D quantitative data [slides](lectures/lecture05.qmd)
 
 ## Labs
 
