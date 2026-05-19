@@ -25,20 +25,19 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.align = "center"
 )
-ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
 ```
 
 ## Quantitative data
 
-Two different versions of quantitative data:
+* **Discrete**: countable and has clear space between values (i.e. whole number only)
 
-**Discrete**: countable and has clear space between values (i.e. whole number only)
+  * Examples: number of goals scored in a soccer game, number of children in a family,...
 
-* Examples: number of goals scored in a soccer game, number of children in a family,...
+. . .
 
-**Continuous**: can take any value within some interval
+* **Continuous**: can take any value within some interval
 
-* Examples: price of houses in Pittsburgh, water temperature, wind speed,...
+  * Examples: price of houses in Pittsburgh, water temperature, wind speed,...
 
 ## Summarizing 1D quantitative data
 
@@ -71,12 +70,6 @@ summary(penguins$flipper_len)
 sd(penguins$flipper_len, na.rm = TRUE)
 ```
 
-```{r}
-#| echo: false
-library(tidyverse)
-```
-
-
 ## Boxplots visualize summary statistics
 
 ::: columns
@@ -99,12 +92,24 @@ Cons:
 :::
 
 ::: {.column}
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
 ```{r}
 #| fig-height: 4
 penguins |> 
   ggplot(aes(x = flipper_len)) +
   geom_boxplot() +
-  theme(axis.text.y = element_blank())
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank())
 ```
 :::
 :::

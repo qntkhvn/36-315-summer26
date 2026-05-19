@@ -1,0 +1,725 @@
+---
+title: "Visualizing 2D quantitative data"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Summarizing 2D quantitative data
+
+Three aspects:
+
+* Direction/trend (positive, negative)
+
+* Strength of the relationship (strong, moderate, weak)
+
+* Linearity (linear, non-linear)
+
+. . .
+
+Goals:
+
+* describe the relationships between two variables $X$ and $Y$
+
+* describe the conditional distribution $Y \mid X$ via regression analysis
+
+* describe the joint distribution $X, Y$ via contours, heatmaps, etc.
+
+. . .
+
+Big picture ideas:
+
+* Scatterplots are by far the most common visual
+
+* Regression analysis is by far the most popular analysis
+
+* Relationships may vary across other variables, e.g., categorical variables
+
+## Summarizing 2D quantitative data
+
+* Numerical summary: correlation coefficient
+
+```{r}
+cor(penguins$bill_dep, penguins$bill_len, use = "complete.obs")
+```
+
+* Note: By default, `cor()` returns Pearson correlation
+
+* Other correlations:
+
+  * [Spearman's correlation](https://en.wikipedia.org/wiki/Spearman's_rank_correlation_coefficient)
+
+  * [Kendall rank correlation coefficient](https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient)
+
+  * and more
+
+
+## Making scatterplots
+
+::: columns
+::: {.column}
+
+* Use `geom_point()`
+
+* Displaying the joint (bivariate) distribution
+
+* What is the obvious flaw with this plot?
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len)) +
+  geom_point(color = "darkred")
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len)) +
+  geom_point(color = "darkred", size = 4)
+```
+
+:::
+:::
+
+## Making scatterplots: adjust the transparency
+
+::: columns
+::: {.column}
+
+* Adjust the transparency of points via `alpha` to visualize overlap
+
+* Provide better understanding of joint frequency
+
+* Especially important with larger datasets
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len)) +
+  geom_point(color = "darkred", alpha = 0.5)
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len)) +
+  geom_point(color = "darkred", size = 4, alpha = 0.5)
+```
+
+:::
+:::
+
+## Point color by a categorical variable
+
+::: columns
+::: {.column}
+
+* Map a categorical variable to `color`
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, color = species)) +
+  geom_point(alpha = 0.5)
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, color = species)) +
+  geom_point(size = 4, alpha = 0.5)
+```
+
+:::
+:::
+
+## Point color by a continuous variable
+
+::: columns
+::: {.column}
+
+* Map a continuous variable to `color`
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, color = body_mass)) +
+  geom_point(alpha = 0.5)
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, color = body_mass)) +
+  geom_point(size = 4, alpha = 0.5)
+```
+
+:::
+:::
+
+## Color gradient for a continuous variable
+
+::: columns
+::: {.column}
+
+* Map a continuous variable to `color`
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, color = body_mass)) +
+  geom_point(alpha = 0.5) +
+  scale_color_gradient(low = "darkblue", high = "darkorange")
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, color = body_mass)) +
+  geom_point(size = 4, alpha = 0.5) +
+  scale_color_gradient(low = "darkblue", high = "darkorange")
+```
+
+:::
+:::
+
+## Point size by a continuous variable
+
+::: columns
+::: {.column}
+
+* Map a continuous variable to `size`
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, size = body_mass)) +
+  geom_point(alpha = 0.5)
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, size = body_mass)) +
+  geom_point(alpha = 0.5)
+```
+
+:::
+:::
+
+## Point shape by a categorical variable
+
+::: columns
+::: {.column}
+
+* Map a categorical variable to `shape`
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, shape = species)) +
+  geom_point(alpha = 0.5)
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len, shape = species)) +
+  geom_point(size = 4, alpha = 0.5)
+```
+
+:::
+:::
+
+## Mapping multiple aesthetics to different variables
+
+::: columns
+::: {.column}
+
+* Each of `color`, `shape`, and `size`<br>is mapped to a different variable
+
+* 5 dimensions at once!
+
+* Be careful about this...
+
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len,
+             color = species, shape = island, size = body_mass)) +
+  geom_point(alpha = 0.5)
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |> 
+  ggplot(aes(x = bill_dep, y = bill_len,
+             color = species, shape = island, size = body_mass)) +
+  geom_point(size = 4, alpha = 0.5)
+```
+
+:::
+:::
+
+## Displaying trend line: linear regression
+
+::: columns
+::: {.column}
+
+* Display regression line for<br>`body_mass ~ flipper_len`
+
+* 95% confidence band by default
+
+* Estimating the conditional expectation of<br>`body_mass` | `flipper_len`
+
+    * i.e., $\mathbb{E}[$ `body_mass` $\mid$ `flipper_len` $]$
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = flipper_len, y = body_mass)) +
+  geom_point(color = "darkred", alpha = 0.5) +
+  geom_smooth(method = "lm")
+```
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = flipper_len, y = body_mass)) +
+  geom_point(color = "darkred", size = 4, alpha = 0.5) +
+  geom_smooth(method = "lm", linewidth = 2)
+```
+
+:::
+:::
+
+## Visualizing joint density
+
+Data: shot attempts by the [Sabrina Ionescu](https://en.wikipedia.org/wiki/Sabrina_Ionescu) in the 2023 WNBA season
+
+  * Each row is a shot attempt by Caitlin Clark in the 2024 WNBA season
+  
+  * Categorical variables: `scoring_play`, `shot_type`
+  
+  * Quantitative variables: `shot_x`, `shot_y`, `shot_distance`, `score_value`
+
+```{r}
+ionescu_shots <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/ionescu-shots.csv") |> 
+  filter(shot_y < 35) # remove some outliers
+glimpse(ionescu_shots)
+```
+
+## Visualizing joint density
+
+::: columns
+::: {.column}
+
+* Visualize joint distribution with a scatterplot
+
+```{r}
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) +
+  geom_point(alpha = 0.3)
+```
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) +
+  geom_point(size = 4, alpha = 0.3)
+```
+:::
+:::
+
+## Going from 1D to 2D density estimation
+
+In 1D: estimate density $f(x)$, assuming that $f(x)$ is _smooth_:
+
+$$
+\hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)
+$$
+
+. . .
+
+In 2D: estimate joint density $f(x_1, x_2)$
+
+$$\hat{f}(x_1, x_2) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h_1h_2} K\left(\frac{x_1 - x_{i1}}{h_1}\right) K\left(\frac{x_2 - x_{i2}}{h_2}\right)$$
+
+. . .
+
+For 2D: there are 2 bandwidths
+
+* $h_1$: controls smoothness as $X_1$ changes, holding $X_2$ fixed
+* $h_2$: controls smoothness as $X_2$ changes, holding $X_1$ fixed
+
+Gaussian kernels are still a popular choice
+
+## Display densities for 2D data: contour plots
+
+Best known in topography: outlines (contours) denote levels of elevation
+
+<center>
+![](https://images.squarespace-cdn.com/content/v1/5cb6391f7980b3404bf57113/1573157765676-YX6XBYP01AORIHYCTUSR/3d+Topp+Greenbelly.co.png){height=700}
+</center>
+
+## Create contours of 2D kernel density estimate
+
+::: columns
+::: {.column}
+
+```{r}
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_point(alpha = 0.3) + 
+  geom_density2d() +
+  coord_fixed()
+```
+
+* Use [`geom_density2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html) to display contour lines
+
+* Extend KDE for joint density estimates in 2D
+
+* Inner lines denote "peaks"
+
+* `coord_fixed()` forced a fixed ratio
+
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_point(size = 4, alpha = 0.3) + 
+  geom_density2d() +
+  coord_fixed()
+```
+:::
+:::
+
+## Create contours of 2D kernel density estimate
+
+::: columns
+::: {.column}
+
+* Modify the binwidth
+
+```{r}
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_point(alpha = 0.3) + 
+  geom_density2d(binwidth = 0.0001) + 
+  coord_fixed()
+```
+
+:::
+
+::: {.column}
+```{r}
+#| echo: false
+#| fig-height: 9
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_point(size = 4, alpha = 0.3) + 
+  geom_density2d(binwidth = 0.0001) + 
+  coord_fixed()
+```
+:::
+:::
+
+## Contours are difficult... what about heatmaps?
+
+::: columns
+::: {.column width="45%"}
+
+* Use [`stat_density_2d()`](https://ggplot2.tidyverse.org/reference/geom_density_2d.html) and the [`after_stat()`](https://ggplot2.tidyverse.org/reference/aes_eval.html) function to make 2D KDE **heatmaps**
+
+* May be easier to read than nested lines with color
+
+```{r}
+#| label: shot-loc-points-heatmap
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  stat_density2d(aes(fill = after_stat(level)),
+                 geom = "polygon") +
+  scale_fill_gradient(low = "darkblue", high = "gold") +
+  coord_fixed()
+```
+
+:::
+
+::: {.column width="55%"}
+```{r}
+#| ref-label: shot-loc-points-heatmap
+#| echo: false
+#| fig-height: 9
+```
+:::
+:::
+
+## Use tiles instead
+
+::: columns
+::: {.column width="45%"}
+
+* Divide the space into a grid and color the grid according to high/low values
+
+```{r}
+#| label: shot-loc-points-heatmap-tile
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  stat_density2d(aes(fill = after_stat(density)),
+                 geom = "tile", contour = FALSE) +
+  scale_fill_gradient(low = "darkblue", high = "gold") +
+  coord_fixed()
+```
+:::
+
+::: {.column width="55%}
+```{r}
+#| ref-label: shot-loc-points-heatmap-tile
+#| echo: false
+#| fig-height: 9
+```
+:::
+:::
+
+## Hexagonal binning
+
+::: columns
+::: {.column width="45%"}
+
+* Use [`geom_hex()`](https://ggplot2.tidyverse.org/reference/geom_hex.html) to make **hexagonal heatmaps**
+
+* Need to have the [`hexbin`](https://cran.r-project.org/web/packages/hexbin/index.html) package installed
+
+* 2D version of histogram
+
+```{r}
+#| label: shot-loc-points-hex
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y)) + 
+  geom_hex() +
+  scale_fill_gradient(low = "darkblue", high = "gold") + 
+  coord_fixed()
+```
+
+:::
+
+::: {.column width="55%"}
+```{r}
+#| ref-label: shot-loc-points-hex
+#| echo: false
+#| fig-height: 9
+```
+:::
+:::
+
+## What about shooting efficiency?
+
+::: columns
+::: {.column width="45%"}
+
+* Compute a function of another variable inside hexagons with [`stat_summary_hex()`](https://ggplot2.tidyverse.org/reference/stat_summary_2d.html)
+
+```{r}
+#| label: shot-loc-hex-make
+#| eval: false
+ionescu_shots |>
+  ggplot(aes(x = shot_x, y = shot_y, 
+             z = scoring_play, group = -1)) +
+  stat_summary_hex(binwidth = c(2, 2), 
+                   fun = mean, color = "black") +
+  scale_fill_gradient(low = "darkblue", high = "gold") + 
+  coord_fixed()
+```
+
+:::
+
+::: {.column width="55%"}
+```{r}
+#| ref-label: "shot-loc-hex-make"
+#| echo: false
+#| fig-height: 9
+```
+:::
+:::
+
+## Linear regression
+
+Assume a __linear relationship__ for $Y = f(X)$ $$Y_{i}=\beta_{0}+\beta_{1} X_{i}+\epsilon_{i}, \quad \text { for } i=1,2, \dots, n$$
+
+* $Y_i$ is the $i$th value for the **response** variable
+  
+* $X_i$ is the $i$th value for the **predictor** variable
+
+. . .
+  
+* $\beta_0$ is an unknown, constant **intercept**
+
+  * average value for $Y$ if $X = 0$ (be careful sometimes...)
+  
+* $\beta_1$ is an unknown, constant **slope**
+
+  * change in average value for $Y$ for each one-unit increase in $X$
+  
+. . .
+  
+* $\epsilon_i$ is the __random__ noise
+
+  * assume **independent, identically distributed** (iid) from a normal distribution 
+
+  * $\epsilon_i \overset{iid}{\sim}N(0, \sigma^2)$ with constant variance $\sigma^2$
+
+## Linear regression estimation
+
+* Estimate the **conditional expection** for $Y$ (i.e., average value for $Y$ given the value for $X$) $$\mathbb{E}[Y_i \mid X_i] = \beta_0 + \beta_1X_i$$
+
+. . .
+
+* Estimate the **best fitted** line with **ordinary least squares (OLS)** by minimizing the **residual sum of squares (RSS)**
+
+$$\text{RSS} \left(\beta_{0}, \beta_{1}\right)=\sum_{i=1}^{n}\left[Y_{i}-\left(\beta_{0}+\beta_{1} X_{i}\right)\right]^{2}=\sum_{i=1}^{n}\left(Y_{i}-\beta_{0}-\beta_{1} X_{i}\right)^{2}$$
+
+. . .
+
+$$\widehat{\beta}_{1}=\frac{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)\left(Y_{i}-\bar{Y}\right)}{\sum_{i=1}^{n}\left(X_{i}-\bar{X}\right)^{2}} = \frac{\textsf{Cov}(X,Y)}{\textsf{Var}(X)} \quad \text{ and } \quad \widehat{\beta}_{0}=\bar{Y}-\widehat{\beta}_{1} \bar{X}$$
+
+## Visual explanation of linear regression in 2D
+
+* Goal: find a "best fit" line that minimizes the vertical distance between the line and the data points 
+
+  * The vertical distance is known as a residual (difference between the actual y-value of a data point and the predicted y-value on the regression line)
+
+::: columns
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+set.seed(2)
+d <- tibble(x = rnorm(50, mean = 100, sd = 20)) |>
+  mutate(y =  0.8 * x + rnorm(50, mean = 0, sd = 10))
+m <- lm(y ~ x, data = d)
+d <- d |> 
+  mutate(yhat = fitted(m))
+
+basic_scatter <- d |> 
+  ggplot(aes(x, y)) +
+  geom_point(size = 4) +
+  coord_equal()
+basic_scatter
+```
+
+:::
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+basic_scatter +
+  geom_segment(aes(xend = x, yend = yhat), color = "red") +
+  geom_smooth(method = "lm", color = "red", se = FALSE)
+```
+
+:::
+:::
