@@ -16,7 +16,7 @@ execute:
 
 # Problem 1: Histograms and boxplots (35 points)
 
-In this problem, we'll use `mtcars`, which is a pre-loaded dataset in `R`.
+In this problem, we will use `mtcars`, which is a pre-loaded dataset in `R`.
 
 ```{r}
 head(mtcars)

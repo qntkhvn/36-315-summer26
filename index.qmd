@@ -29,27 +29,27 @@ format:
 
 ## Labs
 
-* Lab 1: [assignment](labs/lab1.qmd)
-* Lab 2: [assignment](labs/lab2.qmd)
-* Lab 3: [assignment](labs/lab3.qmd)
+* Lab 1 [assignment](labs/lab1.qmd)
+* Lab 2 [assignment](labs/lab2.qmd)
+* Lab 3 [assignment](labs/lab3.qmd)
 
 ## Homework
 
-* Homework 1: [assignment](homework/homework1.qmd)
-* Homework 2: [assignment](homework/homework2.qmd)
+* Homework 1 [assignment](homework/homework1.qmd)
+* Homework 2 [assignment](homework/homework2.qmd)
 
 ## Graphic Critiques
 
-* Critique 1: [template](critiques/critique1.qmd)
-* Critique 2: [template](critiques/critique2.qmd)
+* Critique 1 [template](critiques/critique1.qmd)
+* Critique 2 [template](critiques/critique2.qmd)
 
 ## Final Project
 
 * TBA
 
-<!-- * Project: [guide](project/project-guide.qmd) -->
-<!-- * Report: [guide](project/report-guide.qmd), [template](project/report-template.qmd) -->
-<!-- * Presentation: [guide](project/presentation-guide.qmd) -->
+<!-- * Project [guide](project/project-guide.qmd) -->
+<!-- * Report [guide](project/report-guide.qmd), [template](project/report-template.qmd) -->
+<!-- * Presentation [guide](project/presentation-guide.qmd) -->
 
 ## Calendar
 
