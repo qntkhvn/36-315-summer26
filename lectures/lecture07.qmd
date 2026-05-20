@@ -397,6 +397,35 @@ ionescu_shots <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summ
 glimpse(ionescu_shots)
 ```
 
+## A subtle point about histogram
+
+::: columns
+::: {.column .fragment}
+By default, the bins are centered at the integers<br>Intervals are left-closed, right-open: -0.5 to 0.5, etc.
+
+```{r}
+#| fig-height: 6
+#| fig-width: 7
+ionescu_shots |>
+  ggplot(aes(x = shot_distance)) +
+  geom_histogram(binwidth = 1)
+```
+:::
+
+::: {.column .fragment}
+
+Specify the center of one bin (e.g. 0.5)<br>and use `closed = "left"`
+
+```{r}
+#| fig-height: 6
+#| fig-width: 7
+ionescu_shots |>
+  ggplot(aes(x = shot_distance)) +
+  geom_histogram(binwidth = 1, center = 0.5, closed = "left")
+```
+:::
+:::
+
 ## Visualizing joint density
 
 ::: columns
