@@ -45,11 +45,9 @@ format:
 
 ## Final Project
 
-* TBA
-
-<!-- * Project [guide](project/project-guide.qmd) -->
-<!-- * Report [guide](project/report-guide.qmd), [template](project/report-template.qmd) -->
-<!-- * Presentation [guide](project/presentation-guide.qmd) -->
+* Project [guide](project/project-guide.qmd)
+* Report [guide](project/report-guide.qmd), [template](project/report-template.qmd)
+* Presentation [guide](project/presentation-guide.qmd)
 
 ## Calendar
 
