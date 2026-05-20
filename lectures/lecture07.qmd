@@ -1,5 +1,5 @@
 ---
-title: "Visualizing 2D quantitative data"
+title: "Visualizing 2D quantitative data and linear regression"
 subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
 footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
 format:
@@ -92,7 +92,7 @@ library(tidyverse)
 theme_set(theme_light())
 ```
 
-```{r}
+```{r} 
 #| echo: false
 theme_set(theme_light(base_size = 20))
 ```
@@ -723,3 +723,257 @@ basic_scatter +
 
 :::
 :::
+
+## Linear regression in `R`
+
+```{r}
+penguins_lm <- lm(body_mass ~ flipper_len, data = penguins)
+summary(penguins_lm)
+```
+
+
+## Assessing assumptions of linear regression
+
+Simple linear regression assumes $Y_i \overset{\textsf{iid}}{\sim} N(\beta_0 + \beta_1 X_i, \sigma^2)$
+
+* If this is true, then $Y_i - \hat{Y}_i \overset{\textsf{iid}}{\sim} N(0, \sigma^2)$
+
+. . .
+
+Plot residuals against fitted values $\hat{Y}_i$
+
+* Assess linearity: any divergence from mean 0
+
+* Asess equal variance: if $\sigma^2$ is homogeneous across predictions/fits $\hat{Y}_i$
+
+. . .
+
+More difficult to assess independence and fixed $X$ assumptions
+
+* Make these assumptions based on subject-matter knowledge
+
+
+
+## Plot residuals against predicted values
+
+::: columns
+::: {.column}
+
+```{r}
+#| eval: false
+tibble(fitted = fitted(penguins_lm),
+       resid = residuals(penguins_lm)) |> 
+  ggplot(aes(x = fitted, y = resid)) +
+  geom_point(alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red")
+```
+
+* Conditional on the predicted values, residuals should have a mean of zero
+
+* Residuals should not display any pattern
+
+* Two things to look for:
+
+  * Any trend around horizontal reference line?
+
+  * Equal vertical spread?
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+tibble(fitted = fitted(penguins_lm),
+       resid = residuals(penguins_lm)) |> 
+  ggplot(aes(x = fitted, y = resid)) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_smooth(se = FALSE) # plot the residual mean
+```
+
+
+:::
+:::
+
+## Linear regression with categorical variables
+
+* A categorical variable of $k$ levels is encoded into $k-1$ indicator/dummy variables
+
+. . .
+
+* Example: Penguins species (3 levels: Adelie, Chinstrap, Gentoo)
+
+* Indicators for Chinstrap and Gentoo: $I_C$ and $I_G$
+
+* If $I_C = I_G = 0$, then the species must be Adelie (reference/baseline level)
+
+. . .
+  
+* Model: $Y_i \overset{\textsf{iid}}{\sim} N(\beta_0 + \beta_C I_C + \beta_G I_G, \sigma^2)$
+
+  * $\beta_0$: mean for Adelie (reference level)
+  
+  * $\beta_0 + \beta_C$: mean for Chinstrap
+  
+  * $\beta_0 + \beta_G$: mean for Gentoo
+  
+  * Significant $\beta_C$: Chinstrap and Adelie are different
+  
+  * Significant $\beta_G$: Gentoo and Adelie are different
+  
+  * What about comparing Chinstrap and Gentoo? Need to fit a different model
+  
+## Linear regression with interactions
+
+* Setup: response $Y$ (`bill_dep`) and 2 predictors $X$ (`bill_len`, quantitative) and `species` (categorical)
+
+. . .
+
+* Model 1 (additive, no interaction): $Y_i \overset{\textsf{iid}}{\sim} N(\beta_0 + \beta_X X + \beta_C I_C + \beta_G I_G, \sigma^2)$<br>(Formula: `bill_dep ~ bill_len + species`)
+
+  * The intercept for Adelie: $\beta_0$; for Chinstrap: $\beta_0 + \beta_C$; for Gentoo: $\beta_0 + \beta_G$
+
+  * The slope for all species: $\beta_X$
+
+. . .
+
+* Model 2 (with interaction): $Y_i \overset{\textsf{iid}}{\sim} N(\beta_0 + \beta_X X + \beta_C I_C + \beta_G I_G + \beta_{CX} I_C X + \beta_{GX} I_G X, \sigma^2)$<br>(Formula: `bill_dep ~ bill_len + species + bill_len:species`)
+
+  * The intercept for Adelie: $\beta_0$; for Chinstrap: $\beta_0 + \beta_C$; for Gentoo: $\beta_0 + \beta_G$
+
+  * The slope for Adelie: $\beta_X$; for Chinstrap: $\beta_X + \beta_{CX}$; for Gentoo: $\beta_X + \beta_{GX}$
+
+  * Significant coefficient for categorical variables by themselves $\rightarrow$ significantly different intercepts
+
+  * Significant coefficient for interactions with categorical variables $\rightarrow$ significantly different slopes
+
+## Visualizing additive model (no interaction)
+
+Model: `bill_dep ~ bill_len + species`
+
+Example of [Simpson’s paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox): negative linear relationship between bill depth and bill length overall, but positive linear relationship within species
+
+```{r}
+#| code-fold: true
+#| fig-height: 7
+#| fig-width: 12
+additive_lm <- lm(bill_dep ~ bill_len + species, data = penguins)
+
+intercepts <- c(
+  coef(additive_lm)["(Intercept)"],
+  coef(additive_lm)["(Intercept)"] + coef(additive_lm)["speciesChinstrap"],
+  coef(additive_lm)["(Intercept)"] + coef(additive_lm)["speciesGentoo"]
+)
+
+lines_tbl <- tibble(intercept = intercepts,
+                    slope = rep(coef(additive_lm)["bill_len"], 3),
+                    species = levels(penguins$species))
+penguins |> 
+  ggplot(aes(x = bill_len, y = bill_dep)) +
+  geom_point(alpha = 0.5) +
+  geom_abline(data = lines_tbl, linewidth = 1.5,
+              aes(intercept = intercept, slope = slope, color = species))
+```
+
+## Summarizing additive model
+
+```{r}
+summary(lm(bill_dep ~ bill_len + species, data = penguins))
+```
+
+
+## Visualizing model with interaction
+
+Model: `bill_dep ~ bill_len + species + bill_len:species`
+
+Map `species` to the `color` aesthetic for `geom_smooth()` layer
+
+```{r}
+#| code-fold: true
+#| fig-height: 7
+#| fig-width: 12
+penguins |>
+  ggplot(aes(x = bill_len, y = bill_dep, color = species)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## Summarizing model with interaction
+
+```{r}
+summary(lm(bill_dep ~ bill_len * species, data = penguins))
+```
+
+## Linear regression warnings
+
+**Simpson's paradox**
+
+* A particular trend appears in several subgroups but reverses (or disappears) when the subgroups are combined
+
+  * e.g., negative relationship between two variables overall but positive relationship within every subgroup
+
+* In this case, subgroup analysis is especially important
+
+. . .
+
+**Is the intercept meaningful?**
+
+* Think about whether $X = 0$ makes sense for a particular variable before interpreting the intercept
+
+. . .
+
+**Interpolation versus extrapolation**
+
+* Interpolation: prediction within the range of a variable
+
+* Extrapolation: prediction outside the range of a variable
+
+* Generally speaking, interpolation is more reliable than extrapolation (less sensitive to model misspecification)
+
+## Extrapolation example
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 15))
+```
+
+```{r}
+#| echo: false
+set.seed(1389)
+fake_data <- tibble(x = runif(100, min = -10, max = -3)) |>
+  mutate(y = rnorm(n = 100, mean = 3 * x^2, sd = 3))
+fake_data |> 
+  ggplot(aes(x, y)) +
+  geom_point(size = 1.2) +
+  geom_smooth(method = "lm") +
+  scale_y_continuous(limits = c(0, 350))
+```
+
+## Extrapolation example
+
+```{r}
+#| echo: false
+fake_data |> 
+  ggplot(aes(x, y)) +
+  geom_point(size = 0.7) +
+  scale_x_continuous(limits = c(-11, 11)) +
+  scale_y_continuous(limits = c(0, 350)) +
+  geom_smooth(method = "lm")
+```
+
+## Extrapolation example
+
+```{r}
+#| echo: false
+fake_data |> 
+  ggplot(aes(x, y)) +
+  geom_point(size = 0.7) +
+  geom_smooth(method = "lm") +
+  scale_x_continuous(limits = c(-11, 11)) +
+  scale_y_continuous(limits = c(0, 350)) +
+  stat_function(fun = function (x) 3 * x^2, linetype = "dashed", color = "red")
+```
+
