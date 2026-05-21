@@ -28,9 +28,9 @@ format:
 
 ## Rubric
 
-* Was the presentation at most 5 minutes in length?<span style="float:right;">(5 points, all or nothing)</span>
+* Was the presentation at most 5 minutes in length?<span style="float:right;">(5pts, all or nothing)</span>
 
-* Did you actually present rather than just reading straight from notes?<span style="float:right;">(5 points, all or nothing)</span>
+* Did you actually present rather than just reading straight from notes?<span style="float:right;">(5pts, all or nothing)</span>
 
 * Did you provide a clear description of the dataset?<span style="float:right;">(0--10pts)</span>
 

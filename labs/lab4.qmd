@@ -138,7 +138,7 @@ In this problem, we'll explore different plots that visualize the conditional di
 
 ## A (10pts)
 
-First, we'll create a *stacked histogram* of `mpg`, stacked by `gear`).
+First, we'll create a *stacked histogram* of `mpg`, stacked by `gear`.
 
 * Create a histogram of `mpg` the typical way, using `ggplot()` and `geom_histogram()`. Choose a `bins` or `binwidth` you think is most appropriate.
 
