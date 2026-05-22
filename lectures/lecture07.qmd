@@ -65,7 +65,11 @@ Big picture ideas:
 cor(penguins$bill_dep, penguins$bill_len, use = "complete.obs")
 ```
 
+. . .
+
 * Note: By default, `cor()` returns Pearson correlation
+
+. . .
 
 * Other correlations:
 
@@ -451,6 +455,36 @@ ionescu_shots |>
 ```
 :::
 :::
+
+## Review: 1D kernel density estimation
+
+::: columns
+::: {.column}
+
+* The KDE estimator is $$\displaystyle \hat{f}(x) = \frac{1}{n} \sum_{i=1}^n \frac{1}{h} K_h(x - x_i)$$
+    
+* Smooth out each observation into a small distribution (small "bump")
+
+* Kernel functions are pdfs
+
+* Put a copy of the kernel at each observation, then add them up
+
+* This is a mixture
+
+  * Basis distributions are the scaled copies of the kernel, centered at the $x_i$'s
+  
+  * Weight of each mixture component is $1/n$
+  
+:::
+::: {.column}
+<br>
+<br>
+<center>
+![](../images/kde-bumps.png){height=550}
+</center>
+:::
+:::
+
 
 ## Going from 1D to 2D density estimation
 
