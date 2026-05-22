@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   fig.align = "center"
 )
-ggplot2::theme_set(ggplot2::theme_gray(base_size = 20))
+ggplot2::theme_set(ggplot2::theme_light(base_size = 20))
 library(tidyverse)
 ```
 
@@ -690,7 +690,7 @@ read_csv("../data/comparison-power.csv") |>
 
 * Graphics should be paired with statistical analyses to determine if a *true effect* versus noise is displayed
 
-* **Even if there is a true effect, there may be limited power to detect it** (some effects are easier to detect than others)
+* **Even if there is a true effect, there may be limited power to detect it**<br>(some effects are easier to detect than others)
 
 * **Remember: Power is the probability of rejecting when the null is false**
 
@@ -704,28 +704,27 @@ read_csv("../data/comparison-power.csv") |>
 
   * Choose appropriate tests!
 
-## Appendix: visualizing empirical and parametric CDF
+<!-- ## Appendix: visualizing empirical and parametric CDF -->
 
-```{r}
-#| eval: false
-# create the ECDF function
-fl_ecdf <- ecdf(penguins$flipper_len)
+<!-- ```{r} -->
+<!-- #| eval: false -->
+<!-- # create the ECDF function -->
+<!-- fl_ecdf <- ecdf(penguins$flipper_len) -->
 
-# compute absolute value of the differences between ECDF and theoretical (normal distribution)
-abs_ecdf_diff <- abs(fl_ecdf(penguins$flipper_len) - pnorm(penguins$flipper_len, mean = fl_mean, sd = fl_sd))
+<!-- # compute absolute value of the differences between ECDF and theoretical (normal distribution) -->
+<!-- abs_ecdf_diff <- abs(fl_ecdf(penguins$flipper_len) - pnorm(penguins$flipper_len, mean = fl_mean, sd = fl_sd)) -->
 
-# find the maximum difference value
-max_fl_diff <- penguins$flipper_len[which.max(abs_ecdf_diff)]
+<!-- # find the maximum difference value -->
+<!-- max_fl_diff <- penguins$flipper_len[which.max(abs_ecdf_diff)] -->
 
-penguins |>
-  ggplot(aes(x = flipper_len)) +
-  stat_ecdf(color = "darkblue") +
-  # display normal ECDF
-  stat_function(fun = pnorm, args = list(mean = fl_mean, sd = fl_sd), color = "black", linetype = "dashed") +
-  # display KS test line
-  geom_vline(xintercept = max_fl_diff, color = "red") +
-  # add text with the test results
-  annotate(geom = "text", x = 215, y = 0.25, label = "KS test stat = 0.12428\np-value = 5.163e-05") +
-  labs(x = "Flipper length (mm)", y = "Fn(x)")
-```
-
+<!-- penguins |> -->
+<!--   ggplot(aes(x = flipper_len)) + -->
+<!--   stat_ecdf(color = "darkblue") + -->
+<!--   # display normal ECDF -->
+<!--   stat_function(fun = pnorm, args = list(mean = fl_mean, sd = fl_sd), color = "black", linetype = "dashed") + -->
+<!--   # display KS test line -->
+<!--   geom_vline(xintercept = max_fl_diff, color = "red") + -->
+<!--   # add text with the test results -->
+<!--   annotate(geom = "text", x = 215, y = 0.25, label = "KS test stat = 0.12428\np-value = 5.163e-05") + -->
+<!--   labs(x = "Flipper length (mm)", y = "Fn(x)") -->
+<!-- ``` -->
