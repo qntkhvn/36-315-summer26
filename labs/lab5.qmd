@@ -87,9 +87,7 @@ Make a conditional smoothed density plot of `sqrt(energy_100g)` given `nutrition
 
 ## B (20pts) 
 
-* Test whether `sqrt(energy_100g)` has the same variance across different values of `nutrition_grade_fr`.
-
-To test whether different groups have the same variance, perform a Bartlett's test using `bartlett.test(outcome ~ group, data = food)`, where `outcome` is the numeric variable `sqrt(energy_100g)` and `group` is the categorical variable `nutrition_grade_fr`.
+* Perform a Bartlett's test (using `bartlett.test()`) to test whether `sqrt(energy_100g)` has the same variance across different values of `nutrition_grade_fr`.
 
 ```{r}
 # PUT YOUR CODE HERE
@@ -99,12 +97,10 @@ State your formal conclusion (in context) from this test, and explain how you ar
 
 **YOUR ANSWER HERE**
 
-+ Test whether `sqrt(energy_100g)` has the same mean across different values of `nutrition_grade_fr`.
-
-To do this, perform a one-way ANOVA using `oneway.test(outcome ~ group, data = food)`, where `outcome` and `group` are properly specified. Furthermore, within `oneway.test()`, specify either `var.equal = TRUE` or `var.equal = FALSE` to indicate whether the variances are equal (using the conclusions from the Bartlett's test above).
+* Perform a one-way ANOVA (using `oneway.test()`) to test whether `sqrt(energy_100g)` has the same mean across different values of `nutrition_grade_fr`. Within `oneway.test()`, specify either `var.equal = TRUE` or `var.equal = FALSE` to indicate whether the variances are equal (using the conclusions from the Bartlett's test above).
 
 ```{r}
-# PUT YOUR CODE HERE
+# YOUR CODE HERE
 ```
 
 State your formal conclusion (in context) from this test, and explain how you arrived at your answer. Also, be sure to state the null hypothesis for this test in your answer.
@@ -117,21 +113,16 @@ State your formal conclusion (in context) from this test, and explain how you ar
 
 ## A (10pts) 
 
-Use the Kolmogorov-Smirnov (KS) test to assess if `energy_100g` for Grade D foods follows a Normal distribution.
-
-First, let's define a dataset, `food_d`, which contains only the Nutrition Grade D foods.
+First, define a dataset, `food_d`, which contains only the Nutrition Grade D foods.
 
 ```{r}
-food_d <- food |> 
-  filter(nutrition_grade_fr == "d")
+# YOUR CODE HERE
 ```
 
-Then, fill in the following template code to run the test.
+Then, perform a Kolmogorov-Smirnov (KS) test to assess whether `energy_100g` for Grade D foods follows a normal distribution.
 
 ```{r}
-# mean_est <- ?
-# sd_est <- ?
-# ks.test(food_d$energy_100g, "pnorm", mean = mean_est, sd = sd_est)
+# YOUR CODE HERE
 ```
 
 State the p-value and your formal conclusion (in context) from this test.
@@ -142,28 +133,19 @@ State the p-value and your formal conclusion (in context) from this test.
 
 The KS test relies on the empirical cumulative distribution functions (ECDFs).
 
-The following code generates the ECDF for `energy_100g` with the `food_d` dataset.
+First, make a plot to visualize the ECDF for `energy_100g` with the `food_d` dataset.
 
 ```{r}
-food_d |>
-  ggplot(aes(x = energy_100g)) +
-  stat_ecdf()
+# YOUR CODE HERE
 ```
 
-Notice that the ECDF looks like a step function. Here, steps are quite small, because the sample size of `food_d` is pretty large (about 600).
-
-We can update this figure to include a comparison with the normal CDF using `stat_function()`.
+Next, update the previous plot to include a comparison with the normal CDF using `stat_function()`.
 
 ```{r}
-# food_d |>
-#   ggplot(aes(x = energy_100g)) +
-#   stat_ecdf() +
-#   # plot the normal distribution CDF with the mean and sd estimates
-#   stat_function(fun = pnorm, args = list(mean = mean_est, sd = sd_est),
-#                 color = "red", linetype = "dashed")
+# YOUR CODE HERE
 ```
 
-In 1--2 sentences: How would you use the plot above to report the median of `energy_100g` for Grade D foods? To help answer this question, draw a horizontal line on your ECDF plot by adding `+ geom_hline(yintercept = ?)` to your code, where `?` is filled in with an appropriate value to answer this question.
+In 1--2 sentences: How would you use the plot above to report the median of `energy_100g` for Grade D foods? To help answer this question, draw a horizontal line on your ECDF plot by adding `geom_hline()` to your code, with an appropriate value specified.
 
 ```{r}
 # YOUR CODE HERE
@@ -173,13 +155,10 @@ In 1--2 sentences: How would you use the plot above to report the median of `ene
 
 ## C (10pts) 
 
-Finally, test whether `energy_100g` has a different distribution for Grade B and Grade D foods using a two-sample KS test.
-
-Fill in the following template code (where you must properly define `food_b`) to run a two-sample KS test.
+Test whether `energy_100g` has a different distribution for Grade B and Grade D foods. To do so, first define a dataset called `food_b` (which contains only the Nutrition Grade B foods), then perform a two-sample KS test.
 
 ```{r}
-# food_b <- ?
-# ks.test(food_b$energy_100g, food_d$energy_100g)
+# YOUR CODE HERE
 ```
 
 State your formal conclusion (in context) from this test. Be sure to mention what the null hypothesis is for this test.
@@ -188,12 +167,16 @@ State your formal conclusion (in context) from this test. Be sure to mention wha
 
 ## D (5pts) 
 
-Now let's visualize what the two-sample KS test is doing.
+Visualize the two-sample KS test results as follows.
 
-* First, use your code from Part B, but remove the `geom_hline()` layer, and update the input dataset to be `food` instead of `food_d`.
+* First, use the code from Part B, but remove the `geom_hline()` layer, and update the input dataset to be `food` instead of `food_d`.
 
-* Then, update the ECDF layer to be `stat_ecdf(aes(color = nutrition_grade_fr))`.
+* Then, update the ECDF layer so that it is color coded by `nutrition_grade_fr`.
 
 ```{r}
 # YOUR CODE HERE
 ```
+
+* Focusing on Grade B and Grade D foods, explain whether the graph supports the KS test conclusion in 1--2 sentences?
+
+**YOUR ANSWER HERE**
