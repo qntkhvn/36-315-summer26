@@ -85,9 +85,9 @@ Make a conditional smoothed density plot of `sqrt(energy_100g)` given `nutrition
 # YOUR CODE HERE
 ```
 
-## B (20pts) 
+## B (10pts) 
 
-* Perform a Bartlett's test (using `bartlett.test()`) to test whether `sqrt(energy_100g)` has the same variance across different values of `nutrition_grade_fr`.
+Perform a Bartlett's test (using `bartlett.test()`) to test whether `sqrt(energy_100g)` has the same variance across different values of `nutrition_grade_fr`.
 
 ```{r}
 # PUT YOUR CODE HERE
@@ -97,7 +97,9 @@ State your formal conclusion (in context) from this test, and explain how you ar
 
 **YOUR ANSWER HERE**
 
-* Perform a one-way ANOVA (using `oneway.test()`) to test whether `sqrt(energy_100g)` has the same mean across different values of `nutrition_grade_fr`. Within `oneway.test()`, specify either `var.equal = TRUE` or `var.equal = FALSE` to indicate whether the variances are equal (using the conclusions from the Bartlett's test above).
+## C (10pts)
+
+Perform a one-way ANOVA (using `oneway.test()`) to test whether `sqrt(energy_100g)` has the same mean across different values of `nutrition_grade_fr`. Within `oneway.test()`, specify either `var.equal = TRUE` or `var.equal = FALSE` to indicate whether the variances are equal (using the conclusions from the Bartlett's test above).
 
 ```{r}
 # YOUR CODE HERE
