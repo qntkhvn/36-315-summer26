@@ -39,6 +39,7 @@ format:
 
 * Homework 1 [assignment](homework/homework1.qmd)
 * Homework 2 [assignment](homework/homework2.qmd)
+* Homework 3 [assignment](homework/homework3.qmd)
 
 ## Graphic Critiques
 
