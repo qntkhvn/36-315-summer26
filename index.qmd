@@ -67,7 +67,7 @@ format:
 | May 15 (Friday)     | Lecture 3    | Homework 1 @ 11:59pm |
 </details>
 
-<details open>
+<details>
 <summary><strong>Week 2</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
@@ -78,7 +78,7 @@ format:
 | May 22 (Friday)     | Lecture 6    | Homework 2 @ 11:59pm |
 </details>
 
-<details>
+<details open>
 <summary><strong>Week 3</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
