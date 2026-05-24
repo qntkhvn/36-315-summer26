@@ -1,0 +1,518 @@
+---
+title: "Nonlinear regression and more quantitative data visualization"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Beyond linear regression
+
+* The truth is (almost) never linear
+
+* But often the linearity assumption is good enough
+
+* Many nonparametric/nonlinear regression methods
+
+  * splines
+  
+  * **local regression**
+  
+  * generalized additive models
+  
+  * kernel regression
+  
+  * wavelets
+
+## Nonlinear regression
+
+* Assume normality, but not linearity where $f(x)$ is some unknown function $$Y_i \stackrel{iid}{\sim} N(\underbrace{f(X_i)}, \sigma^2)$$
+
+* Do not make explicit assumptions about the functional form of $f$ (i.e., $f$ is estimated from the data)
+
+* **Intuition: Any nonlinear function is locally linear**
+
+* Local linear regressions fits a bunch of... local linear regressions, and then glues them together
+
+* Local linear regression is basically **weighted linear regression**, where only "local units" get weight
+
+## Weighted linear regression
+
+* In linear regression, we solve
+
+$$\arg \min_{\beta_0,\beta_1} \sum_{i=1}^n (Y_i - \beta_0 - \beta_1 X_i)^2$$
+
+. . .
+
+* In **weighted** linear regression, we solve
+
+$$\arg \min_{\beta_0,\beta_1} \sum_{i=1}^n w_i \cdot (Y_i - \beta_0 - \beta_1 X_i)^2$$
+
+. . .
+
+* Local linear regression is exactly the same, except the weights depend on which $x$ we want to estimate $f(x)$.
+
+## Local linear regression via LOESS
+
+In **local linear regression**, we estimate $f(X_i)$ and solve
+
+$$\text{arg }\underset{\beta_0, \beta_1}{\text{min}} \sum_i^n w_i(x) \cdot \big(Y_i - \beta_0 - \beta_1 X_i \big)^2$$ 
+
+* Notice the weights depend on $x$, so observations close to $x$ gets more weight in estimating $f(x)$
+
+. . .
+
+`geom_smooth()` uses tri-cubic weighting:
+
+$$w_i(d_i) = \begin{cases} (1 - |d_i|^3)^3, \text{ if } i \in \text{neighborhood of  } x\\
+0 \text{ if } i \notin \text{neighborhood of  } x \end{cases}$$
+
+* $d_i$: distance between $x$ and $X_i$ scaled to be between 0 and 1
+  
+* `span`: controls fraction of observations in neighborhood around the observation of interest
+
+  * Default: `span = 0.75` (use 75% of the observations to fit local linear regression with weights)
+  
+:::aside
+LOESS (Locally Estimated Scatterplot Smoothing) or LOWESS (Locally Weighted Scatterplot Smoothing)
+:::
+  
+## Local linear regression, animated
+
+```{r}
+#| echo: false
+#| fig-width: 8
+library(tidyverse)
+library(gganimate)
+library(broom)
+set.seed(1234)
+x <- seq(0, 10, 10/99)
+y <- 0.7 * sin(0.9 * x) + 0.08 * (x - 5)^2 - 0.7 + rnorm(100, 0.7)
+df <- tibble(x, y)
+span <- 0.25
+d <- df |>
+  crossing(center = df$x) |>
+  mutate(dist = abs(x - center)) |>
+  filter(rank(dist) / n() <= span) |> 
+  mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3)
+fit <- loess(y ~ x, degree = 1, span = span, data = df)
+a <- fit |> 
+  augment() |> 
+  crossing(center = df$x) |> 
+  filter(x <= center)
+d |> 
+  ggplot(aes(x, y)) +
+  geom_point(data = df, alpha = 0.3, color = "gray70") +
+  geom_point(aes(alpha = weight)) +
+  geom_vline(aes(xintercept = center), linetype = "dashed", color = "grey40") +
+  geom_smooth(aes(group = center, weight = weight), method = "lm", se = FALSE, color = "blue") +
+  geom_line(data = a, aes(x, .fitted), color = "red", linewidth = 1) +
+  scale_alpha_continuous(range = c(0, 1), guide = "none") +
+  transition_states(center, transition_length = 1, state_length = 0) +
+  theme_light(base_size = 14)
+```
+
+
+## Displaying trend lines: LOESS
+
+::: columns
+::: {.column}
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+```{r}
+#| eval: false
+penguins |> 
+  ggplot(aes(x = flipper_len, y = body_mass)) +
+  geom_point(alpha = 0.5) + 
+  geom_smooth()
+```
+
+* LOESS is default behavior when $n \leq 1000$
+
+* Default `span = 0.75`
+
+* For $n > 1000$, `mgcv::gam()` is used with<br>`formula = y ~ s(x, bs = "cs")` and<br>`method = "REML"`
+
+:::
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggplot(aes(x = flipper_len, y = body_mass)) +
+  geom_point(size = 3, alpha = 0.5) + 
+  geom_smooth()
+```
+
+:::
+:::
+
+## Adjusting `span`
+
+```{r}
+#| echo: false
+#| fig-height: 7
+#| fig-width: 9
+set.seed(1234)
+x <- runif(100, 0, 10)
+y <- sin(x) + rnorm(100, 0, 0.3)
+
+library(gganimate)
+tibble(span = seq(0.05, 1, by = 0.05)) |>
+  group_by(span) |>
+  do(broom::augment(loess(y ~ x, degree = 2, span = .$span))) |> 
+  ggplot(aes(x, y)) +
+  geom_point(color = "blue", size = 2) +
+  geom_line(aes(y = .fitted), color = "chocolate", linewidth = 2) +
+  transition_states(span, transition_length = 1, state_length = 0) +
+  ggtitle("span = {closest_state}") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Pairs plots
+
+* Create a pairs plot to see all pairwise relationships in one plot
+
+* Pairs plot can include the various kinds of pairwise plots
+
+  * Two quantitative variables: scatterplot
+
+  * One categorical, one quantitative: side-by-side violins, stacked histograms, overlaid densities
+
+  * Two categorical: stacked bars, side-by-side bars, mosaic plots
+  
+## Pairs plots 
+
+```{r}
+#| fig-height: 9
+#| fig-width: 15
+library(GGally)
+penguins |> 
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  ggpairs()
+```
+
+## Pair plots of quantitative variables
+
+::: columns
+::: {.column width="42%"}
+
+* Diagonal: marginal distributions
+
+* Off-diagonal: joint (pairwise) distributions or statistical summaries (e.g., correlation)
+
+* Matrix of plots is symmetric
+
+```{r}
+#| eval: false
+penguins |> 
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  ggpairs(aes(alpha = 0.2))
+```
+
+Syntax note: change `alpha` within `aes` (annoying...)
+
+:::
+::: {.column width="58%"}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  ggpairs(aes(alpha = 0.2))
+```
+
+:::
+:::
+
+## Pair plots with categorical variables
+
+::: columns
+::: {.column width="43%"}
+
+* Can either use `select()` before plotting or specify `columns` directly
+
+```{r}
+#| eval: false
+penguins |> 
+  ggpairs(columns = c("bill_len", "body_mass", "island"),
+          aes(alpha = 0.2, color = species))
+```
+
+:::
+::: {.column width="57%"}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggpairs(columns = c("bill_len", "body_mass", "island"),
+          aes(alpha = 0.2, color = species))
+```
+
+:::
+:::
+
+## More customization
+
+::: columns
+::: {.column width="38%"}
+
+* Can customize which figures are displayed in which panels
+
+* For more details, check out the package documentation [here](https://ggobi.github.io/ggally/articles/ggpairs.html)
+
+```{r}
+#| eval: false
+penguins |> 
+  ggpairs(
+    columns = c("bill_len", "body_mass", "island"),
+    mapping = aes(alpha = 0.2, color = species), 
+    lower = list(continuous = "smooth_lm", 
+                 combo = "facetdensitystrip"),
+    upper = list(continuous = "cor", 
+                 combo = "facethist")
+  )
+```
+
+:::
+::: {.column width="62%"}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |> 
+  ggpairs(
+    columns = c("bill_len", "body_mass", "island"),
+    mapping = aes(alpha = 0.2, color = species), 
+    lower = list(continuous = "smooth_lm", 
+                 combo = "facetdensitystrip"),
+    upper = list(continuous = "cor", 
+                 combo = "facethist")
+  ) +
+  theme_light(base_size = 16)
+```
+
+:::
+:::
+
+## More customization
+
+::: columns
+::: {.column width="46%"}
+
+* Can also incorporate `ggplot2` customization
+
+```{r}
+#| eval: false
+penguins |>
+  ggpairs(columns = c("bill_len", "bill_dep", "flipper_len"),
+          aes(color = species, alpha = 0.2)) +
+  scale_color_manual(values = c("orange", "blue", "cyan4")) +
+  scale_fill_manual(values = c("orange", "blue", "cyan4")) +
+  theme_minimal() +
+  theme(strip.text = element_text(face = "bold"))
+```
+
+:::
+::: {.column width="54%"}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+penguins |>
+  ggpairs(columns = c("bill_len", "bill_dep", "flipper_len"),
+          aes(color = species, alpha = 0.2)) +
+  scale_color_manual(values = c("orange", "blue", "cyan4")) +
+  scale_fill_manual(values = c("orange", "blue", "cyan4")) +
+  theme_minimal(base_size = 16) +
+  theme(strip.text = element_text(face = "bold"))
+```
+
+:::
+:::
+
+## Correlation heatmaps
+
+::: columns
+::: {.column}
+
+* Use `correlate()` and `scretch()` functions from the `corrr` package to compute correlation matrix and pivot
+
+* Use `geom_tile()` to create a heatmap (tile map)
+
+```{r}
+library(corrr)
+```
+
+```{r}
+#| eval: false
+penguins |> 
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  correlate(diagonal = 1) |> 
+  stretch() |> 
+  ggplot(aes(x, y, fill = r)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(high = "red", mid = "white", low = "blue", 
+                       midpoint = 0, limits = c(-1, 1)) +
+  coord_fixed()
+```
+
+* See also: [`ggcorrplot`](https://rpkgs.datanovia.com/ggcorrplot)
+
+:::
+::: {.column}
+
+<br>
+
+```{r}
+#| echo: false
+#| fig-height: 7
+penguins |> 
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  correlate(diagonal = 1) |> 
+  stretch() |> 
+  ggplot(aes(x, y, fill = r)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(high = "red", mid = "white", low = "blue", 
+                       midpoint = 0, limits = c(-1, 1)) +
+  coord_fixed()
+```
+
+
+:::
+:::
+
+## Parallel coordinates plots
+
+::: columns
+::: {.column width="42%"}
+
+* Display each variable side-by-side on standardized axis
+
+* Connect observations with lines
+
+* Useful when working with a moderate number of observations and variables<br>(can be overwhelming with too many)
+
+* Adjust the transparency of the lines to handle overlap
+
+```{r}
+#| eval: false
+library(GGally)
+penguins |>
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  ggparcoord(alphaLines = 0.2)
+```
+
+:::
+::: {.column width="58%"}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+library(GGally)
+penguins |>
+  select(bill_len, bill_dep, flipper_len, body_mass) |> 
+  ggparcoord(alphaLines = 0.2)
+```
+
+:::
+:::
+
+## Parallel coordinates plots
+
+::: columns
+::: {.column width="45%"}
+
+* Color lines by a categorical variable
+
+* Can be useful for revealing group structure
+
+* How do we order the x-axis?
+
+```{r}
+#| eval: false
+penguins |>
+  ggparcoord(columns = 3:6, alphaLines = 0.2, 
+             groupColumn = "species", order = c(6, 5, 3, 4)) +
+  theme(legend.position = "top")
+```
+
+:::
+::: {.column width="55%"}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |>
+  ggparcoord(columns = 3:6, alphaLines = 0.2, 
+             groupColumn = "species", order = c(6, 5, 3, 4)) +
+  theme(legend.position = "top")
+```
+
+:::
+:::
+
+## Parallel coordinates plots
+
+::: columns
+::: {.column width="45%"}
+
+* By default, the y-axis is scaled by subtracting the mean and dividing by the standard deviation
+
+* Use `scale = "uniminmax"` so that minimum of the variable is 0 and the maximum is 1
+
+```{r}
+#| eval: false
+penguins |>
+  ggparcoord(columns = 3:6, alphaLines = 0.2, 
+             groupColumn = "species", scale = "uniminmax") +
+  theme(legend.position = "top")
+```
+
+:::
+::: {.column width="55%"}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+penguins |>
+  ggparcoord(columns = 3:6, alphaLines = 0.2, 
+             groupColumn = "species", scale = "uniminmax") +
+  theme(legend.position = "top")
+```
+
+:::
+:::
