@@ -121,7 +121,7 @@ a <- fit |>
   augment() |> 
   crossing(center = df$x) |> 
   filter(x <= center)
-d |> 
+d |>
   ggplot(aes(x, y)) +
   geom_point(data = df, alpha = 0.3, color = "gray70") +
   geom_point(aes(alpha = weight)) +
@@ -516,3 +516,230 @@ penguins |>
 
 :::
 :::
+
+## Distance between observations
+
+* Goal: visualize structure among observations using distances matrices
+
+. . .
+
+* What does it means for two or more observations to be similar or different?
+
+. . .
+
+* This requires characterizing the **distance** between observations
+
+  * Clusters: groups of observations that are "close" together
+
+. . .
+
+*   This is easy to do for 2 quantitative variables: just make a scatterplot (possibly with contours or heatmap)
+
+. . .
+
+*   Define distance beyond 2D:
+
+    * Let $\boldsymbol{x}_i = (x_{i1}, \dots, x_{ip})$ be a vector of $p$ features for observation $i$
+
+    * Question of interest: How "far away" is $\boldsymbol{x}_i$ from $\boldsymbol{x}_j$?
+
+    * When looking at a scatterplot, **Euclidean distance** is used $$d(\boldsymbol{x}_i, \boldsymbol{x}_j) = \sqrt{(x_{i1} - x_{j1})^2 + \dots + (x_{ip} - x_{jp})^2}$$
+
+## Distances in general
+
+* There's a variety of different types of distance metrics: [**Euclidean**](https://en.wikipedia.org/wiki/Euclidean_distance) (focus) [Manhattan](https://en.wikipedia.org/wiki/Taxicab_geometry), [Mahalanobis](https://en.wikipedia.org/wiki/Mahalanobis_distance), [Cosine](https://en.wikipedia.org/wiki/Cosine_similarity), [Kullback-Leibler](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence), [Hellinger](https://en.wikipedia.org/wiki/Hellinger_distance),
+[Wasserstein](https://en.wikipedia.org/wiki/Wasserstein_metric), etc.
+
+. . .
+
+* Let $d(\boldsymbol{x}_i, \boldsymbol{x}_j)$ denote the pairwise distance between two observations $i$ and $j$
+
+  1. **Identity**: $\boldsymbol{x}_i = \boldsymbol{x}_j \Leftrightarrow d(\boldsymbol{x}_i, \boldsymbol{x}_j) = 0$
+
+  2. **Non-negativity**: $d(\boldsymbol{x}_i, \boldsymbol{x}_j) \geq 0$
+
+  3. **Symmetry**: $d(\boldsymbol{x}_i, \boldsymbol{x}_j) = d(\boldsymbol{x}_j, \boldsymbol{x}_i)$
+
+  4. **Triangle inequality**: $d(\boldsymbol{x}_i, \boldsymbol{x}_j) \leq d(\boldsymbol{x}_i, \boldsymbol{x}_k) + d(\boldsymbol{x}_k, \boldsymbol{x}_j)$
+
+. . .
+
+::: columns
+::: {.column width="48%"}
+
+* Distance matrix: matrix $D$ of all pairwise distances
+
+  * $D_{ij} = d(\boldsymbol{x}_i, \boldsymbol{x}_j)$
+
+  * Note: $D_{ii} = 0$ and $D_{ij} = D_{ji}$
+
+:::
+
+::: {.column width="52%"}
+
+$$
+D = 
+\begin{pmatrix}
+0 & D_{12} & \cdots & D_{1n} \\
+D_{21} & 0 & \cdots & D_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+D_{n1} & \cdots & \cdots & 0
+\end{pmatrix}
+$$
+
+:::
+:::
+
+## Multidimensional scaling (MDS)
+
+* Find a $k$-dimensional projection of the original $p$-dimensional dataset (where $k < p$)
+
+. . . 
+
+* Preserve the distances as much as possible
+
+  * i.e., pairs of observations with small distances in the original $p$-column dataset still have small distances in the smaller $k$-column dataset (approximately equal to the actual distance)
+  
+. . .
+
+* Formally, MDS attempts to find $\mathbf y_1, \ldots, \mathbf y_n \in \mathbb{R}^k$ whose distance matrix is approximately $\mathbf D=(d_{ij}: \, i,j=1, \ldots , n)$ (the original distance matrix)
+
+  * i.e., for which $\textsf{distance}(\mathbf y_i, \mathbf y_j) \approx d_{ij}$
+
+
+## MDS example: Starbucks drinks
+
+```{r}
+starbucks <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-12-21/starbucks.csv") |>
+  # convert columns to numeric that were saved as character
+  mutate(trans_fat_g = as.numeric(trans_fat_g), fiber_g = as.numeric(fiber_g))
+names(starbucks)
+```
+
+. . .
+
+* First, scale the data to ensure the variables are on the same scale (i.e., variances are equal to 1)
+
+```{r}
+starbucks_scaled <- starbucks |> 
+  select(serv_size_m_l:caffeine_mg) |> 
+  mutate(across(everything(), ~ .x / sd(.x, na.rm = TRUE)))
+```
+
+. . .
+
+* Then, compute distance matrix with `dist()` (default: `method = "euclidean"`)
+
+```{r}
+starbucks_dist <- dist(starbucks_scaled)
+class(starbucks_dist)
+```
+
+## Implementing MDS
+
+::: columns
+::: {.column}
+
+* Use `cmdscale()` function and supply a distance matrix `d` and the number of dimensions `k`<br>(usually `k = 2` for visualization purposes)
+
+* What are the dimensions of the input and output?
+
+* How do we interpret the 2D projection?
+
+```{r}
+#| eval: false
+starbucks_mds <- cmdscale(d = starbucks_dist, k = 2)
+
+starbucks <- starbucks |> 
+  mutate(mds1 = starbucks_mds[,1],
+         mds2 = starbucks_mds[,2])
+
+starbucks |>
+  ggplot(aes(x = mds1, y = mds2)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "MDS coordinate 1", y = "MDS coordinate 2")
+```
+
+:::
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 9
+starbucks_mds <- cmdscale(d = starbucks_dist, k = 2)
+starbucks <- starbucks |> 
+  mutate(mds1 = starbucks_mds[,1],
+         mds2 = starbucks_mds[,2])
+starbucks |>
+  ggplot(aes(x = mds1, y = mds2)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "MDS coordinate 1", y = "MDS coordinate 2")
+```
+
+
+:::
+:::
+
+## Visualizing MDS by categorical/continuous variables
+
+::: columns
+::: {.column}
+
+```{r}
+#| fig-height: 8
+#| code-fold: true
+starbucks |>
+  ggplot(aes(x = mds1, y = mds2, color = size)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "MDS coordinate 1", y = "MDS coordinate 2")
+```
+
+:::
+::: {.column}
+
+```{r}
+#| fig-height: 8
+#| code-fold: true
+starbucks |>
+  ggplot(aes(x = mds1, y = mds2, color = sugar_g)) +
+  geom_point(alpha = 0.5) +
+  scale_color_gradient(low = "darkblue", high = "darkorange") +
+  labs(x = "MDS coordinate 1", y = "MDS coordinate 2")
+```
+
+:::
+:::
+
+## Another MDS example: MCU movies
+
+```{r}
+mcu <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/mcu.csv")
+# names(mcu)
+
+mcu_scaled <- mcu |> 
+  select(-c(film, category, year)) |> 
+  mutate(across(everything(), ~ .x / sd(.x, na.rm = TRUE)))
+
+mcu_mds <- cmdscale(d = dist(mcu_scaled), k = 2)
+
+mcu <- mcu |>
+  mutate(mds1 = mcu_mds[, 1], mds2 = mcu_mds[, 2])
+```
+
+## Which of these movies are most similar/different?
+
+```{r}
+#| echo: false
+set.seed(9)
+```
+
+```{r}
+#| code-fold: true
+#| fig-height: 7
+library(ggrepel)
+mcu |>
+  ggplot(aes(x = mds1, y = mds2)) +
+  geom_point(color = "darkblue", size = 2, alpha = 0.5) +
+  geom_text_repel(aes(label = film), alpha = 0.75, color = "black") +
+  labs(x = "MDS coordinate 1", y = "MDS coordinate 2")
+```
