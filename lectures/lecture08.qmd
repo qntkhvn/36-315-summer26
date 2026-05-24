@@ -312,7 +312,7 @@ penguins |>
 
 ```{r}
 #| echo: false
-#| fig-height: 9
+#| fig-height: 7
 penguins |> 
   ggpairs(
     columns = c("bill_len", "body_mass", "island"),
@@ -712,7 +712,16 @@ starbucks |>
 
 ## Another MDS example: MCU movies
 
+**Which of these movies are most similar/different?**
+
 ```{r}
+#| echo: false
+set.seed(9)
+```
+
+```{r}
+#| code-fold: true
+#| fig-height: 7
 mcu <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/mcu.csv")
 # names(mcu)
 
@@ -724,18 +733,7 @@ mcu_mds <- cmdscale(d = dist(mcu_scaled), k = 2)
 
 mcu <- mcu |>
   mutate(mds1 = mcu_mds[, 1], mds2 = mcu_mds[, 2])
-```
 
-## Which of these movies are most similar/different?
-
-```{r}
-#| echo: false
-set.seed(9)
-```
-
-```{r}
-#| code-fold: true
-#| fig-height: 7
 library(ggrepel)
 mcu |>
   ggplot(aes(x = mds1, y = mds2)) +
