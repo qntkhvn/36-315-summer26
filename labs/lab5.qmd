@@ -26,7 +26,7 @@ food <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs
 
 ## A (10pts) 
 
-* First, create a histogram of the `energy_100g` variable on the **density scale**. There's no need to specify a `binwidth` for this part, but fill the bars with a non-gray color. Finally, add a smoothed density curve to your plot using `geom_density()`.
+* First, create a histogram of the `energy_100g` variable on the **density scale**. There's no need to specify a `binwidth` for this part, but fill the bars with a non-gray color. Also, add a smoothed density curve to the plot using `geom_density()`.
 
 ```{r}
 # YOUR CODE HERE
