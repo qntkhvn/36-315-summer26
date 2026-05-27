@@ -389,7 +389,7 @@ penguins |>
 
 Data: shot attempts by the [Sabrina Ionescu](https://en.wikipedia.org/wiki/Sabrina_Ionescu) in the 2023 WNBA season
 
-  * Each row is a shot attempt by Caitlin Clark in the 2024 WNBA season
+  * Each row is a shot attempt by Sabrina Ionescu in the 2023 WNBA season
   
   * Categorical variables: `scoring_play`, `shot_type`
   
