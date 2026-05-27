@@ -1,0 +1,657 @@
+---
+title: "Mastering `ggplot2`"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Topics
+
+* Plot composition
+
+* Colors
+
+* Themes
+
+* Annotations
+
+* Animations
+
+* Interactive figures
+
+## Plot composition
+
+* Create the same type of plot many times
+
+  * e.g., use faceting with `facet_wrap()` or `facet_grid()`
+
+* Combine several distinct plots into one cohesive display
+
+  * e.g., use plot arrangement packages like [`cowplot`](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html) or [`patchwork`](https://patchwork.data-imaginist.com/index.html)
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+## Faceting by one variable
+
+```{r}
+#| fig-height: 7
+#| fig-width: 14
+#| code-fold: true
+penguins |>
+  ggplot(aes(x = flipper_len, y = body_mass)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~ species)
+```
+
+## Faceting by multiple variables
+
+```{r}
+#| fig-height: 7
+#| fig-width: 14
+#| code-fold: true
+penguins |>
+  ggplot(aes(x = flipper_len, y = body_mass)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(island ~ species)
+```
+
+## Arrange plots with `cowplot`
+
+* Example: shot attempts by the [Sabrina Ionescu](https://en.wikipedia.org/wiki/Sabrina_Ionescu) in the 2023 WNBA season
+
+* Plot density curve and ECDF for shot distance together
+
+```{r}
+#| eval: false
+ionescu_shots <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/ionescu-shots.csv")
+
+ionescu_shot_density <- ionescu_shots |>
+  ggplot(aes(x = shot_distance)) + 
+  geom_density() +
+  geom_rug(alpha = 0.3) +
+  labs(x = "Shot distance (in feet)",
+       y = "Number of shot attempts")
+
+ionescu_shot_ecdf <- ionescu_shots |>
+  ggplot(aes(x = shot_distance)) + 
+  stat_ecdf() +
+  geom_rug(alpha = 0.3) +
+  labs(x = "Shot distance (in feet)",
+       y = "Proportion of Ionescu shot attempts")
+
+library(cowplot)
+plot_grid(ionescu_shot_density, ionescu_shot_ecdf, labels = c("A", "B"), label_size = 15)
+```
+
+## Arrange plots with `cowplot`
+
+```{r}
+#| echo: false
+#| fig-width: 16
+#| fig-height: 7
+ionescu_shots <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/ionescu-shots.csv")
+
+ionescu_shot_density <- ionescu_shots |>
+  ggplot(aes(x = shot_distance)) + 
+  geom_density() +
+  geom_rug(alpha = 0.3) +
+  labs(x = "Shot distance (in feet)",
+       y = "Number of shot attempts")
+
+ionescu_shot_ecdf <- ionescu_shots |>
+  ggplot(aes(x = shot_distance)) + 
+  stat_ecdf() +
+  geom_rug(alpha = 0.3) +
+  labs(x = "Shot distance (in feet)",
+       y = "Proportion of Ionescu shot attempts")
+
+library(cowplot)
+plot_grid(ionescu_shot_density, ionescu_shot_ecdf, labels = c("A", "B"), label_size = 25)
+```
+
+## Arrange plots with `patchwork`
+
+```{r}
+#| fig-width: 16
+#| fig-height: 7
+#| code-fold: true
+ionescu_shots <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/ionescu-shots.csv")
+
+ionescu_scoring_density <- ionescu_shots |>
+  ggplot(aes(x = shot_distance, color = scoring_play)) + 
+  geom_density() +
+  geom_rug(alpha = 0.3) +
+  labs(x = "Shot distance (in feet)",
+       y = "Number of shot attempts")
+
+ionescu_scoring_ecdf <- ionescu_shots |>
+  ggplot(aes(x = shot_distance, color = scoring_play)) + 
+  stat_ecdf() +
+  geom_rug(alpha = 0.3) +
+  labs(x = "Shot distance (in feet)",
+       y = "Proportion of Ionescu shot attempts")
+
+library(patchwork)
+ionescu_scoring_density + ionescu_scoring_ecdf + plot_layout(guides = "collect")
+```
+
+## Arrange plots with `patchwork`
+
+```{r}
+#| fig-width: 14
+#| fig-height: 8
+#| code-fold: true
+p1 <- penguins |> 
+  ggplot() + 
+  geom_point(aes(x = flipper_len, y = bill_len))
+
+p2 <- penguins |> 
+  ggplot() + 
+  geom_histogram(aes(flipper_len))
+
+p3 <- penguins |> 
+  ggplot() + 
+  stat_ecdf(aes(bill_len, color = species))
+
+p1 | (p2 / p3) & theme_minimal() 
+```
+
+## Colors
+
+* **Discrete**: used to represent distinct categories with no ordering (nominal categorical). Colors should be distinct clearly with no single category emphasized unless intentionally highlighting a specific group
+
+  * Do NOT use a discrete scale on a continuous variable
+
+. . .
+  
+* **Sequential**: used when values are mapped to a single color gradient (e.g. choropleth maps), or for an ordered categorical variable or low to high continuous variable
+
+  * Do NOT use a sequential scale on an unordered variable
+  
+. . .
+  
+* **Divergent:** used when data are centered around a meaningful midpoint and diverges in two directions from it (e.g., 0 for positive/negative values or 50% for percentages)
+
+  * Do NOT use a divergent scale on data without natural midpoint
+  
+## Colors in `R`
+
+* Specify a color in `R` using
+
+  * color name (see all with `colors()`)
+  
+  * hex code (see, e.g., [here](https://htmlcolorcodes.com/))
+  
+  * `rgb()`: build a color using a quantity of red, green, and blue (+ transparency)
+  
+. . .
+  
+* Resources
+
+  * [R Color Brewer palettes](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)
+
+  * [Color palettes repository](https://github.com/EmilHvitfeldt/r-color-palettes)
+  
+  * [Color palette finder](https://r-graph-gallery.com/color-palette-finder)
+  
+  * [Working with colours in R](https://nrennie.rbind.io/blog/colours-in-r/)
+  
+  * [General color guide](https://www.datawrapper.de/blog/colors-for-data-vis-style-guides)
+
+## Options for `ggplot2` color
+
+* Change discrete color palette with `scale_color_brewer()`
+
+```{r}
+#| fig-height: 6
+#| fig-width: 9
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len, color = species)) +
+  geom_point(alpha = 0.7) +
+  scale_color_brewer(palette = "Set2")
+```
+
+## Options for `ggplot2` color
+
+* Change continuous color palette using the viridis scales (also color-blind friendly)
+
+```{r}
+#| fig-height: 6
+#| fig-width: 9
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len, color = flipper_len)) +
+  geom_point(alpha = 0.7) +
+  scale_color_viridis_c()
+```
+
+## `ggplot2` themes
+
+::: {.panel-tabset}
+
+### `theme_minimal`()
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_minimal()
+```
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8
+#| echo: false
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_minimal(base_size = 17)
+```
+
+### `theme_bw`()
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_bw()
+```
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8
+#| echo: false
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_bw(base_size = 17)
+```
+
+### `theme_light`()
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_light()
+```
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8
+#| echo: false
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_light(base_size = 17)
+```
+
+### `theme_classic`()
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_classic()
+```
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8
+#| echo: false
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_classic(base_size = 17)
+```
+
+### Default: `theme_gray`()
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_gray()
+```
+
+```{r}
+#| fig-height: 6
+#| fig-width: 8
+#| echo: false
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_gray(base_size = 17)
+```
+
+:::
+
+## Themes: ink, paper, accent
+
+* `ink` affects all foreground elements and parts of layers
+
+* `paper` affects all background elements and parts of layers
+
+* `accent` has niche application in `geom_smooth()` or `geom_contour()`
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ island) +
+  theme_classic(paper = "cornsilk", ink = "navy", accent = "red")
+```
+
+```{r}
+#| fig-height: 7
+#| fig-width: 16
+#| echo: false
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~ island) +
+  theme_classic(paper = "cornsilk", ink = "navy", accent = "red", base_size = 20)
+```
+
+## Theme components
+
+* For more customization, see [here](https://ggplot2.tidyverse.org/reference/theme.html)
+
+```{r}
+#| fig-height: 7
+#| fig-width: 10
+#| code-fold: true
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len, color = island)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~ island) +
+    labs(
+    title = "Penguin Body Mass vs Bill Length",
+    x = "Body Mass (g)",
+    y = "Bill Length (mm)",
+    color = "Island"
+  ) +
+  theme_bw(base_size = 18) +
+  theme(
+    # plot components
+    plot.title = element_text(face = "bold.italic", size = 20, hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "navy"),
+    axis.ticks = element_blank(),
+
+    # panel/grid components
+    panel.grid.major = element_line(color = "lightgray"),
+    panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "darkgray"),
+
+    # facet components
+    strip.background = element_rect(fill = "lightblue", color = NA),
+    strip.text = element_text(face = "bold"),
+
+    # legend components
+    legend.position = "bottom",
+    legend.title = element_text(face = "italic")
+  )
+```
+
+
+## Themes from other packages
+
+::: columns
+::: {.column}
+
+* [`ggthemes`](https://jrnold.github.io/ggthemes/)
+
+* [`hrbrthemes`](https://github.com/hrbrmstr/hrbrthemes)
+
+* And many more... (see [here](https://github.com/erikgahner/awesome-ggplot2#themes-and-aesthetics))
+
+```{r}
+#| eval: false
+library(ggthemes)
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_gdocs()
+```
+
+
+:::
+::: {.column}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+library(ggthemes)
+penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len)) +
+  geom_point(alpha = 0.7) +
+  theme_gdocs(base_size = 20)
+```
+
+:::
+:::
+
+## Thinking about themes
+
+* Default choices tend to treat each element with equal weight
+
+  * e.g., axes stand out as much as the data or background elements look the same as the points of emphasis
+
+* Design plot with the visual hierarchy in mind
+
+  * Make elements of that are more important look more important
+
+    * i.e., customize so that the data is the focus, not the axes and grid lines
+
+  * Match visual weight to the focus of the graphic for communication
+
+## Annotation
+
+* Use [`annotate()`](https://ggplot2.tidyverse.org/reference/annotate.html) to manually add geoms (text, lines, rectangles, etc.)
+
+```{r}
+#| fig-height: 7
+#| fig-width: 8
+#| code-fold: true
+mtcars |>
+  ggplot(aes(x = wt, y = mpg)) +
+  geom_point() +
+  annotate(geom = "text", x = 4, y = 23, label = "Some text") +
+  annotate(geom = "rect", xmin = 3, xmax = 4, ymin = 15, ymax = 20, alpha = 0.2) +
+  annotate(geom = "curve", linewidth = 0.5, x = 4, y = 22, xend = 3.5, yend = 20, curvature = -0.3,
+           arrow = arrow(type = "closed", length = unit(10, "pt")))
+```
+
+## Storytelling with animation
+
+* Static version
+
+```{r}
+#| fig-height: 7
+#| fig-width: 10
+#| code-fold: true
+f1_constructors <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/f1-constructors.csv") |>
+  filter(name %in% c("McLaren", "Renault", "Racing Point"), year == 2020)
+
+f1_constructors |>
+  ggplot(aes(x = round, y = points, color = name)) +
+  geom_line(linewidth = 2) +
+  scale_x_continuous(breaks = seq(1, 17, 1)) +
+  labs(x = NULL,
+       y = "Accumulated points",
+       color = "Team",
+       title = "The race for third place in the 2020 F1 season")
+```
+
+## Animation with [`gganimate`](https://gganimate.com/)
+
+* Add a **transition** on top of the static plot
+
+```{r}
+#| fig-height: 7
+#| fig-width: 10
+#| code-fold: true
+library(gganimate)
+
+f1_constructors |>
+  ggplot(aes(x = round, y = points, color = name)) +
+  geom_line(linewidth = 2) +
+  scale_x_continuous(breaks = seq(1, 17, 1)) +
+  labs(x = NULL,
+       y = "Accumulated points",
+       color = "Team",
+       title = "The race for third place in the 2020 F1 season") +
+  transition_reveal(round)
+```
+
+## Key `gganimate` concepts
+
+* `transition_*()`: defines how data should be spread out and how it relates to itself across time
+
+* `view_*()`: defines how positional scales should change along the animation
+
+* `shadow_*()`: defines how data from other points in time should be presented in the given point in time
+
+* `enter_*()/exit_*()`: defines how new data should appear and how old data should disappear
+
+* `ease_aes()`: defines how different aesthetics should be eased during transitions
+
+See [here](https://goodekat.github.io/presentations/2019-isugg-gganimate-spooky/slides) and [here](https://slides.mitchelloharawild.com/wombat-gganimate) for great tutorials
+
+## Considerations in making effective animations
+
+* Think about **pace**: speed of animation (too fast: hard to follow; too slow: boring and tedious)
+
+* Think about **perplexity**: amount of information; avoid information overload
+
+* Think about **purpose**: usefulness of animation (needed at all? providing additional value?)
+
+. . .
+
+* Always make and describe the static version first
+
+* Never add animation just because it looks cool
+
+* When presenting, make sure to explain what is being displayed in the animation and<br>which elements should be emphasized
+
+  * This helps determine whether including animation is actually worthwhile
+
+## Interactive plots with [**`plotly`**](https://plotly.com/r/)
+
+* Apply `ggplotly()` to a static plot
+
+```{r}
+#| eval: false
+#| code-fold: true
+penguins_plot <- penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len, color = species)) +
+  geom_point(alpha = 0.5, size = 2) +
+  labs(x = "Body Mass (g)", 
+       y = "Bill Length (mm)",
+       color = NULL)
+
+library(plotly)
+penguins_plot |> 
+  ggplotly()
+```
+
+<div style="display: flex; justify-content: center;">
+
+```{r}
+#| echo: false
+#| fig-height: 6.3
+#| fig-width: 10
+penguins_plot <- penguins |> 
+  ggplot(aes(x = body_mass, y = bill_len, color = species)) +
+  geom_point(alpha = 0.5, size = 2.5) +
+  labs(x = "Body Mass (g)", 
+       y = "Bill Length (mm)",
+       color = NULL)
+
+library(plotly)
+penguins_plot |> 
+  ggplotly()
+```
+
+</div>
+
+## Infographics versus figures in papers/reports
+
+* Infographics should stand alone: relevant labels, titles and captions within the plot
+
+<center>
+![](https://clauswilke.com/dataviz/figure_titles_captions_files/figure-html/corruption-development-infographic-1.png){height=680}
+</center>
+
+## Infographics versus figures in papers/reports
+
+* Figures in papers/reports should have captions explaining the information provided in standalone labels
+
+<center>
+![](https://clauswilke.com/dataviz/figure_titles_captions_files/figure-html/corruption-development-1.png){height=570}
+</center>
+[*Figure 1:* **Corruption and human development.** The most developed countries experience the least corruption. Data sources: Transparency International & UN Human Development Report.]{style="font-size:83%;"}
+
+## Resources
+
+* [`ggplot2` extensions](https://exts.ggplot2.tidyverse.org/gallery/)
+
+* [`ggplot2`: Elegant Graphics for Data Analysis](https://ggplot2-book.org/)
+
+* [`ggplot2` website](https://ggplot2.tidyverse.org/)
+
+* [`Mastering Data Visualization with `ggplot2` workshop at posit::conf(2025)`](https://posit-conf-2025.github.io/ggplot2/) (featuring latest `ggplot2` updates)
+
+<!-- ## {-} -->
+
+<!-- ### `gganimate` can win you thousands of dollars, but not LOTS OF thousands of dollars, and most certainly not free parking -->
+
+<!-- <center> -->
+<!-- ![](https://raw.githubusercontent.com/qntkhvn/strain/main/figures/example_play.gif){height=700} -->
+<!-- </center> -->
