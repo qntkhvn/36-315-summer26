@@ -1,0 +1,505 @@
+---
+title: "Hierarchical clustering and dendrograms"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Clustering (cluster analysis)
+
+* Clustering is a fundamental problem in unsupervised learning
+
+  * Think of unsupervised learning as an extension of EDA (there's no unique right answer)
+  
+. . .
+
+* Goal: partition observations into distinct clusters so that
+
+  * observations within clusters are more similar to each other
+
+  * observations in different clusters are more different from each other
+
+## Preview
+
+* **Hierarchical clustering** does not require commitment to a particular choice of clusters
+
+. . .
+
+* In fact, we end up with a tree-like visual representation of the observations, called a **dendrogram**
+
+. . .
+  
+* This allows us to view at once the clusterings obtained for each possible number of clusters
+
+. . .
+  
+* Common approach: agglomerative (bottom-up) hierarchical clustering: build a dendrogram starting from the leaves and combining clusters up to the trunk
+
+. . .
+  
+* There's also divisive (top-down) hierarchical clustering: start with one large cluster and then break the cluster recursively into smaller and smaller pieces
+
+## Hierarchical clustering in simple terms
+
+::: columns
+::: {.column width="55%"}
+
+* Key idea: Builds a hierarchy in an agglomerative<br>(or bottom-up) fashion
+
+* Algorithm (informal version)
+
+  * Start with each point in its own cluster
+
+  * Identify the closest two clusters and merge them
+
+  * Repeat
+
+  * Ends when all points are in a single cluster
+  
+:::
+
+::: {.column width="45%"}
+
+Toy example
+
+<center>
+![](../images/hc-toy-plain.png){height=500}
+</center>
+
+:::
+:::
+
+## Toy example
+
+::: columns
+::: {.column}
+
+<br>
+<center>
+![](../images/hc-toy-annotated.png){height=600}
+</center>
+
+:::
+
+::: {.column}
+
+<br>
+<center>
+![](../images/hc-toy-dendro.png){height=600}
+</center>
+
+:::
+:::
+
+
+
+## Hierarchical clustering
+
+Start with all observations in their own cluster
+
+. . .
+
+* Step 1: Compute the pairwise dissimilarities between each cluster
+
+  * e.g., distance matrix on previous slides (using Euclidean distance)
+    
+  * In practice, we can also try out different types of distance
+
+. . .
+
+* Step 2: Identify the pair of clusters that are **least dissimilar**
+
+. . .
+
+* Step 3: Fuse these two clusters into a new cluster
+
+. . .
+
+* **Repeat Steps 1 to 3 until all observations are in the same cluster**
+
+. . .
+
+**"Bottom-up"**, agglomerative clustering that forms a **tree/hierarchy** of merging
+
+. . .
+
+No mention of any randomness. And no mention of the number of clusters.
+
+
+## Dissimilarity between clusters
+
+* We know how to compute distance/dissimilarity between two observations
+
+. . .
+
+* But what about distance/dissimilarity between a cluster and an observation, or between two clusters?
+
+. . .
+
+* We need to choose a **linkage function**. Clusters are built up by **linking them together**
+
+
+## Linkages
+
+* Linkage: function $d(C_1, C_2)$ that takes two groups (clusters) $C_1$ and $C_2$ and returns a dissimilarity score
+
+. . .
+
+* First, compute all pairwise dissimilarities between the observations in the two clusters (i.e., compute the distance matrix between observations)
+
+. . .
+
+* Agglomerative clustering, given the linkage:
+
+  * Start with all points in their own cluster
+
+  * Until there is only one cluster, repeatedly: merge the two clusters $C_1$, $C_2$ such that $d(C_1, C_2)$ is the smallest
+  
+. . .
+
+* There are different types of linkage: complete, single, average,...
+
+## Complete linkage
+
+* Consider the largest dissimilarity between two points of different clusters (**maximal** inter-cluster dissimilarity) $$d_\text{complete}(C_1, C_2) = \underset{i \in C_1, j \in C_2}{\text{max}} d_{ij}$$
+
+* The complete linkage score $d_\text{complete}(C_1, C_2)$ is the distance of the furthest pair
+
+<center>
+<img src= "/images/complete-linkage.png" style="border: 1px solid grey;" width="480">
+</center>
+
+## Single linkage
+
+* Consider the smallest dissimilarity between two points of different clusters (**minimal** inter-cluster dissimilarity) $$d_\text{single}(C_1, C_2) = \underset{i \in C_1, j \in C_2}{\text{min}} d_{ij}$$
+
+* The single linkage score $d_\text{single}(C_1, C_2)$ is the distance of the closest pair
+
+<center>
+<img src= "/images/single-linkage.png" style="border: 1px solid grey;" width="480">
+</center>
+
+## Average linkage
+
+* Consider the average dissimilarity over all points of different clusters
+(**mean** inter-cluster dissimilarity) $$d_\text{average}(C_1, C_2) = \frac{1}{|C_1||C_2|} \sum_{i \in C_1, j \in C_2} d_{ij}$$
+
+* The average linkage score $d_\text{average}(C_1, C_2)$ is the average distance across all pairs (of different clusters)
+
+## Hierarchical clustering example
+
+* First, scale the data and compute the distance matrix
+
+```{r}
+library(tidyverse)
+mcu <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/mcu.csv")
+
+mcu_scaled <- mcu |> 
+  select(-c(film, category, year)) |> 
+  mutate(across(everything(), ~ .x / sd(.x, na.rm = TRUE)))
+rownames(mcu_scaled) <- mcu$film
+
+mcu_dist <- dist(mcu_scaled)
+```
+
+
+* Use `hclust()` with a `dist()` object
+
+* Specify `method` (`complete`, `single`, `average`, etc.)
+
+```{r}
+mcu_hc_complete <- mcu_dist |> 
+  hclust(method = "complete")
+```
+
+
+## Dendrograms with [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/vignettes/ggdendro.html) package
+
+::: columns
+::: {.column width="35%"}
+
+**Complete linkage** example
+
+<br>
+
+```{r}
+#| eval: false
+library(ggdendro)
+mcu_hc_complete |> 
+  ggdendrogram(theme_dendro = FALSE) +
+  labs(y = "Dissimilarity") +
+  coord_flip() + 
+  theme_light() +
+  theme(axis.title.y = element_blank())
+```
+
+<br>
+
+Each **leaf** is one observation
+
+Branch length indicates dissimilarity between clusters
+
+:::
+::: {.column width="65%"}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+library(ggdendro)
+mcu_hc_complete |> 
+  ggdendrogram(theme_dendro = FALSE) +
+  labs(y = "Dissimilarity") +
+  coord_flip() + 
+  theme_light(base_size = 18) +
+  theme(axis.title.y = element_blank())
+```
+
+:::
+:::
+
+
+
+## Dendrograms with [`ggdendro`](https://cran.r-project.org/web/packages/ggdendro/vignettes/ggdendro.html) package
+
+::: columns
+::: {.column width="35%"}
+
+**Single linkage** example
+
+<br>
+
+```{r}
+#| eval: false
+mcu_hc_single <- mcu_dist |> 
+  hclust(method = "single")
+
+mcu_hc_single |> 
+  ggdendrogram(theme_dendro = FALSE) +
+  labs(y = "Dissimilarity") +
+  coord_flip() + 
+  theme_light() +
+  theme(axis.title.y = element_blank())
+```
+
+<br>
+
+Single linkage often suffers from **chaining effect**: poorly separate but distinct clusters are merged together
+
+:::
+::: {.column width="65%"}
+
+```{r}
+#| echo: false
+#| fig-height: 8
+mcu_hc_single <- mcu_dist |> 
+  hclust(method = "single")
+
+mcu_hc_single |> 
+  ggdendrogram(theme_dendro = FALSE) +
+  labs(y = "Dissimilarity") +
+  coord_flip() + 
+  theme_light(base_size = 18) +
+  theme(axis.title.y = element_blank())
+```
+
+:::
+:::
+
+## Display MDS and dendrogram side-by-side
+
+```{r}
+#| code-fold: true
+mcu_mds <- cmdscale(d = dist(mcu_scaled), k = 2)
+
+mcu <- mcu |>
+  mutate(mds1 = mcu_mds[, 1], mds2 = mcu_mds[, 2])
+
+library(ggrepel)
+mcu_mds_plot <- mcu |>
+  ggplot(aes(x = mds1, y = mds2)) +
+  geom_point(color = "darkblue", size = 2, alpha = 0.5) +
+  geom_text_repel(aes(label = film), alpha = 0.75, color = "black") +
+  labs(x = "MDS coordinate 1", y = "MDS coordinate 2") +
+  theme_light()
+
+mcu_dendro <- mcu_hc_complete |> 
+  ggdendrogram(theme_dendro = FALSE) +
+  labs(y = "Dissimilarity") +
+  coord_flip() + 
+  theme_light() +
+  theme(axis.title.y = element_blank())
+
+library(cowplot)
+plot_grid(mcu_mds_plot, mcu_dendro)
+```
+
+## Cut the dendrogram to return cluster labels
+
+Two ways to specify how to cut the tree using `cutree()`
+
+::: {.panel-tabset}
+
+### Specify the height to cut with `h`
+
+```{r}
+mcu_hc_complete |> 
+  cutree(h = 10)
+```
+  
+### Specify the desired number of clusters with `k`
+
+```{r}
+mcu_hc_complete |> 
+  cutree(k = 2)
+```
+
+:::
+
+## Visualize results with cut on dendrogram
+
+```{r}
+#| code-fold: true
+mcu_mds_clusters <- mcu |>
+  mutate(cluster = cutree(mcu_hc_complete, h = 10)) |> 
+  ggplot(aes(x = mds1, y = mds2, color = factor(cluster))) +
+  geom_point(size = 2, alpha = 0.5) +
+  geom_text_repel(aes(label = film), alpha = 0.75) +
+  labs(x = "MDS coordinate 1", 
+       y = "MDS coordinate 2",
+       color = "Cluster") +
+  theme_light() +
+  theme(legend.position = "top")
+
+mcu_dendro_cut <- mcu_dendro +
+  geom_hline(yintercept = 10, linetype = "dashed", color = "darkorange")
+
+plot_grid(mcu_mds_clusters, mcu_dendro_cut)
+```
+
+## Some notes on dendrograms
+
+* Dendrograms are often misinterpreted
+
+. . .
+
+* Conclusions about the distance/dissimilarity between two observations should not be implied by their relationship on the horizontal axis nor by the vertical connections
+
+. . .
+
+* Rather, the height of the branch between an observation and the clusters of observations below them indicate the distance between the observation and that cluster it is joined to
+
+## Toy example
+
+* Consider observations 9 and 2. They appear close on the dendrogram
+
+* But their closeness on the dendrogram imply they are approximately the same distance measure from the cluster that they are fused to (observations 5, 7, 8)
+
+* It by no means implies that observation 9 and 2 are close to one another.
+
+<center>
+![](https://bradleyboehmke.github.io/HOML/19-hierarchical_files/figure-html/comparing-dendrogram-to-distances-1.png){height=500}
+</center>
+
+## Shortcomings of different types of linkage
+
+* Single linkage suffers from **chaining**
+
+  * In order to merge two groups, only need one pair of points to be close, irrespective of all others
+  
+  * Therefore clusters can be too spread out, and not compact enough
+  
+. . .
+  
+* Complete linkage avoids chaining, but suffers from **crowding**
+
+  * A point can be closer to points in other clusters than to points in its own cluster (since it is based on the maximum dissimilarity between pairs)
+  
+  * Clusters are compact, but not far enough apart
+  
+. . .
+
+* Average linkage tries to strike a balance
+
+  * Clusters tend to be relatively compact and relatively far apart (since it is based on the average pairwise dissimilarity)
+  
+  * Not clear what properties the resulting clusters have when cutting an average linkage tree at given height
+  
+  * Single and complete linkage trees each has simpler interpretations
+  
+## Complete linkage interpretation
+
+* Cutting the tree at $h = 5$ gives the clustering assignments marked by colors
+
+* Cut interpretation: for each point $x_i$, every other point $x_j$ in its cluster satisfies $d_{ij} \le 5$
+
+<center>
+<img src= "/images/complete-linkage-cut.png" height="600">
+</center>
+
+## Single linkage interpretation
+
+* Cutting the tree at $h = 0.9$ gives the clustering assignments marked by colors
+
+* Cut interpretation: for each point $x_i$,  there is another point $x_j$ in its cluster satisfies $d_{ij} \le 0.9$
+
+<center>
+<img src= "/images/single-linkage-cut.png" height="600">
+</center>
+
+## More linkage functions
+
+* **Centroid linkage**: Computes the dissimilarity between the centroid for cluster 1 and the centroid for cluster 2
+
+  * i.e., distance between the averages of the two clusters
+
+  * use `method = centroid`
+
+. . .
+
+* **Ward's linkage**: Merges a pair of clusters to minimize the within-cluster variance
+
+  * i.e., minimize the objection function from $k$-means clustering
+
+  * use `method = ward.D` or `method = ward.D2` (different algorithms)
+
+## Takeaways
+
+* Use dendrograms to visualize distances and the clustering structure in the dataset
+
+* Practical issues
+
+  * What dissimilarity measure should be used?
+
+  * What type of linkage should be used?
+
+  * How many clusters to choose?
+
+  * Which features should be used to drive the clustering?
+
+  * Hard clustering vs. soft clustering
+
+    * Hard clustering ($k$-means, hierarchical): assigns each observation to exactly one cluster
+
+    * Soft (fuzzy) clustering: assigns each observation a probability of belonging to a cluster

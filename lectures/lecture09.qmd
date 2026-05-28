@@ -27,6 +27,32 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Learning outcomes
+
+**Pick graphs that are most appropriate for particular data types**
+
+* Requires a working knowledge of different graph types and need to appropriately distinguish different data types
+
+* For any graph, need to know what information is visible vs hidden
+
+. . .
+
+**Characterize distributions (visually and quantitatively)**
+
+* Notice key attributes (e.g., center, shape, spread for 1D quantitative data) and choose graphs that showcase distributional characteristics (e.g., boxplots suck)
+
+* Choose graph specifications that showcase distribution quantities (e.g., binwidth, bandwidth)
+
+. . .
+
+**Perform statistical inference to complement graphs**
+
+* Validate what a graph shows to determine if that trend/difference is significant
+
+* Requires a working knowledge of statistical inference (e.g., tests, confidence intervals)
+
+* Interpret inferential results in context
+
 ## Topics
 
 * Plot composition
@@ -646,7 +672,7 @@ penguins_plot |>
 
 * [`ggplot2` website](https://ggplot2.tidyverse.org/)
 
-* [`Mastering Data Visualization with `ggplot2` workshop at posit::conf(2025)`](https://posit-conf-2025.github.io/ggplot2/) (featuring latest `ggplot2` updates)
+* [Mastering Data Visualization with `ggplot2` workshop at `posit::conf(2025)`](https://posit-conf-2025.github.io/ggplot2/)<br>(featuring latest `ggplot2` updates)
 
 <!-- ## {-} -->
 
