@@ -36,6 +36,7 @@ format:
 * Lab 3 [assignment](labs/lab3.qmd)
 * Lab 4 [assignment](labs/lab4.qmd)
 * Lab 5 [assignment](labs/lab5.qmd)
+* Lab 6 [assignment](labs/lab6.qmd)
 
 ## Homework
 
