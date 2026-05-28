@@ -47,7 +47,7 @@ knitr::opts_chunk$set(
 
 ## Nonlinear regression
 
-* Assume normality, but not linearity where $f(x)$ is some unknown function $$Y_i \stackrel{iid}{\sim} N(\underbrace{f(X_i)}, \sigma^2)$$
+* Assume normality, but not linearity where $f(x)$ is some unknown function $$Y_i \stackrel{\textsf{iid}}{\sim} N(f(X_i), \sigma^2)$$
 
 * Do not make explicit assumptions about the functional form of $f$ (i.e., $f$ is estimated from the data)
 
