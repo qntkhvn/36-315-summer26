@@ -71,7 +71,21 @@ $$\arg \min_{\beta_0,\beta_1} \sum_{i=1}^n w_i \cdot (Y_i - \beta_0 - \beta_1 X_
 
 . . .
 
-* Local linear regression is exactly the same, except the weights depend on which $x$ we want to estimate $f(x)$.
+* Local linear regression is exactly the same, except the weights depend on which $x$ we want to estimate $f(x)$
+
+  * Fit a different linear regression everywhere, weighting the data points by how close they are to the point of interest
+
+## Local linear regression algorithm
+
+Local regression at $X=x_0$
+
+1. Compute the fraction $k/n$ of observations who $x_i$ are the closest to $x_0$
+
+2. Assign a weight $w_i = w(x_i, x_0)$ to each point in this local neighborhood, so that the closest/furthest has the highest/lowest weights. All but these $k$ nearest neighbors get weight zero
+
+3. Fit a weighted linear (least squares) regression
+
+$$\text{arg }\underset{\beta_0, \beta_1}{\text{min}} \sum_i^n w_i(x_0) \cdot \big(Y_i - \beta_0 - \beta_1 X_i \big)^2$$ 
 
 ## Local linear regression via LOESS
 
@@ -132,7 +146,6 @@ d |>
   transition_states(center, transition_length = 1, state_length = 0) +
   theme_light(base_size = 14)
 ```
-
 
 ## Displaying trend lines: LOESS
 
@@ -547,7 +560,7 @@ penguins |>
 
 ## Distances in general
 
-* There's a variety of different types of distance metrics: [**Euclidean**](https://en.wikipedia.org/wiki/Euclidean_distance) (focus) [Manhattan](https://en.wikipedia.org/wiki/Taxicab_geometry), [Mahalanobis](https://en.wikipedia.org/wiki/Mahalanobis_distance), [Cosine](https://en.wikipedia.org/wiki/Cosine_similarity), [Kullback-Leibler](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence), [Hellinger](https://en.wikipedia.org/wiki/Hellinger_distance),
+* There's a variety of different types of distance metrics: [**Euclidean**](https://en.wikipedia.org/wiki/Euclidean_distance) (focus) [Manhattan](https://en.wikipedia.org/wiki/Taxicab_geometry), [Mahalanobis](https://en.wikipedia.org/wiki/Mahalanobis_distance), [Minkowski](https://en.wikipedia.org/wiki/Minkowski_distance), [Cosine](https://en.wikipedia.org/wiki/Cosine_similarity), [Kullback-Leibler](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence), [Hellinger](https://en.wikipedia.org/wiki/Hellinger_distance),
 [Wasserstein](https://en.wikipedia.org/wiki/Wasserstein_metric), etc.
 
 . . .
