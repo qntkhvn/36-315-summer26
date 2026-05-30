@@ -1,0 +1,705 @@
+---
+title: "Principal component analysis"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Dimension reduction: the big picture
+
+* **Key question: How do we visualize the structure of high-dimensional data?**
+
+. . .
+
+* Example: What if you're given a dataset with 50 variables and are asked to make one visualization that best represents the data? What do you do?
+
+. . .
+
+* Tedious task: Make a series of all $\displaystyle \binom{50}{2} = 1225$ pairs of plots? Or make a giant correlation heatmap?
+
+. . .
+
+* **Intuition: Take high-dimensional data and represent it in 2--3 dimensions, then visualize those dimensions**
+
+
+## Dimension reduction: the big picture
+
+* It's usually really hard to visualize many dimensions at the same time
+
+. . .
+
+* Often, it makes a lot of sense to choose 2--3 of the "most important dimensions" and just plot those
+
+. . .
+
+* PCA is a very common way to define "most important dimensions"
+
+. . .
+
+* PCA provides the linear combinations of variables that capture the most variation in the data
+
+. . .
+
+* It's common to plot the first two principal components in a scatterplot
+
+. . .
+
+* It's very useful to plot principal components with a biplot
+
+  * Adds interpretability to the principal components, and helps reveal relationships among the variables
+
+## What is the goal of dimension reduction?
+
+Given a dataset with $p$ variables (columns) for $n$ observations (rows), can we find a smaller number of dimensions that captures interesting structure in the data?
+
+. . .
+
+**Dimension reduction**: 
+
+* Focus on reducing the dimensionality of the feature space (i.e., number of columns) 
+
+* **Retain** most of the information/**variability** in a lower dimensional space (i.e., reducing the number of columns)
+
+## Principal components analysis (PCA)
+
+* PCA produces a low-dimensional representation of a dataset
+
+* PCA finds a set of variables that are linear combinations of the features that have maximal variance *and* are mutually uncorrelated
+
+* The set of uncorrelated variables is called the **principal components (PCs)**
+
+## Principal components
+
+* PCs are weighted, normalized linear combinations of the original variables
+
+* Weights reveal how different variables are **loaded** into the PCs
+
+* First PC accounts for most variation in the data, second PC for second-most variation, and so on
+
+## Principal components (a little more formal)
+
+* Assume $\boldsymbol{X}$ is a $n \times p$ matrix that is **centered** and **stardardized**
+
+. . .
+
+* PCA will give us $p$ principal components that are $n$-length columns, denoted by $Z_1, \dots, Z_p$
+
+  * The first PC is the linear combination that has the largest possible variance
+
+  * Each succeeding component has the largest possible variance under the constraint that it is uncorrelated with the preceding components
+
+  * **A small number of principal components often explains a high proportion of the variability in the data**
+
+## First principal component
+
+$$Z_1 = \phi_{11} X_1 + \phi_{21} X_2 + \dots + \phi_{p1} X_p$$
+
+. . .
+
+* $\phi_{11}, \phi_{21}, \dots, \phi_{p1}$ are the loadings of the first PC 
+
+* These are weights indicating the contributions of each feature
+  
+* Weights are normalized $\displaystyle \sum_{j=1}^p \phi_{j1}^2 = 1$ (else, arbitrarily large variance)
+  
+* Together, the loadings make up the **loading vector** for the first PC, $\phi_{1} = (\phi_{11}, \phi_{21}, \dots, \phi_{p1})$
+
+* $Z_1$ is a linear combination of the $p$ variables that has the **largest variance** (among all PCs)
+
+## Second principal component
+
+$$Z_2 = \phi_{12} X_1 + \phi_{22} X_2 + \dots + \phi_{p2} X_p$$
+
+* $\phi_{12}, \phi_{22}, \dots, \phi_{p2}$ are the loadings of the second PC 
+  
+* Weights are normalized $\displaystyle \sum_{j=1}^p \phi_{j2}^2 = 1$
+  
+* Together, the loadings make up the **loading vector** for the second PC, $\phi_{2} = (\phi_{12}, \phi_{22}, \dots, \phi_{p2})$
+
+* $Z_2$ is a linear combination of the $p$ variables that has the **largest variance** *but* **subject to constraint it is uncorrelated with $Z_1$**
+    
+## Obtaining the principal components
+
+Repeat the same process to create $p$ principal components
+
+* **Uncorrelated**: Each ($Z_j, Z_{j'}$) is uncorrelated with each other
+
+* **Ordered Variance**: $\text{Var}(Z_1) > \text{Var}(Z_2) > \dots > \text{Var}(Z_p)$
+
+* **Total Variance**: $\displaystyle \sum_{j=1}^p \text{Var}(Z_j) = p$
+
+PCA can be
+
+* formulated as an optimization problem
+
+* solved via linear algebra techniques (e.g. eigen decomposition or singular value decomposition (SVD))
+
+## Geometry of PCA
+
+* The loading vector $\phi_1$ with elements $\phi_{11}, \phi_{21}, \dots, \phi_{p1}$ defines a direction in feature space along which the data vary the most
+
+* If we project the observations in our dataset onto this direction, the projected values are called the principal component scores
+
+## Geometry of PCA in 2D
+
+```{r}
+#| echo: false
+#| fig-height: 7
+library(tidyverse)
+theme_set(theme_light(base_size = 20))
+set.seed(123) 
+plot_data <- tibble(x = rnorm(50, mean = 100, sd = 20)) |>
+  mutate(y =  0.8 * x + rnorm(50, mean = 0, sd = 10))
+basic_scatter <- ggplot(plot_data) +
+  geom_point(aes(x, y), color = "black")+
+  coord_equal()
+basic_scatter
+```
+
+## Geometric interpretation of PCA in 2D
+
+```{r}
+#| echo: false
+#| fig-height: 7
+line1 <- lm(y ~ x, plot_data)$coef
+line1_slope <- line1[2]
+line1_intercept <- line1[1]
+basic_scatter_yfit <- basic_scatter +
+  geom_abline(aes(slope = line1_slope, intercept = line1_intercept),
+              colour = "darkorange", linewidth = 1.5) +
+  annotate("text", x = 75, y = 115, size = 11,
+           label = "y ~ x", color = "darkorange")
+basic_scatter_yfit
+```
+
+## Geometric interpretation of PCA in 2D
+
+```{r}
+#| echo: false
+#| fig-height: 7
+line2 <- lm(x ~ y, plot_data)$coef
+line2_slope <- 1 / line2[2]
+line2_intercept <- -(line2[1] / line2[2])
+basic_scatter_xyfit <- basic_scatter_yfit +
+  geom_abline(aes(slope = line2_slope, intercept = line2_intercept),
+              colour = "blue", linewidth = 1.5) +
+  annotate("text", x = 125, y = 55, size = 11,
+           label = "x ~ y", color = "blue")
+basic_scatter_xyfit
+```
+
+## Geometric interpretation of PCA in 2D
+
+```{r}
+#| echo: false
+#| fig-height: 7
+pca <- prcomp(cbind(plot_data$x, plot_data$y))$rotation
+pca_slope <- pca[2,1] / pca[1,1]
+pca_intercept <- mean(plot_data$y) - (pca_slope * mean(plot_data$x))
+
+basic_scatter_y_pca_fit <- basic_scatter_xyfit +
+  geom_abline(aes(slope = pca_slope, intercept = pca_intercept),
+              colour = "darkgreen", linewidth = 1.5) +
+  annotate("text", x = 135, y = 95, size = 11,
+           label = "PCA", color = "darkgreen")
+basic_scatter_y_pca_fit
+```
+
+## Visualizing PCA in two dimensions
+
+Key idea: provide low-dimensional linear surfaces that are closest to the observations
+
+```{r}
+#| echo: false
+#| fig-width: 15
+#| fig-height: 6
+plot_data |>
+  mutate(
+    yhat_line1 = (x * line1_slope + line1_intercept),
+    xhat_line1 = x,
+    yhat_line2 = y,
+    xhat_line2 = (y - line2_intercept) / line2_slope,
+    a = pca_slope,
+    b = -1,
+    c = pca_intercept,
+    xhat_line3 = (b * (b * x - a * y) - (a * c)) / ((a * a) + (b * b)),
+    yhat_line3 = (a * (-b * x + a * y) - (b * c)) / ((a * a) + (b * b)),
+    slope_line1 = line1_slope,
+    slope_line2 = line2_slope,
+    slope_line3 = pca_slope,
+    intercept_line1 = line1_intercept,
+    intercept_line2 = line2_intercept,
+    intercept_line3 = pca_intercept
+  ) |> 
+  select(-c(a, b, c)) |> 
+  pivot_longer(yhat_line1:intercept_line3, names_to = "key", values_to = "value") |>
+  separate(key, c("type", "line"), "_") |> 
+  pivot_wider(names_from = "type", values_from = "value") |> 
+  mutate(
+    line = case_when(
+      line=="line1" ~ "y ~ x",
+      line=="line2" ~ "x ~ y",
+      TRUE ~ "PCA"),
+    line = fct_relevel(line, "y ~ x", "x ~ y", "PCA")
+  ) |> 
+  ggplot() +
+  geom_point(aes(x = x, y = y, color = line)) +
+  geom_abline(aes(slope = slope, intercept = intercept, color = line)) +
+  geom_segment(aes(x = x, y = y, xend = xhat, yend = yhat, color = line)) +
+  facet_wrap(~ line, ncol = 3) +
+  scale_color_manual(values = c("darkorange", "blue", "darkgreen")) +
+  theme(legend.position = "none",
+        strip.text = element_text(size = 20, color = "black"),
+        strip.background = element_rect(fill = NA))
+```
+
+. . .
+
+* The above is the **minimizing projection residuals** viewpoint of PCA
+
+* There's another viewpoint---**maximizing variance**. That is, if we project all points onto the solid green line, we maximize the variance of the resulting projected points across all such green lines
+
+## PCA example: Starbucks drinks
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+starbucks <- read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-12-21/starbucks.csv"
+) |>
+  # convert columns to numeric that were saved as character
+  mutate(trans_fat_g = as.numeric(trans_fat_g), fiber_g = as.numeric(fiber_g))
+glimpse(starbucks)
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+## Implement PCA
+
+* Use `prcomp()` (based on SVD) for PCA on centered and scaled data
+
+```{r}
+starbucks_feat <- starbucks |> 
+  select(serv_size_m_l:caffeine_mg)
+starbucks_pca <- prcomp(starbucks_feat, center = TRUE, scale. = TRUE)
+summary(starbucks_pca)
+```
+
+## Compute principal components
+
+* Extract the matrix of principal components (dimension will match original data)
+
+* Note: columns are uncorrelated, such that $\text{Var}(Z_1) > \text{Var}(Z_2) > \dots > \text{Var}(Z_p)$ 
+
+```{r}
+starbucks_pc_matrix <- starbucks_pca$x
+head(starbucks_pc_matrix)
+```
+
+## Extract loading matrix
+
+```{r}
+starbucks_pca$rotation
+```
+
+## Visualize first two principal components
+
+::: columns
+::: {.column}
+
+```{r}
+#| label: pca-plot
+#| eval: false
+starbucks <- starbucks |> 
+  mutate(pc1 = starbucks_pc_matrix[,1], 
+         pc2 = starbucks_pc_matrix[,2])
+starbucks |> 
+  ggplot(aes(x = pc1, y = pc2)) +
+  geom_point(alpha = 0.5) +
+  labs(x = "PC 1", y = "PC 2")
+```
+
+* Principal components are not interpretable
+
+* Make a **biplot** with arrows showing the linear relationship between one variable and other variables
+
+:::
+
+::: {.column}
+
+```{r}
+#| ref-label: pca-plot
+#| echo: false
+#| fig-height: 9
+```
+
+:::
+:::
+
+
+## Making PCs interpretable with biplots
+
+* Biplot displays both the space of observations and the space of variables
+
+::: columns
+::: {.column}
+
+```{r}
+#| label: pca-biplot
+#| eval: false
+library(factoextra)
+# fviz_pca_var(): projection of variables
+# fviz_pca_ind(): display observations with first two PCs
+starbucks_pca |> 
+  fviz_pca_biplot(label = "var",
+                  alpha.ind = 0.25,
+                  alpha.var = 0.75,
+                  labelsize = 5,
+                  col.var = "darkblue",
+                  repel = TRUE)
+```
+
+* Interpret a biplot
+
+  * Arrow direction
+
+  * Arrow angles
+  
+  * Arrow length
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| ref-label: pca-biplot
+#| echo: false
+#| fig-height: 10
+```
+
+:::
+:::
+
+## Interpreting a biplot
+
+::: columns
+::: {.column}
+
+Interpreting the **direction of a particular arrow**
+
+* For example, far left arrow for `caffeine_mg`: as `caffeine_mg` increases, $Z_1$ and $Z_2$ tend to decrease
+
+  * i.e., within the definition of $Z_1$ and $Z_2$, the coefficient for `caffeine_mg` is negative
+
+* In contrast, arrow for `serv_size_m_l` points to upper right: as `serv_size_m_l` increases,<br>both $Z_1$ and $Z_2$ also increase
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| ref-label: pca-biplot
+#| echo: false
+#| fig-height: 10
+```
+
+
+:::
+:::
+
+## Interpreting a biplot
+
+::: columns
+::: {.column}
+
+**The angle of between the vectors is indicative of the correlation between different variables**
+
+* $90^{\circ}$ (right angle): uncorrelated<br>(e.g. `serv_size_m_l` & `saturated_fat_g`)
+
+* $< 90^{\circ}$ (vectors in similar directions):<br>positively correlated<br>(e.g. `sugar_g` & `total_carbs_g`)
+
+* $> 90^{\circ}$ (vectors in different directions):<br>negatively correlated<br>(e.g. `caffeine_mg` & `calories`)
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| ref-label: pca-biplot
+#| echo: false
+#| fig-height: 10
+```
+:::
+:::
+
+## Interpreting a biplot
+
+::: columns
+::: {.column}
+
+**The arrow length indicates how strongly related the principal components are with the individual variables**
+
+* For example, `serv_size_m_l` has a fairly long arrow because it has a large positive coefficient in the rotation matrix (see below)
+
+* Meanwhile, `caffeine_mg` has a relatively short arrow because its coefficients are relatively small.
+
+:::
+
+
+::: {.column}
+
+```{r}
+#| ref-label: pca-biplot
+#| echo: false
+#| fig-height: 10
+```
+
+:::
+:::
+
+## Intuition on how many PCs to use
+
+```{r}
+summary(starbucks_pca)
+```
+
+. . .
+
+* PC1 accounts for the most variation in our data, PC2 accounts for the next most, and so on
+
+. . .
+
+* Each time we add a new PC dimension, we capture a higher proportion of the variability/information in the data
+
+. . .
+
+* But that increase in proportion decreases for each new dimension we add (i.e., additional PCs will add smaller and smaller variance)
+
+. . .
+
+* **It is recommended to keep adding PCs until the marginal gain levels off (i.e. decreases to the point that it isn’t too beneficial to add another dimension to the data)**
+
+
+## Create a scree plot (or elbow plot)
+
+::: columns
+::: {.column}
+
+```{r}
+#| eval: false
+starbucks_pca |> 
+  fviz_eig(addlabels = TRUE) +
+  geom_hline(yintercept = 100 * (1 / ncol(starbucks_pca$x)), 
+             linetype = "dashed", 
+             color = "darkred")
+```
+
+```{r}
+#| echo: false
+#| fig-height: 7.5
+starbucks_pca |> 
+  fviz_eig(addlabels = TRUE) +
+  geom_hline(yintercept = 100 * (1 / ncol(starbucks_pca$x)), 
+             linetype = "dashed", 
+             color = "darkred") +
+  theme(text = element_text(size = 20))
+```
+
+
+:::
+
+::: {.column}
+
+* Shows proportion of variation explained by each PC
+
+* Visual rule-of-thumb: look for the "elbow" (where the proportion of variation starts to become flat)
+
+* A heuristic rule of thumb: horizontal line at $1/p$
+
+<br>
+<br>
+
+* The scree plot suggests keeping the first 3 PCs<br>(could even go up to first 5 PCs for another substantial drop in the elbow)
+
+:::
+:::
+
+## Discussion
+
+::: columns
+::: {.column}
+
+```{r}
+#| eval: false
+starbucks_pca |> 
+  fviz_eig(addlabels = TRUE) +
+  geom_hline(yintercept = 100 * (1 / ncol(starbucks_pca$x)), 
+             linetype = "dashed", 
+             color = "darkred")
+```
+
+```{r}
+#| echo: false
+#| fig-height: 7.5
+starbucks_pca |> 
+  fviz_eig(addlabels = TRUE) +
+  geom_hline(yintercept = 100 * (1 / ncol(starbucks_pca$x)), 
+             linetype = "dashed", 
+             color = "darkred") +
+  theme(text = element_text(size = 20))
+```
+
+:::
+
+::: {.column}
+
+* Suppose we decide to use first 3 PCs (to capture satisfactory amount of the variation in the data)
+
+* A standard biplot displays only the first 2 PCs, meaning that some information is omitted
+
+  * In this case, the omitted information corresponds to roughly 30% of the total variation (i.e., the variation captured by PCs 3--11)
+  
+  * About 1/3 of this remaining information is captured by PC3 (not plotted)
+  
+* In principle, we should plot 3 quantitative variables (e.g., point size, transparency, 3D scatterplot, etc.)
+
+* Alternatively, we could make three scatterplots (one for each pair of PCs)
+:::
+:::
+
+
+## Remember the spelling...
+
+<center>
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">folks. it&#39;s _principal_ (not principle) components analysis.</p>&mdash; Stephanie Hicks, PhD (@stephaniehicks) <a href="https://x.com/stephaniehicks/status/1626428875323367424?ref_src=twsrc%5Etfw">February 17, 2023</a></blockquote> <script async src="https://platform.x.com/widgets.js" charset="utf-8"></script>
+
+</center>
+
+## Appendix: PCA output
+
+```{r}
+# str(starbucks_pca)
+```
+
+Examine the output after running `prcomp()`
+
+* `starbucks_pca$sdev`: singular values ($\sqrt{\lambda_j}$)
+
+* `starbucks_pca$rotation`: loading matrix ($V$)
+
+*  `starbucks_pca$x`: principal component scores matrix ($Z=XV$)
+
+Can use the `broom` package for tidying `prcomp()`
+
+```{r}
+#| eval: false
+tidy(starbucks_pca, matrix = "eigenvalues") # equivalent to starbucks_pca$sdev
+tidy(starbucks_pca, matrix = "rotation") # equivalent to starbucks_pca$rotation
+tidy(starbucks_pca, matrix = "scores") # equivalent to starbucks_pca$x
+```
+
+## Appendix: Proportion of variance explained
+
+```{r}
+library(broom)
+starbucks_pca |>
+  tidy(matrix = "eigenvalues") |>
+  ggplot(aes(x = PC, y = percent)) +
+  geom_line() + 
+  geom_point() +
+  geom_hline(yintercept = 1 / ncol(starbucks_feat), color = "darkred", linetype = "dashed") +
+  scale_x_continuous(breaks = 1:ncol(starbucks_pca$x))
+```
+
+## Appendix: Cumulative proportion of variance explained
+
+```{r}
+library(broom)
+starbucks_pca |>
+  tidy(matrix = "eigenvalues") |>
+  ggplot(aes(x = PC, y = cumulative)) +
+  geom_line() + 
+  geom_point() +
+  scale_x_continuous(breaks = 1:ncol(starbucks_pca$x))
+```
+
+## Appendix: Singular value decomposition (SVD)
+
+$$
+X = U D V^T
+$$
+
+* $U$ and $V$: matrices containing the left and right **singular vectors of scaled matrix $X$**
+
+* $D$: diagonal matrix of the **singular values**
+
+. . .
+
+* SVD simplifies matrix-vector multiplication as **rotate, scale, and rotate again**
+
+. . .
+
+$V$: **loading matrix** for $X$ with $\phi_{j}$ as columns
+
+* $Z = X  V$: PC matrix
+
+. . .
+
+Bonus: **Eigenvalue decomposition** (or spectral decomposition)
+
+* $V$: **eigenvectors** of $X^TX$ (covariance matrix)
+
+* $U$: **eigenvectors** of $XX^T$
+
+* The singular values (diagonal of $D$) are square roots of the **eigenvalues** of $X^TX$ or $XX^T$
+
+* Meaning that $Z = UD$
+
+## Appendix: Eigenvalues guide dimension reduction
+
+We want to choose $p^* < p$ such that we are explaining variation in the data
+
+. . .
+
+Eigenvalues $\lambda_j$ for $j \in 1, \dots, p$ indicate **the variance explained by each component**
+
+* $\displaystyle \sum_j^p \lambda_j = p$, meaning $\lambda_j \geq 1$ indicates $\text{PC}j$ contains at least one variable's worth in variability
+  
+* $\displaystyle \frac{\lambda_j}{p}$: proportion of variance explained by $\text{PC}j$
+  
+* Arranged in descending order so that $\lambda_1$ is largest eigenvalue and corresponds to PC1
+  
+. . .
+  
+* Compute the cumulative proportion of variance explained (CVE) with $p^*$ components $$\text{CVE}_{p^*} = \sum_j^{p*} \frac{\lambda_j}{p}$$
+
+Use a **scree plot** to plot eigenvalues and guide choice for $p^* <p$ by looking for "elbow" (rapid to slow change)
