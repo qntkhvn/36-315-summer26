@@ -45,6 +45,7 @@ format:
 * Homework 1 [assignment](homework/homework1.qmd)
 * Homework 2 [assignment](homework/homework2.qmd)
 * Homework 3 [assignment](homework/homework3.qmd)
+* Homework 4 [assignment](homework/homework4.qmd)
 
 ## Graphic Critiques
 
@@ -83,7 +84,7 @@ format:
 | May 22 (Friday)     | Lecture 6    | Homework 2 @ 11:59pm |
 </details>
 
-<details open>
+<details>
 <summary><strong>Week 3</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
@@ -94,7 +95,7 @@ format:
 | May 29 (Friday)     | Lecture 8    | Homework 3 @ 11:59pm |
 </details>
 
-<details>
+<details open>
 <summary><strong>Week 4</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|

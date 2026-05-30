@@ -1,0 +1,193 @@
+---
+title: "Homework 4"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+author: "YOUR NAME HERE"
+toc: true
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Contours and heatmaps (30 points)
+
+The following dataset contains information on student academic performance. The data description can be found [here](https://www.kaggle.com/aljarah/xAPI-Edu-Data). The main attributes include `Grade`, which is classified as Low (L), Medium (M), or High (H), and other variables on student characteristics and behaviors.
+
+```{r}
+library(tidyverse)
+students <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/students.csv")
+```
+
+## A (10pts) 
+
+First, create a scatterplot of `RaisedHands` and `VisitedResources`. Make sure to adjust the transparency. Add contour lines using `geom_density2d()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Next, use the above plot and make the bandwidth smaller by setting `h = c(10, 10)` within `geom_density2d()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Now compare and contrast the two plots in 1-3 sentences.
+
+**YOUR ANSWER HERE**
+
+## B (10pts) 
+
+Similar to Part A, create a scatterplot of `RaisedHands` and `VisitedResources` with contour lines, but with the following changes:
+
+* Make the bandwidth of the contour lines larger by setting `h = c(80, 80)` within `geom_density2d()`
+
+* Set the color of the points according to `Grade` and the shape of the points according to `Gender`
+
+* The color of the contour lines should be constant and not mapped to any variable
+
+```{r}
+# YOUR CODE HERE
+```
+
+* How many modes are there in the plot? Describe and characterize each mode in terms of `RaisedHands` and `VisitedResources`.
+
+**YOUR ANSWER HERE**
+
+* In 1--3 sentences, describe and characterize each mode in terms of `Grade` and `Gender`.
+
+**YOUR ANSWER HERE**
+
+## C (5pts) 
+
+* Create a heatmap of `RaisedHands` and `VisitedResources` with points added but no contour lines (using the default bandwidth) with `stat_density2d`. Change the default colors using `scale_fill_gradient()` and set the `low` and `high` arguments in that function. Be sure to add the `geom_point()` layer *after* `stat_density2d()`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## D (5pts) 
+
+* Create a hexagonal heatmap of `RaisedHands` and `VisitedResources`, but this time use `scale_fill_gradient2()` (Note: If an error is shown when using `geom_hex()`, be sure to install the `hexbin` package.)
+
+* Within `scale_fill_gradient2()`, specify a middle color using the `mid` argument (similar to `low` and `high`)
+
+* Within `scale_fill_gradient2()`, there is an argument called `midpoint` that specifies the middle density. The default is 0, which doesn't make sense for densities, because 0 is the lowest possible value for densities. So, experiment and set `midpoint` equal to a non-zero number that makes sense given the range of counts in the hexagonal bins. 
+
+```{r}
+# YOUR CODE HERE
+```
+
+\newpage
+
+# Problem 2: Olive distances (40 points)
+
+The following dataset contains information on 572 Italian olive oils, including
+
+* the percentage composition of 8 fatty acids (`palmitic`, `palmitoleic`, `stearic`, `oleic`, `linoleic`, `linolenic`, `arachidic`, `eicosenoic`)
+
+* the `region` and `area` of Italy. In particular, there are 9 collection regions: 4 from southern Italy, (North and South Apulia, Calabria, Sicily), 3 from northern Italy (Umbria, East and West Liguria), and 2 from Sardinia (Inland and Coastal).
+
+```{r}
+olive <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/olive.csv")
+```
+
+## A (10pts) 
+
+Create a scatterplot of the $k=2$ dimensions obtained from multi-dimensional scaling (MDS). Use Euclidean distance and compute the distances using only the quantitative variables (i.e., the 8 fatty acid). Be sure to standardize the variables before performing MDS.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (10pts) 
+
+Add a layer to the scatterplot in Part A such that the number of modes can be determined. Color the points by `area`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+* How many modes are there in the scatterplot? Explain in 1--2 sentences.
+
+**YOUR ANSWER HERE**
+
+* Summarize the takeaways from this graphic in 1--3 sentences.
+
+**YOUR ANSWER HERE**
+
+## C (10pts) 
+
+As of now, the MDS dimensions are not interpretable. Thus, it can be useful to see how the MDS dimensions relate to the original data. Let's focus on the first dimension returned by the MDS in Part A and denote this `mds1`. 
+
+First, run a linear regression (additive, no interactions) with `mds1` as the outcome and the quantitative variables in the dataset (i.e., the 8 fatty acids) as the covariates.
+
+```{r}
+# PUT YOUR CODE HERE
+```
+
+Which variables are positively associated with `mds1` to a statistically-significant degree, and which are negatively associated with `mds1` to a statistically-significant degree?
+
+**YOUR ANSWER HERE**
+
+## D (10pts) 
+
+Pick two variables that are positively associated with `mds1` to a statistically-significant degree and two variables that are negatively associated with `mds1` to a statistically-significant degree. Create a pairs plot that
+
+* shows the pairwise relationship for the four variables (thus, there should be six scatterplots), all colored by `area`
+
+* shows the marginal distribution of each of the four variables, each colored by `area`
+
++ sets `alpha = 0.5` such that there is some transparency in the plot.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Summarize the main takeaways from the graph in 2--4 sentences. Be sure to compare the different areas of Italy in terms of each of the four variables.
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Data art (30pts)
+
+Read the following article:
+
+> > > Matthews, G. J. (2026). Lies, Damn Lies, and Data Art. *CHANCE, 39*(1), 12--18. https://doi.org/10.1080/09332480.2026.2648464
+
+## A (5pts)
+
+In 1--2 paragraphs: How does data art differ from data visualization? Explain in your own words. Feel free to give examples to distinguish between data art and data visualization.
+
+**YOUR ANSWER HERE**
+
+## B (15pts)
+
+In this part, we will focus on Figure 4 in the article ("2019 Chicago Bears win probability curves.") Typically, a win probability plot is a jagged time series plot showing how each team's chances of winning change over the course of a game. (Hence, there would be two symmetrical curves, one for each team, plotted against time. Think about why the two curves are symmetrical...) [Here](https://raw.githubusercontent.com/maksimhorowitz/nflscrapR/master/README-unnamed-chunk-5-1.png) is an example of a win probability plot.
+
+Using these background information, answer the following questions:
+
+* What do you think the author did to create these "vase-like" shapes to represent the win probability curves?
+
+**YOUR ANSWER HERE**
+
+* Notice that there are 16 different squares/panels arranged in a grid within the artwork. What do you think each individual panel represents? Then, look closely at the very top of every single panel. Why does every panel start with an exact same "pinch" at the top center?
+
+**YOUR ANSWER HERE**
+
+* Look closely at the 16 panels again. Notice that many of them share similar visual silhouettes/shapes. What are the distinct curve shapes/clusters here? Think about the specific geometric features (e.g., the locations of bottlenecks, sudden expansions, etc.) that define each curve cluster. What does each cluster actually represent?
+
+**YOUR ANSWER HERE**
+
+## C (10pts)
+
+Suppose you are given actual play-by-play data on win probabilities for the 2019 Chicago Bears. How would you create a data visualization version of this data art? Sketch out some pseudocode. In particular, discuss what variables you would use, and the plotting steps you would take.
+
+**YOUR ANSWER HERE**
