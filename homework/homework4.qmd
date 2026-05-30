@@ -15,7 +15,7 @@ execute:
 
 \newpage
 
-# Problem 1: Contours and heatmaps (30 points)
+# Problem 1: Contours and heatmaps (30pts)
 
 The following dataset contains information on student academic performance. The data description can be found [here](https://www.kaggle.com/aljarah/xAPI-Edu-Data). The main attributes include `Grade`, which is classified as Low (L), Medium (M), or High (H), and other variables on student characteristics and behaviors.
 
@@ -86,7 +86,7 @@ Similar to Part A, create a scatterplot of `RaisedHands` and `VisitedResources` 
 
 \newpage
 
-# Problem 2: Olive distances (40 points)
+# Problem 2: Olive distances (40pts)
 
 The following dataset contains information on 572 Italian olive oils, including
 
