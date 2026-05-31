@@ -1,0 +1,127 @@
+---
+title: "Lab 7"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Pairs plot and multidimensional scaling (45pts)
+
+The following dataset contains ratings for soccer goalkeepers playing in the English Premier League according to FIFA 21, a popular soccer video game franchise. The variables include player name, nationality, overall rating, and six skill-specific ratings (diving, handling, kicking, reflexes, speed, and positioning). Note that higher ratings correspond to better player quality.
+
+```{r}
+library(tidyverse)
+goalkeepers <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/goalkeepers.csv")
+```
+
+## A (10pts)
+
+Create a pairs plot for the six skill-specific goalkeeper ratings (diving, handling, kicking, reflexes, speed, and positioning). Here, use the `ggpairs()` function from the `GGally` package. Be sure to adjust the transparency.
+
+```{r}
+#| fig-height: 6
+#| fig-width: 7
+# YOUR CODE HERE
+```
+
+Which pair of variables has the weakest correlation?
+
+**YOUR ANSWER HERE**
+
+## B (20pts)
+
+Implement MDS for the six skill-specific goalkeeper ratings using the `cmdscale()` function with `k = 2`. Be sure to standardize the variables before running MDS. Use Euclidean distance when creating the distance matrix. Store the MDS output in an object called `gk_mds`. Finally, display the first 5 rows of `gk_mds` using the `head()` function.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (5pts)
+
+Create a scatterplot of the two dimensions obtained from MDS. Be sure to adjust the transparency.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## D (10pts)
+
+Make the following changes to the scatterplot in Part C: Color the points by a player's overall rating (`overall` in the dataset). Also, increase the size of the points and choose a different color gradient than the default.
+
+```{r}
+# YOUR CODE HERE
+```
+
+In a few sentences, interpret this MDS plot. Is there any separation by overall rating?
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 2: Hierarchical clustering and dendrograms (55pts)
+
+## A (15pts)
+
+Use the `goalkeepers` data and perform hierarchical clustering for the six skill-specific ratings (diving, handling, kicking, reflexes, speed, and positioning). Be sure to standardize the variables before clustering. Use Euclidean distance and complete linkage for clustering. Store the clustering output in an object called `gk_hc`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (10pts)
+
+Create a dendrogram to visualize the clustering results using the `ggdendrogram()` function in the `ggdendro` package. Flip the coordinates so that the horizontal dimension corresponds to the goalkeepers in the data. Be sure to display the actual names of the goalkeepers instead of the observation index in the data.
+
+```{r}
+#| fig-height: 8
+#| fig-width: 7
+# YOUR CODE HERE
+```
+
+
+## C (10pts)
+
+In this part, we will color the dendrogram by the clusters obtained from hierarchical clustering. To do so, install and load the `factoextra` package. Then, use the `fviz_dend()` function and pass in the clustering output object `gk_hc`, along with a desired number of cluster `k`. Here, specify `k = 3`. Also, flip the coordinates by adding `horiz = TRUE`, change the text size to `cex = 0.5`, and remove the legend by adding `theme(legend.position = "none")`.
+
+```{r}
+#| fig-height: 9
+#| fig-width: 7
+# YOUR CODE HERE
+```
+
+## D (5pts)
+
+Use the code from Part C and add the following inside `fviz_dend()`: `rect = TRUE` and `rect_fill = TRUE`. 
+
+```{r}
+#| fig-height: 9
+#| fig-width: 7
+# YOUR CODE HERE
+```
+
+In 1--2 sentences, describe what `rect = TRUE` and `rect_fill = TRUE` do to the dendrogram.
+
+**YOUR ANSWER HERE**
+
+## E (15pts)
+
+Add a thick, dashed line to the dendrogram from Part B (made with `ggdendrogram()`) to indicate a cut value that returns 3 cluster labels. Store this figure as `gk_dendro`.
+
+Next, use the MDS plot from Part C of Problem 1 but remove the point layer. Display the player name corresponding to each point with `geom_text()`. Make sure the player names are colored by the cluster labels. Move the legend to the top of the figure. Store this figure as `gk_mds_clusters`.
+
+Finally, create a composite figure that arranges `gk_dendro` and `gk_mds_clusters` side-by-side. To do so, use either the `patchwork` or `cowplot` package.
+
+```{r}
+#| fig-width: 7
+#| fig-height: 6
+# YOUR CODE HERE
+```
