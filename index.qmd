@@ -29,6 +29,8 @@ format:
 * Lecture 6: Comparing distributions [slides](lectures/lecture06.qmd)
 * Lecture 7: Visualizing 2D quantitative data and linear regression [slides](lectures/lecture07.qmd)
 * Lecture 8: Nonlinear regression and more quantitative data visualization [slides](lectures/lecture08.qmd)
+* Lecture 9: Mastering ggplot2 [slides](lectures/lecture09.qmd)
+
 
 
 ## Labs

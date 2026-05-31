@@ -627,8 +627,6 @@ penguins_plot |>
   ggplotly()
 ```
 
-<div style="display: flex; justify-content: center;">
-
 ```{r}
 #| echo: false
 #| fig-height: 6.3
@@ -644,8 +642,6 @@ library(plotly)
 penguins_plot |> 
   ggplotly()
 ```
-
-</div>
 
 ## Infographics versus figures in papers/reports
 
