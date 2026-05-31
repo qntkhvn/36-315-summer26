@@ -633,7 +633,7 @@ penguins_plot |>
 
 ```{r}
 #| echo: false
-#| fig-height: 6.3
+#| fig-height: 6.5
 #| fig-width: 10
 penguins_plot <- penguins |> 
   ggplot(aes(x = body_mass, y = bill_len, color = species)) +
