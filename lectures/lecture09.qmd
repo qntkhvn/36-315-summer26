@@ -53,6 +53,10 @@ knitr::opts_chunk$set(
 
 * Interpret inferential results in context
 
+. . .
+
+**MAKE HIGH-QUALITY GRAPHICS**
+
 ## Topics
 
 * Plot composition
