@@ -491,10 +491,10 @@ wid12 <- co2 |>
 
 co2 <- co2 |>
   mutate(moving_avg = zoo::rollapply(co2_val, width = 12, FUN = "mean", align = "right", fill = NA),
-         res = co2_val - moving_avg)
+         resid = co2_val - moving_avg)
 
 resid_plot <- co2 |>
-  ggplot(aes(x = obs_date, y = res)) +
+  ggplot(aes(x = obs_date, y = resid)) +
   geom_line() +
   labs(x = "Year", y = "Residuals of CO2 (ppm)")
 
@@ -506,7 +506,8 @@ wid12 + resid_plot
 
 ```{r}
 #| code-fold: true
-autoplot(acf(tail(co2$res, -11), plot = FALSE))
+# ACF of the residuals (except the first 11 points, which are NA)
+autoplot(acf(tail(co2$resid, -11), plot = FALSE))
 ```
 
 ## Seasonal decomposition
