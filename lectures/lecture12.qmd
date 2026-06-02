@@ -1,0 +1,541 @@
+---
+title: "Visualizing trends and time series"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Trend and time series data
+
+> A **time series** is a sequence of data points indexed, listed, or graphed in chronological order. --- Wikipedia
+
+<br>
+
+Main topic
+
+* **Time series analysis**
+
+  * What already happened?
+
+  * Extract meaningful statistics and other characteristics of the data
+  
+. . .
+
+* **Time series forecasting**
+
+  * What will happen in the future?
+
+  * Predict future values based on previously observed values
+
+
+## Longitudinal data and time series structure
+
+* Consider a *single observation* measured across time
+
+* Time series data usually has the following structure:
+
+| Variable   | $T_1$    | $T_2$    | $\dots$  | $T_J$    |
+| ---------- | -------- | -------- | -------- | -------- |
+| $X_1$      | $x_{11}$ | $x_{12}$ | $\dots$  | $x_{1J}$ |
+| $X_2$      | $x_{21}$ | $x_{22}$ | $\dots$  | $x_{2J}$ |
+| $\vdots$   | $\vdots$ | $\vdots$ | $\dots$  | $\vdots$ |
+| $X_P$      | $x_{P1}$ | $x_{P2}$ | $\dots$  | $x_{PJ}$ |
+
+* With $N$ observations, there are $N$ of these matrices
+
+* Time may consist of regularly- or irregularly-spaced intervals
+
+
+## Example: statistics PhDs over time
+
+```{r}
+#| echo: false
+# library(tidyverse)
+# phd_field <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-02-19/phd_by_field.csv")
+# stats_phd <- phd_field |> 
+#   filter(str_detect(tolower(field), "statistics"))
+# stats_phd |> write_csv("data/stats-phd.csv")
+# stat_phd_year_summary <- stats_phds |> 
+#   group_by(year) |> 
+#   summarize(n_phds = sum(n_phds))
+```
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+stats_phd <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/stats-phd.csv")
+head(stats_phd)
+```
+
+```{r}
+stats_phd_year <- stats_phd |> 
+  group_by(year) |> 
+  summarize(n_phds = sum(n_phds))
+head(stats_phd_year)
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+## Time series plot
+
+Scatterplot with `n_phds` on the y-axis and `year` on the x-axis + Add line to emphasize order + Manually set x-axis breaks to show every year
+
+```{r}
+#| code-fold: true
+#| fig-height: 8
+#| fig-width: 12
+stats_phd_year |> 
+  ggplot(aes(x = year, y = n_phds)) +
+  geom_point() +
+  geom_line() +
+  scale_x_continuous(breaks = unique(stats_phd_year$year),
+                     labels = unique(stats_phd_year$year))
+```
+
+## Drop points to emphasize trend
+
+```{r}
+#| code-fold: true
+#| fig-height: 8
+#| fig-width: 12
+stats_phd_year |> 
+  ggplot(aes(x = year, y = n_phds)) +
+  geom_line() +
+  scale_x_continuous(breaks = unique(stats_phd_year$year),
+                     labels = unique(stats_phd_year$year))
+```
+
+## Fill area under the line
+
+```{r}
+#| code-fold: true
+#| fig-height: 8
+#| fig-width: 12
+stats_phd_year |> 
+  ggplot(aes(x = year, y = n_phds)) +
+  geom_area(fill = "cyan") +
+  scale_x_continuous(breaks = unique(stats_phd_year$year),
+                     labels = unique(stats_phd_year$year))
+```
+
+## Plotting multiple time series: use lines with colors
+
+```{r}
+#| code-fold: true
+#| eval: false
+stats_phd |> 
+  ggplot(aes(x = year, y = n_phds, color = field)) +
+  geom_line() +
+  scale_x_continuous(breaks = unique(stats_phd$year),
+                     labels = unique(stats_phd$year))
+```
+
+```{r}
+#| echo: false
+#| fig-height: 6.5
+#| fig-width: 16
+stats_phd |> 
+  ggplot(aes(x = year, y = n_phds, color = field)) +
+  geom_line() +
+  scale_x_continuous(breaks = unique(stats_phd$year),
+                     labels = unique(stats_phd$year)) +
+  theme(legend.key.spacing.y = unit(0.1, "in"))
+```
+
+:::aside
+Also known as a spaghetti plot
+:::
+
+## Highlight specific lines
+
+```{r}
+#| code-fold: true
+#| fig-height: 8
+#| fig-width: 12
+stats_phd |> 
+  filter(!(field %in% c("Biometrics and biostatistics", "Statistics (mathematics)"))) |> 
+  ggplot() +
+  geom_line(aes(x = year, y = n_phds, group = field),
+            color = "gray", linewidth = 1, alpha = 0.5) +
+  geom_line(data = filter(stats_phd, field %in% c("Biometrics and biostatistics", "Statistics (mathematics)")),
+            aes(x = year, y = n_phds, color = field),
+            linewidth = 1.5, alpha = 1) +
+  scale_x_continuous(breaks = unique(stats_phd$year),
+                     labels = unique(stats_phd$year))
+```
+
+## Other packages to check out
+
+* [`gghighlight`](https://yutannihilation.github.io/gghighlight/)
+
+* [`geomtextpath`](https://allancameron.github.io/geomtextpath/)
+
+* [`ggrepel`](https://ggrepel.slowkow.com/articles/examples.html)
+
+## Stacked area charts
+
+::: columns
+::: {.column}
+
+<center>
+![](https://meghan.rbind.io/blog/2021-07-20-alternatives-to-simple-color-legends-in-ggplot2/featured.png)
+</center>
+
+:::
+::: {.column}
+
+<center>
+![](https://operations.nfl.com/media/4ljfztzg/tiers-1.svg){height=700}
+</center>
+
+:::
+:::
+
+## Characteristics of time series
+
+* **Trends**: Does the variable increase or decrease over time, on average?
+
+* **Seasonality**: Are there changes in the variable that regularly happen (e.g., every winter, every hour, etc.)?
+
+* **Noise**: Variation in the variable beyond average trends and seasonality
+
+## Moving average
+
+* Moving/rolling averages are a starting point for visualizing how a trend changes over time
+
+* Intuition
+
+  * Divide the data into small subsets ("windows")
+
+  * Compute the average within each window
+
+  * Connect the averages together to make a trend line
+
+* This is sometimes called a simple moving average
+
+* Have we seen this before?
+
+## {-}
+
+```{r}
+#| echo: false
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+co2_tbl <- tibble(co2_val = as.numeric(co2)) |>
+  mutate(obs_i = 1:n())
+co2_tbl <- co2_tbl |>
+  mutate(obs_date = seq(as.Date("1/1/1959", format = "%m/%d/%Y"), by = "month", length.out = n()))
+co2_tbl |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_point(color = "red") + 
+  labs(x = "Year", y = "CO2 (ppm)",
+       title = "CO2 Emissions Over Time")
+```
+
+## {-}
+
+```{r}
+#| echo: false
+co2_tbl |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_point(color = "red") + 
+  geom_line(color = "red") +
+  labs(x = "Year", y = "CO2 (ppm)",
+       title = "CO2 Emissions Over Time")
+```
+
+## {-}
+
+```{r}
+#| echo: false
+co2_tbl |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_line(color = "red") +
+  labs(x = "Year", y = "CO2 (ppm)",
+       title = "CO2 Emissions Over Time")
+
+```
+
+## {-}
+
+```{r}
+#| echo: false
+library(ggseas)
+co2_tbl |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 12, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)", 
+       title = "CO2 Emissions Over Time")
+```
+
+## {-}
+
+```{r}
+#| echo: false
+co2_tbl |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  stat_rollapplyr(width = 12, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)", 
+       title = "CO2 Emissions Over Time")
+```
+
+## {-}
+
+```{r}
+#| echo: false
+co2_tbl |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 12, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)", 
+       title = "CO2 Emissions Over Time")
+```
+
+## Computing a moving average
+
+Formally, a moving average can be written as
+
+$$\mu_k = \frac{1}{h}\sum_{t=k - h + 1}^k X_t$$
+
+* Large $h$: smooth line; captures global trends
+
+* Small $h$: jagged/volatile line; captures local trends
+
+## Time series visualization example
+
+Data: Mauna Loa monthly atmospheric  $\text{CO}_2$ concentration 1959 to 1997
+
+```{r}
+#| echo: false
+# co2_tbl |> 
+#   write_csv("data/co2.csv")
+```
+
+```{r}
+#| code-fold: true
+co2 <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/co2.csv")
+co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) +
+  geom_line() +
+  labs(x = "Time index", y = "CO2 (ppm)")
+```
+
+## Use [`ggseas`](https://cran.r-project.org/web/packages/ggseas/vignettes/ggseas.html) package to plot moving averages
+
+```{r}
+#| code-fold: true
+library(ggseas)
+co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 12, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)", title = "Width = 12")
+```
+
+## Moving window
+
+* Setting `width = 12` and `align = "right"` means for each point, plot the average of a **moving window** consisting of that point and the 11 points behind it 
+
+  * Since this is monthly data, this is the average of a year’s worth of data
+  
+  * Note that there is no trend line for the first 11 points on the left-hand side of the graph
+  
+* Choose a `width` value that is "just right" 
+
+  * Want the trend to be smooth enough, but also don’t want to deviate from the data too much
+  
+## Moving window
+
+```{r}
+#| echo: false
+library(patchwork)
+wid2 <- co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) +
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 2, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)",
+       title = "Width = 2")
+
+wid24 <- co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) +
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 24, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)",
+       title = "Width = 24")
+wid2 + wid24
+```
+
+## Moving window
+
+```{r}
+#| echo: false
+co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) +
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 100, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)",
+       title = "Width = 100")
+```
+
+## Other moving averages
+
+* **Cumulative moving average**: The average at time $k$ is the average of all points at and before $k$. Mathematically:
+
+$$\mu_k^{\textsf{(CMA)}} = \frac{1}{k} \sum_{t=1}^k X_t$$
+
+. . .
+
+* **Weighted moving average**: Same as simple moving average, but different measurements get different weights for the average.
+
+$$\mu_k^{\textsf{(WMA)}} = \frac{\sum_{t=k - h + 1}^k X_t \cdot w_t}{ \sum_{t=k - h + 1}^k w_t}$$
+
+
+## Lags
+
+* Time series data are not independent and identically distributed (iid)
+
+  * Example: today's temperature is correlated with yesterday's temperature
+
+. . .
+
+* **Lags**: a time offset used to compare observations separated by a fixed number of time steps
+
+  * Lag 1: compare $X_t$ with $X_{t - 1}$
+
+  * Lag 2: compare $X_t$ with $X_{t - 2}$
+
+  * and so on...
+
+. . .
+
+* Given time measurements $(X_1, X_2, X_3, X_4, X_5)$
+
+  * Lag 1 compares $(X_2, X_3, X_4, X_5)$ with $(X_1, X_2, X_3, X_4)$
+
+  * Lag 2 compares $(X_3, X_4, X_5)$ vs $(X_1, X_2, X_3)$.
+
+
+## Autocorrelation
+
+* **Autocorrelation**: correlation between a time series and a lagged version of itself
+
+. . .
+
+* Define $r_{\ell}$ as the correlation between a time series and lag $\ell$ of that time series
+
+  * Lag 1: $r_1$ is correlation between $(X_2, X_3, X_4, X_5)$ and $(X_1,X_2,X_3,X_4)$
+
+  * Lag 2: $r_2$ is correlation between $(X_3, X_4, X_5)$ and $(X_1,X_2,X_3)$
+
+  * and so on...
+
+. . .
+
+* Common diagnostic: plot $\ell$ on x-axis, $r_{\ell}$ on y-axis
+
+  * Reveals if correlations are significantly large/small for certain lags
+
+
+## Autocorrelation plots
+
+```{r}
+#| code-fold: true
+library(ggfortify)
+auto_corr <- acf(co2$co2_val, plot = FALSE)
+autoplot(auto_corr)
+```
+
+
+## Autocorrelation plots and seasonality
+
+* With strong global trends, autocorrelations will be very positive
+
+* Visualize autocorrelations after removing the global trend
+
+```{r}
+#| code-fold: true
+wid12 <- co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) +
+  geom_line(color="red") +
+  stat_rollapplyr(width = 12, align = "right") +
+  labs(x = "Year", y = "CO2 (ppm)")
+
+co2 <- co2 |>
+  mutate(moving_avg = zoo::rollapply(co2_val, width = 12, FUN = "mean", align = "right", fill = NA),
+         res = co2_val - moving_avg)
+
+resid_plot <- co2 |>
+  ggplot(aes(x = obs_date, y = res)) +
+  geom_line() +
+  labs(x = "Year", y = "Residuals of CO2 (ppm)")
+
+library(patchwork)
+wid12 + resid_plot
+```
+
+## Autocorrelation plots and seasonality
+
+```{r}
+#| code-fold: true
+autoplot(acf(tail(co2$res, -11), plot = FALSE))
+```
+
+## Seasonal decomposition
+
+* STL decomposition (**S**easonal decomposition of **T**ime series by **L**oess)
+
+* Break down a time series into three characteristics: **trend**, **seasonality**, **noise**
+
+. . .
+
+* Use `ggsdc()` (from [`ggseas`](https://cran.r-project.org/web/packages/ggseas/vignettes/ggseas.html)) to visualize seasonal decomposition
+
+  * `observed`: original time series
+
+  * `trend`: loess curve; global trend
+
+  * `seasonality`: another loess curve as the seasonality (observed - trend) 
+
+  * `irregular`:  irregular/residual noise (observed - trend - seasonality)
+  
+  * In other words: `trend` + `seasonality` + `irregular` = `observed`
+
+## Seasonal decomposition
+
+```{r}
+#| code-fold: true
+#| fig-width: 6
+co2 |>
+  ggsdc(aes(obs_date, co2_val), frequency = 12, method = "stl", s.window = 12) +
+  geom_line() + 
+  labs(x = "Year", y = "CO2 (ppm)")
+```
