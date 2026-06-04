@@ -116,9 +116,9 @@ In 1--2 sentences, describe what `rect = TRUE` and `rect_fill = TRUE` do to the 
 
 Add a thick, dashed line to the dendrogram from Part B (made with `ggdendrogram()`) to indicate a cut value that returns 3 cluster labels. Store this figure as `gk_dendro`.
 
-Next, use the MDS plot from Part C of Problem 1 but remove the point layer. Display the player name corresponding to each point with `geom_text()`. Make sure the player names are colored by the cluster labels. Move the legend to the top of the figure. Store this figure as `gk_mds_clusters`.
+Next, use the MDS plot from Part C of Problem 1 but remove the point layer. Display the player names using `geom_text()`. Make sure the player names are colored by the cluster labels. Move the legend to the top of the figure. Store this figure as `gk_mds_clusters`.
 
-Finally, create a composite figure that arranges `gk_dendro` and `gk_mds_clusters` side-by-side. To do so, use either the `patchwork` or `cowplot` package.
+Finally, create a composite figure that arranges `gk_dendro` and `gk_mds_clusters` side-by-side. To do so, use either the `patchwork` or `cowplot` package. (Feel free to also decrease the size of the titles/labels/text in the plots as needed.)
 
 ```{r}
 #| fig-width: 7
