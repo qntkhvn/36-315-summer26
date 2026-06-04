@@ -1,0 +1,371 @@
+---
+title: "Visualizing text data"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+set.seed(8)
+```
+
+## Text data example
+
+* The Office, Season 4 Episode 13: [Dinner Party](https://en.wikipedia.org/wiki/Dinner_Party_(The_Office))
+
+* Access via the [`schrute` package](https://cran.r-project.org/web/packages/schrute/vignettes/theoffice.html)
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 18))
+```
+
+```{r}
+library(schrute)
+transcripts <- theoffice |>
+  filter(season == 4, episode == 13) |>
+  select(index, character, text)
+head(transcripts)
+```
+
+## Bag of words representation of text
+
+Most common way to store text data: **document-term matrix** (DTM)
+
+|              | Word 1   | Word 2   | $\dots$  | Word $J$ |
+| ------------ | -------- | -------- | -------- | -------- |
+| Document $1$ | $w_{11}$ | $w_{12}$ | $\dots$  | $w_{1J}$ |
+| Document $2$ | $w_{21}$ | $w_{22}$ | $\dots$  | $w_{2J}$ |
+| $\dots$      | $\dots$  | $\dots$  | $\dots$  | $\dots$  |
+| Document $N$ | $w_{N1}$ | $w_{N2}$ | $\dots$  | $w_{NJ}$ |
+
+* $w_{ij}$: count of word $j$ in document $i$, or term frequency
+
+. . .
+
+To reduce number of columns:
+
+* **Stop words**: remove extremely common, functional words (e.g., the, and, is, in, of, etc.)
+
+* **Stemming**: reduce all words to their "stem"
+
+  * Example: compute, computer, computed, computing, computation $\rightarrow$ comput
+
+
+## Tokenize text into long format
+
+* Convert raw text into long, tidy table with one-token-per-document-per-row
+
+  * A **token**: a unit of text (typically a word)
+  
+* Easy to convert text into DTM format using [`tidytext` package](https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html)  
+  
+```{r}
+library(tidytext)
+transcripts_tokens <- transcripts |>
+  unnest_tokens(word, text)
+head(transcripts_tokens)
+```
+
+## Remove stop words
+
+::: columns
+::: {.column}
+
+* `tidytext` provides `stop_words` data
+
+```{r}
+head(stop_words)
+```
+
+:::
+::: {.column}
+
+* Remove stop words from all tokens
+
+```{r}
+transcripts_tokens <- transcripts_tokens |>
+  filter(!(word %in% stop_words$word))
+head(transcripts_tokens)
+```
+
+:::
+:::
+
+## Visualize distribution of most common words
+
+```{r}
+#| code-fold: true
+transcripts_tokens |> 
+  count(word, sort = TRUE) |> 
+  filter(n > 5) |> 
+  mutate(word = fct_reorder(word, n)) |> 
+  ggplot(aes(n, word)) +
+  geom_col() +
+  labs(y = NULL)
+```
+
+## Stemming
+
+* Use [`SnowballC` package](https://cran.r-project.org/web/packages/SnowballC/SnowballC.pdf) and `wordStem()` function to perform stemming
+
+```{r}
+library(SnowballC)
+transcripts_tokens <- transcripts_tokens |>
+  mutate(stem = wordStem(word))
+head(transcripts_tokens)
+```
+
+## Tokenize by n-gram
+
+* An **n-gram** is a sequence of n adjacent items (e.g., words, letters, symbols, etc.)
+
+. . .
+
+::: columns
+::: {.column}
+
+* Consider pairs of two consecutive words ("bigrams") instead of single words
+
+```{r}
+transcripts_bigrams <- transcripts |>
+  unnest_tokens(bigram,text, token = "ngrams", n = 2) |> 
+  filter(!is.na(bigram))
+head(transcripts_bigrams)
+```
+
+:::
+::: {.column}
+
+* Remove stop words: `separate()` into two words, then `filter()`, then `unite()`
+
+```{r}
+transcripts_bigrams <- transcripts_bigrams |> 
+  separate(bigram, c("word1", "word2"), sep = " ") |> 
+  filter(!word1 %in% stop_words$word,
+         !word2 %in% stop_words$word) |> 
+  unite(bigram, word1, word2, sep = " ")
+head(transcripts_bigrams)
+```
+
+:::
+:::
+
+. . .
+
+* Can perform the same frequency analysis as for single words
+
+## Word clouds
+
+* A **word cloud** displays all words mentioned across documents, where more common words are larger
+
+  * First, compute the word counts $$w_{\cdot 1} = \sum_{i=1}^N w_{i1} \hspace{0.1in} \dots \hspace{0.1in} w_{\cdot J} = \sum_{i=1}^N w_{iJ}$$
+
+  * Then, the size of word $j$ is proportional to $w_{\cdot j}$
+
+. . .
+
+* Create word clouds in `R` using [`wordcloud` package](https://cran.r-project.org/web/packages/wordcloud/wordcloud.pdf)
+
+* `wordcloud()` function takes in two main inputs: `words`(vector of unique words) and `freq` (vector of frequencies)
+
+## Word clouds
+
+```{r}
+#| code-fold: true
+token_summary <- transcripts_tokens |>
+  count(stem)
+library(wordcloud)
+wordcloud(words = token_summary$stem, 
+          freq = token_summary$n, 
+          random.order = FALSE, # place biggest words in center
+          max.words = 100, 
+          colors = brewer.pal(8, "Dark2"))
+```
+
+## Comparison clouds
+
+* Goal: create word clouds to compare two different collections of documents $\mathcal{A}$ and $\mathcal{B}$
+
+. . .
+
+* Construct vectors of total words for each collection
+
+  * $\mathbf{w}^{\mathcal{A}} = (w_{\cdot 1}^{\mathcal{A}}, \dots, w_{\cdot J}^{\mathcal{A}})$
+
+  * $\mathbf{w}^{\mathcal{B}} = (w_{\cdot 1}^{\mathcal{B}}, \dots, w_{\cdot J}^{\mathcal{B}})$
+
+. . .
+
+* Consider the $j$th word (say "dinner")
+
+  * If $w_{\cdot j}^{\mathcal{A}}$ is large, then "dinner" is large in the word cloud for $\mathcal{A}$
+
+  * If $w_{\cdot j}^{\mathcal{B}}$ is large, then "dinner" is large in the word cloud for $\mathcal{B}$
+
+  * But if both are large, this does not indicate whether $w_{\cdot j}^{\mathcal{A}}$ or $w_{\cdot j}^{\mathcal{B}}$ is bigger
+
+## Comparison clouds
+
+* For word $j$, compute $\bar{w}_{\cdot j} = \textsf{average}(w_{\cdot j}^{\mathcal{A}}, w_{\cdot j}^{\mathcal{B}})$
+
+. . .
+
+* Compute $w_{\cdot j}^{\mathcal{A}} - \bar{w}_{\cdot j}$ and $w_{\cdot j}^{\mathcal{B}} - \bar{w}_{\cdot j}$
+
+. . .
+
+* If $w_{\cdot j}^{\mathcal{A}} - \bar{w}_{\cdot j}$ is very positive, make it large for the $\mathcal{A}$ word cloud<br>If $w_{\cdot j}^{\mathcal{B}} - \bar{w}_{\cdot j}$ is very positive, make it large for the $\mathcal{B}$ word cloud
+
+## Comparison clouds
+
+```{r}
+#| code-fold: true
+#| fig-height: 4
+#| fig-width: 10
+michael_jan_summary <- transcripts_tokens |>
+  count(character, stem) |> 
+  filter(character %in% c("Michael", "Jan"))
+
+library(reshape2)
+michael_jan_summary |>
+  acast(stem ~ character, value.var = "n", fill = 0) |>
+  comparison.cloud(colors = c("red", "blue"), max.words = 100, scale = c(2, 0.1), title.size = 2)
+```
+
+## Term frequency-inverse document frequency (tf-idf)
+
+* Goal: compare text across documents (e.g., The Office characters)
+
+* Determine the most unique words for each document using **tf-idf**
+
+* Approach: downweight words that occur frequently across all documents
+
+. . .
+
+* **Inverse document frequency (idf)**: For word $j$, compute
+
+$$\textsf{idf}_j = \log \frac{N}{N_j},$$ where $N$ is number of documents and $N_j$ is number of documents containing word $j$
+
+* **Term frequency-inverse document frequency (tf-idf)**
+
+$$\textsf{tf-idf}_j = \textsf{tf}_j \times \textsf{idf}_j = w_{ij} \times \textsf{idf}_j$$
+
+. . .
+
+* The higher the tf-idf value (unitless), the more unique the word is in the document
+
+## tf-idf example
+
+Use `bind_tf_idf()` from `tidytext` package
+
+```{r}
+transcripts_tfidf <- transcripts_tokens |>
+  count(character, stem) |> 
+  bind_tf_idf(stem, character, n) 
+head(transcripts_tfidf)
+```
+
+## Visualize most unique words according to tf-idf
+
+```{r}
+#| code-fold: true
+#| fig-height: 8
+transcripts_tfidf |>
+  filter(character %in% c("Michael", "Jan", "Jim", "Pam")) |>
+  group_by(character) |>
+  slice_max(tf_idf, n = 7, with_ties = FALSE) |>
+  mutate(stem = reorder_within(stem, tf_idf, character)) |>
+  ggplot(aes(x = tf_idf, y = stem)) +
+  geom_col() +
+  scale_y_reordered() +
+  facet_wrap(~ character, ncol = 2, scales = "free") +
+  labs(x = "tf-idf", y = NULL)
+```
+
+## Sentiment analysis
+
+* Goal: understand the emotional intent or sentiment of words
+
+. . .
+
+* Lexicon-based approach
+
+  * Find a sentiment lexicon/dictionary
+  
+  * Compute summary (e.g., average sentiment)
+  
+. . .
+  
+* Different types of sentiment lexicons
+  
+  * Positive or negative
+  
+  * Numerical score (e.g., from −5 to +5) 
+  
+  * Specific emotions (e.g., sadness, anger, joy, etc.)
+  
+## Sentiment analysis example
+
+::: columns
+::: {.column}
+
+* Consider the [Bing sentiment lexicon](https://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html)<br>(positive/negative)
+
+```{r}
+bing_sentiment <- get_sentiments("bing")
+head(bing_sentiment)
+```
+
+:::
+::: {.column}
+
+* Join sentiment to token table
+
+```{r}
+transcripts_sentiment <- transcripts_tokens |> 
+  inner_join(bing_sentiment)
+head(transcripts_sentiment)
+```
+
+:::
+:::
+
+* Make different graphics to visualize sentiment
+
+## Sentiment word clouds
+
+```{r}
+#| code-fold: true
+#| fig-height: 4
+#| fig-width: 9
+transcripts_sentiment |> 
+  count(word, sentiment) |> 
+  acast(word ~ sentiment, value.var = "n", fill = 0) |> 
+  comparison.cloud(colors = c("midnightblue", "red"), max.words = 100, scale = c(2, 0.5), title.size = 1)
+```
+
