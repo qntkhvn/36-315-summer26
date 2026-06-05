@@ -31,6 +31,7 @@ format:
 * Lecture 8: Nonlinear regression and more quantitative data visualization [slides](lectures/lecture08.qmd)
 * Lecture 9: Mastering ggplot2 [slides](lectures/lecture09.qmd)
 * Lecture 10: Hierarchical clustering and dendrograms [slides](lectures/lecture10.qmd)
+* Lecture 11: Principal component analysis [slides](lectures/lecture11.qmd)
 
 ## Labs
 

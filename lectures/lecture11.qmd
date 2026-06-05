@@ -162,6 +162,12 @@ PCA can be
 
 * If we project the observations in our dataset onto this direction, the projected values are called the principal component scores
 
+<center>
+
+<img src= "/images/pca-2d.png" style="border: 1px solid grey;" height="480">
+
+</center>
+
 ## Geometry of PCA in 2D
 
 ```{r}
@@ -178,7 +184,7 @@ basic_scatter <- ggplot(plot_data) +
 basic_scatter
 ```
 
-## Geometric interpretation of PCA in 2D
+## Geometry of PCA in 2D
 
 ```{r}
 #| echo: false
@@ -194,7 +200,7 @@ basic_scatter_yfit <- basic_scatter +
 basic_scatter_yfit
 ```
 
-## Geometric interpretation of PCA in 2D
+## Geometry of PCA in 2D
 
 ```{r}
 #| echo: false
@@ -210,7 +216,7 @@ basic_scatter_xyfit <- basic_scatter_yfit +
 basic_scatter_xyfit
 ```
 
-## Geometric interpretation of PCA in 2D
+## Geometry of PCA in 2D
 
 ```{r}
 #| echo: false
@@ -223,7 +229,7 @@ basic_scatter_y_pca_fit <- basic_scatter_xyfit +
   geom_abline(aes(slope = pca_slope, intercept = pca_intercept),
               colour = "darkgreen", linewidth = 1.5) +
   annotate("text", x = 135, y = 95, size = 11,
-           label = "PCA", color = "darkgreen")
+           label = "PC1", color = "darkgreen")
 basic_scatter_y_pca_fit
 ```
 
@@ -261,8 +267,8 @@ plot_data |>
     line = case_when(
       line=="line1" ~ "y ~ x",
       line=="line2" ~ "x ~ y",
-      TRUE ~ "PCA"),
-    line = fct_relevel(line, "y ~ x", "x ~ y", "PCA")
+      TRUE ~ "PC1"),
+    line = fct_relevel(line, "y ~ x", "x ~ y", "PC1")
   ) |> 
   ggplot() +
   geom_point(aes(x = x, y = y, color = line)) +
@@ -279,7 +285,7 @@ plot_data |>
 
 * The above is the **minimizing projection residuals** viewpoint of PCA
 
-* There's another viewpoint---**maximizing variance**. That is, if we project all points onto the solid green line, we maximize the variance of the resulting projected points across all such green lines
+* There's another viewpoint: **maximizing variance**. That is, if we project all points onto the solid green line, we maximize the variance of the resulting projected points across all such green lines
 
 ## PCA example: Starbucks drinks
 
