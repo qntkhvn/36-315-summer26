@@ -1,0 +1,605 @@
+---
+title: "Visualizing spatial data and maps"
+subtitle: "<br>36-315: Statistical Graphics and Visualization, Summer 2026"
+footer:  "[36-315-summer26.netlify.app](https://36-315-summer26.netlify.app)"
+format:
+  revealjs:
+    embed-resources: true
+    height: 900
+    width: 1600
+    theme: theme.scss
+    smaller: true
+    slide-number: c/t
+    linestretch: 1.4
+    code-line-numbers: false
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center"
+)
+```
+
+## Spatial data and maps
+
+2D coordination representation with latitude and longitude
+
+<br>
+
+|                                   | Latitude                                                            | Longitude                                                           |
+|-----------------------------------| --------------------------------------------------------------------| --------------------------------------------------------------------|
+| Direction                         | North/South                                                         | East/West                                                           |
+| Range                             | $(-90^\circ, 90^\circ)$                                             | $(-180^\circ, 180^\circ)$                                           |
+| Reference line                    | Equator ($0^\circ$)                                                 | Prime (Greenwich) meridian ($0^\circ$)                              |
+| Hemispheres                       | $(0^\circ, 90^\circ)$: Northern<br>$(-90^\circ, 0^\circ)$: Southern | $(0^\circ, 180^\circ)$: Eastern<br>$(-180^\circ, 0^\circ)$: Western |
+
+## Types of spatial data
+
+::: {.panel-tabset}
+  
+## Point pattern data
+
+* **Point pattern** data:	record locations (latitude/longitude coordinates) of events/objects in space
+
+  * Where are the points?
+
+  * e.g., locations of crime incidents, locations of lightning strikes, etc.
+
+* Simply records the locations of events (i.e., only the locations are of interest)
+
+* Data typically contain 2 variables: latitude and longitude
+
+* Display locations as points on a map (often called dot map or bubble map)
+
+* Goal: understand how the density of events varies across space
+
+* Event density can also be visualized using density estimation methods
+
+## Point-referenced data
+
+* **Point-referenced** data (or **geostatistical** data): record locations along with one or more variables measured at those locations
+
+  * What values are measured at each point?
+
+  * e.g., temperature measured at weather stations, air quality measured at sensor locations, etc.
+
+* Goal: understand how the measured variable(s) (e.g., altitude, temperature, rainfall, etc.) vary across space
+
+* Display locations as points and measured variables as visual attributes such as color, size, shape, or transparency
+
+* For a single variable, color gradient or varying point size are commonly used to display spatial variation
+
+## Areal data
+
+* **Areal** data: data aggregated over geographic regions (e.g., counties, states, census tracts), where one or more variables are associated with each region
+
+  * What values are associated with each region?
+
+  * e.g., COVID cases by county, average home prices by ZIP code, etc.
+  
+* Choropleth maps for areal data: color regions by variable(s) of interest
+
+:::
+
+## Polygon maps
+
+* Simplest approach to plotting maps
+
+* Draw geographic boundaries for different region
+
+* Use the `map_data()` function in `ggplot2` to get latitude/longitude coordinates
+
+  * e.g., `map_data("world")`, `map_data("state")`, `map_data("county")`, etc.
+  
+
+```{r}
+library(tidyverse)
+theme_set(theme_light())
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+```{r}
+us_counties <- map_data("county")
+pa_counties <- us_counties |>  
+  filter(region == "pennsylvania")
+head(pa_counties)
+```
+
+## Polygon maps
+
+```{r}
+#| fig-height: 7
+pa_counties |> 
+  ggplot(aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill = "white", color = "lightgray")
+```
+
+## Simple features maps
+
+* The simple latitude/longitude data format is not typically used in real-world mapping
+
+. . .
+
+* Data for maps are typically encoded using the [**simple features**](https://en.wikipedia.org/wiki/Simple_Features) (sf) standard
+
+  * Contains geographic features made of mostly two-dimensional geometries (e.g., point, line, polygon, etc.)
+  
+  * Formalized by the [Open Geospatial Consortium](https://en.wikipedia.org/wiki/Open_Geospatial_Consortium) (OGC) and [International Organization for Standardization](https://en.wikipedia.org/wiki/International_Organization_for_Standardization) (ISO)
+  
+. . .
+
+* Check out the [`sf` package](https://r-spatial.github.io/sf/) and [vignettes](https://r-spatial.github.io/sf/articles)
+  
+## Simple features maps
+  
+* Example: Australia state boundaries via the `ozmaps` package
+
+  * `geometry`: contains multipolygon objects that specify polygon vertices that set the region border
+  
+```{r}
+library(ozmaps)
+library(sf)
+ozmap_states
+```
+
+## Simple features maps
+
+* `geom_sf()` relies on a specialized `geometry` aesthetic
+
+* Map the `geometry` aesthetic to a geometry column
+
+```{r}
+#| code-fold: true
+ozmap_states |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf() +
+  coord_sf()
+```
+
+## Map projections
+
+* Is drawing maps by plotting longitude and latitude on a Cartesian plane an accurate representation?
+
+. . .
+
+* **Map projections**: transformation of the latitude/longitude coordinates on a sphere (the earth) to a 2D plane
+
+  * Not possible to perform map projection without some distortion or cutting (always have to make a decision)
+
+. . .
+
+* Map projections are often classified in terms of the geometric properties that they preserve, e.g.
+
+  * **Area-preserving projections**: preserve relative area (regions of equal area on the globe are represented with equal area on the map)
+
+  * **Shape-preserving (conformal) projections**: preserve local shape and angles
+  
+  * Not possible for any projection to be both area- and shape-preserving
+
+. . .
+
+* Check out [Wikipedia](https://en.wikipedia.org/wiki/List_of_map_projections) (and [xkcd](https://xkcd.com/977/))
+  
+## Coordinate reference systems
+
+* Specify both projection catalog (ESRI or EPSG) and projection number (see [here](https://epsg.io))
+
+  * EPSG:3395 Mercator projection (for the world)
+  
+  * ESRI:54009 Mollweide projection (for the world)
+  
+  * ESRI:54030 Robinson projection (for the world)
+  
+  * ESRI:102003 Albers projection (for the contiguous United States)
+  
+  * and many more...
+
+. . .
+
+* Alternatively, specify projection names (see [here](https://proj.org/en/stable/operations/projections/index.html))
+
+  * `"+proj=merc"`: Mercator
+  
+  * `"+proj=robin"`: Robinson
+  
+  * `"+proj=moll"`: Mollweide
+  
+  * and many more...
+  
+## Coordinate reference systems
+
+```{r}
+library(rnaturalearth)
+world <- ne_countries(returnclass = "sf") |> 
+  filter(sovereignt != "Antarctica")
+```
+
+```{r}
+class(world)
+head(world)
+```
+
+## Coordinate reference systems
+
+::: {.panel-tabset}
+
+## Mercator (world)
+
+```{r}
+#| code-fold: true
+#| fig-height: 6
+world |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf() +
+  coord_sf(crs = "EPSG:3395")
+```
+
+## Robinson (world)
+
+```{r}
+#| code-fold: true
+#| fig-height: 5
+world |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf() +
+  coord_sf(crs = "+proj=robin")
+```
+
+## Mercator (USA)
+
+```{r}
+#| code-fold: true
+#| fig-height: 6
+usa <- ne_states(country = "United States of America", returnclass = "sf") |> 
+  filter(!name %in% c("Alaska", "Hawaii"))
+
+usa |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf() +
+  coord_sf(crs = "+proj=merc")
+```
+
+## Albers (USA)
+
+```{r}
+#| code-fold: true
+#| fig-height: 6
+usa |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf() +
+  coord_sf(crs = "ESRI:102003")
+```
+
+:::
+
+## Case study: haunted places in the United States
+
+* Examples adopted from [here](https://github.com/cnicault/tidytuesday)
+
+```{r}
+haunted_places <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-10-10/haunted_places.csv") |> 
+  filter(!state %in% c("Alaska", "Hawaii"))
+head(haunted_places)
+```
+
+* Count the number of haunted places in each state
+
+```{r}
+haunted_states <- haunted_places |>
+  count(state, state_abbrev)
+head(haunted_states)
+```
+
+## Choropleth map
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 12))
+```
+
+```{r}
+#| code-fold: true
+usa |> 
+  left_join(haunted_states, by = join_by(postal == state_abbrev)) |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf(aes(fill = n), linewidth = 0.1) +
+  scale_fill_gradient2() +
+  labs(fill = "Count",
+       title = "Haunted places in the US")
+```
+
+```{r}
+#| echo: false
+theme_set(theme_light(base_size = 20))
+```
+
+## Choropleth map
+
+```{r}
+#| code-fold: true
+usa |> 
+  left_join(haunted_states, by = join_by(postal == state_abbrev)) |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf(aes(fill = n), linewidth = 0.1) +
+  coord_sf(crs = "ESRI:102003") +
+  scale_fill_gradient(low = "#1a1a24", high = "white") +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = "black"))
+```
+
+## Hexbin map
+
+```{r}
+#| code-fold: true
+#| fig-height: 5
+# https://team.carto.com/u/andrew/tables/andrew.us_states_hexgrid/public/map
+us_hex <- read_sf("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/us_states_hexgrid.geojson") |> 
+  st_transform(crs = 3857)
+
+states_hex <- us_hex |> 
+  inner_join(haunted_states, by = join_by(iso3166_2 == state_abbrev))
+
+states_centroid <- states_hex |> 
+  st_centroid()
+
+states_hex |> 
+  ggplot(aes(geometry = geometry)) +
+  geom_sf(aes(fill = n), linewidth = 0.1) +
+  geom_sf_text(data = states_centroid, aes(label = iso3166_2), vjust = -0.5, size = 3) +
+  geom_sf_text(data = states_centroid, aes(label = n), vjust = 1, size = 3.5, fontface = "bold") +
+  scale_fill_gradient(low = "#F2EA79", high = "#D92B04") +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = "black"))
+```
+
+## Bubble map
+
+```{r}
+#| code-fold: true
+#| fig-width: 7.5
+map_data("state") |> 
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group),
+               fill = "gray75", color = "gray20", alpha = 0.1) +
+  geom_point(data = haunted_places, 
+             aes(x = city_longitude, y = city_latitude),
+             color = "white", alpha = 0.1, size = 0.3) +
+  coord_map("albers", lat0 = 39, lat1 = 45, xlim = c(-118, -75)) +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = "black"),
+        plot.margin = margin(0, 0, 0, 0))
+```
+
+## Bubble map
+
+```{r}
+#| code-fold: true
+#| fig-width: 7.5
+map_data("state") |> 
+  ggplot() +
+  geom_polygon(aes(long, lat, group = group),
+               fill = "gray75", color = "gray20", alpha = 0.1) +
+  geom_point(data = count(haunted_places, city, city_longitude, city_latitude), 
+             aes(x = city_longitude, y = city_latitude, size = n),
+             color = "white", alpha = 0.1) +
+  coord_map("albers", lat0 = 39, lat1 = 45, xlim = c(-118, -75)) +
+  theme_void() +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill = "black"),
+        plot.margin = margin(0, 0, 0, 0))
+```
+
+## Data art
+
+```{r}
+#| code-fold: true
+#| fig-width: 7.5
+haunted_places |> 
+  ggplot(aes(x = city_longitude, y = city_latitude, alpha = after_stat(level))) +
+  geom_density_2d_filled(bins = 50, color = NA, show.legend = FALSE) +
+  scale_fill_manual(values = colorRampPalette(c("#1a1a24", "#4a5568", "#cbd5e1", "white"))(50)) + 
+  scale_alpha_manual(values = seq(0.4, 0.8, length.out = 50)) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"))
+```
+
+## Bivariate choropleth maps
+
+<center>
+![](https://upload.wikimedia.org/wikipedia/commons/4/41/Black_Hispanic_Bivariate_Map.png){height=700}
+</center>
+
+See tutorials [here](https://timogrossenbacher.ch/bivariate-maps-with-ggplot2-and-sf/), [here](https://cran.r-project.org/web/packages/biscale/vignettes/biscale.html) and [here](https://geospatialstuff.com/posts/2026/01/21/bivariate-choropleths)
+
+## Interactive maps with [Leaflet](https://rstudio.github.io/leaflet/)
+
+* [Leaflet](https://leafletjs.com/) is an open-source JavaScript library for interactive maps
+
+```{r}
+library(leaflet)
+```
+
+* Create a map widget by with `leaflet()`
+
+* Add layers 
+
+  * `addTiles():` add default basemap tiles to map
+
+  * `addMarkers():` put markers at the specified longitude and latitude coordinates
+
+    * `lng` and `lat`: specify longitude and latitude of the markers
+
+    * `popup`: add description about each location
+    
+  * and more...
+  
+* More examples [here](https://r-graph-gallery.com/package/leaflet.html) and [here](https://rstudio.github.io/leaflet/)
+
+## Basic leaflet map
+
+<center>
+
+```{r}
+pgh_leaflet <- leaflet() |> 
+  setView(lng = -79.9972, lat = 40.4387, zoom = 12)
+pgh_leaflet |> 
+  addTiles()
+```
+
+</center>
+
+## Basemaps
+
+Type `leaflet::providers` or see [here](https://leaflet-extras.github.io/leaflet-providers/preview/index.html) for all basemap options
+
+::: {.panel-tabset}
+
+## Default (OpenStreetMap)
+
+<center>
+
+```{r}
+pgh_leaflet |> 
+  addTiles()
+```
+
+</center>
+
+## Stadia Maps
+
+<center>
+
+```{r}
+pgh_leaflet |> 
+  addProviderTiles(providers$Stadia.StamenToner)
+```
+
+</center>
+
+## OpenTopoMap
+
+<center>
+
+```{r}
+pgh_leaflet |> 
+  addProviderTiles(providers$OpenTopoMap)
+```
+
+</center>
+
+## Carto
+
+<center>
+
+```{r}
+pgh_leaflet |> 
+  addProviderTiles(providers$CartoDB.DarkMatter)
+```
+
+</center>
+
+## USGS
+
+<center>
+
+```{r}
+pgh_leaflet |> 
+  addProviderTiles(providers$USGS)
+```
+
+</center>
+
+:::
+  
+## More leaflet annotations
+
+<center>
+
+```{r}
+leaflet() |> 
+  addTiles() |> 
+  addMarkers(lng = c(-83.813, -87.658, -79.944),
+             lat = c(39.935, 42.000, 40.443),
+             popup = c("Wittenberg", "Loyola Chicago", "Carnegie Mellon"))
+```
+
+</center>
+
+## Geocoding
+
+* Use the `tidygeocoder` package
+
+```{r}
+library(tidygeocoder)
+```
+
+* Address geocoding with `geocode()`
+  
+* Reverse geocoding with `reverse_geocode()`
+
+* Many geocoding services (see [here](https://jessecambon.github.io/tidygeocoder/articles/geocoder_services.html))
+  
+## Address geocoding  
+  
+::: {.panel-tabset}
+
+## Full address
+  
+```{r}
+school_addresses <- tibble(
+  school_name = c("Wittenberg", "Loyola Chicago", "Carnegie Mellon"),
+  school_address = c("200 W Ward St, Springfield, OH 45504", "1032 W Sheridan Rd, Chicago, IL 60660", "5000 Forbes Ave, Pittsburgh, PA")
+)
+school_addresses
+```
+
+```{r}
+school_addresses |> 
+  geocode(address = school_address)
+```
+
+## Address component arguments
+
+Use `street`, `city`, `county`, `state`, `postalcode`, `country`
+
+```{r}
+head(louisville)
+```
+
+```{r}
+louisville |> 
+  head(3) |> 
+  geocode(street = street, city = city, state = state, postalcode = zip, method = "arcgis")
+```
+
+:::
+
+## Reverse geocoding
+
+```{r}
+school_coordinates <- tibble(school_name = c("Wittenberg", "Loyola Chicago", "Carnegie Mellon"),
+                             school_latitiude = c(39.935, 42.000, 40.443),
+                             school_longitude = c(-83.813, -87.658, -79.944))
+school_coordinates
+```
+
+```{r}
+school_coordinates |> 
+  reverse_geocode(lat = school_latitiude, long = school_longitude, method = "osm", full_results = TRUE)
+```
+
