@@ -209,8 +209,10 @@ stats_phd |>
 :::
 ::: {.column}
 
+<br>
+<br>
 <center>
-![](https://operations.nfl.com/media/4ljfztzg/tiers-1.svg){height=700}
+![](../images/tiers.png)
 </center>
 
 :::
