@@ -1,0 +1,296 @@
+---
+title: "Homework 5"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+author: "YOUR NAME HERE"
+toc: true
+fontsize: 10pt
+geometry: margin=0.9in
+format:
+  pdf:
+    colorlinks: true
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: The principal components of music (32pts)
+
+The following dataset contains information on spotify songs. Most of the variables are self-explanatory a higher value denotes a higher amount of that variable (e.g., energy, danceability, etc.) Note that the dataset does not contain information on individual songs. Rather, it contains the **average** information of every song in a given year. For example, the first row of the dataset shows the average value of each variable for all songs released in 1920.
+
+```{r}
+library(tidyverse)
+spotify <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/spotify.csv")
+```
+
+## A (10pts) 
+
+* Perform a principal components analysis (PCA) using the 11 song characteristics (`acousticness`, `danceability`, `duration_ms`, `energy`, `instrumentalness`, `liveness`, `loudness`, `speechiness`, `tempo`, `valence`, and `popularity`). Be sure that the variables are *centered* and *standardized* before performing PCA. Store the PCA results in an object called `spotify_pca`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Use the PCA summary output to answer the following questions: What proportion of the total variation in the data is captured by the first principal component? By the second principal component? By both the first and second principal components together?
+
+**YOUR ANSWER HERE**
+
+## B (5pts) 
+
+Create an elbow plot for the PCA results, where the component numbers (1 through 11) are on the x-axis, and the proportion of total variation is on the y-axis.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Based on the elbow plot, how many principal components should be used? Explain in 1--2 sentences.
+
+**YOUR ANSWER HERE**
+
+## C (7pts) 
+
+* First, create a scatterplot with the first principal component on the x-axis and the second principal component on the y-axis, with points colored by `decades`
+
+```{r}
+# YOUR CODE HERE
+```
+
+* Next, create a scatterplot with the first principal component on the x-axis and the third principal component on the y-axis, with points colored by `decades`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+In 2--4 sentences, discuss the relationship between `decades` and each of the principal components visualized in each plot.
+
+**YOUR ANSWER HERE**
+
+## D (10pts) 
+
+* Use `fviz_pca_biplot()` (from the `factoextra` package) to make a biplot of the first two principal components. Set `repel = TRUE` to make it easier to see the variable names on the arrows. Color the points by the `decades` variable using the `habillage` argument. Also, change the `shape` argument to avoid mapping the shape to the group variable (`decades`).
+
+```{r}
+# YOUR CODE HERE
+```
+
+In 2--4 sentences, discuss the relationship between `decades` and the original variables in the data.
+
+**YOUR ANSWER HERE**
+
+* Consider the following line of code:
+
+```{r}
+# spotify_pca$rotation
+```
+
+It should return an 11 x 11 matrix, where the rows correspond to the original variables and the columns correspond to the principal components. Each column represents the **linear combination** of the variables that each principal component represents. In particular, each number shows how the variable is associated with the principal component. If a number is positive, that means songs with a higher value of that principal component also tend to have a higher value of that variable. Similarly, if a number is negative, that means songs with a lower value of that principal component tend to have a higher value of that variable.
+
+Now look back at the first plot in Part C, which visualizes the first two principal components (colored by `decades`). Given these details about the rotation matrix, discuss in 2--4 sentences
+the relationship between `decades` and the original variables in the data. Be sure to explain how the rotation matrix output is used to support and justify the answer.
+
+```{r}
+# YOUR CODE HERE
+```
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 2: Time series, lags, and autocorrelation (34pts)
+
+The following dataset contains information on bike trips taken by individuals in New York City.
+
+```{r}
+bikes <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/bikes.csv")
+```
+
+## A (7pts) 
+
+The variable `start.date` contains the day that someone began a bike trip. To use this variable, we first need to convert it to a `Date` variable. (By default, `start.date` is likely coded as a `character` variable.)
+
+```{r}
+bikes <- bikes |>
+  mutate(start.date = as.Date(start.date, format = "%m/%d/%y"))
+```
+
+Now, create a table called `trips_per_day` that contains two columns:
+
+* `start.date`: all unique `start.date` values in the data
+* `n_trips`: number of trips on each particular `start.date`
+
+```{r}
+# YOUR CODE HERE
+```
+
+Next, use the data `trips_per_day` and plot the number of trips over time with `geom_line()`. Be sure the plot is properly titled and labeled.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Describe the plot in 1--3 sentences, particularly in terms of overall trends and seasonality. 
+
+**YOUR ANSWER HERE**
+
+## B (7pts) 
+
+Create another table that summarizes the number of trips by `start.date` and `usertype`. Call this `trips_per_day_usertype`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Next, use `trips_per_day_usertype` and create the same time series plot as Part A but colored by `usertype`. Be sure to adjust the transparency.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Finally, compare and contrast the two time series plots in 1--3 sentences.
+
+**YOUR ANSWER HERE**
+
+## C (10pts) 
+
+First, write code to randomly generate 1000 data points from a standard normal distribution. Store this in an object called `rand_ts`. (Thus, this also generates a time series at 1000 time points.)
+
+```{r}
+# YOUR CODE HERE
+```
+
+Use the `acf()` function to create an autocorrelation plot of `rand_ts`. Display the autocorrelation for lags 0 through 500. (Use the help documentation for `acf()` to see how to change the maximum lag.)
+
+```{r}
+# YOUR CODE HERE
+```
+
+* Based on the confidence intervals shown in the plot, are any of the autocorrelations significantly different from zero? If so, which lags appear to have autocorrelations that differ significantly from zero?
+
+**YOUR ANSWER HERE**
+
+* If some autocorrelations significantly differ from zero, explain why this might occur. In particular, discuss why certain lags beyond lag 0 may appear significantly different from zero, although `rand_ts` is a completely random time series by definition.
+
+**YOUR ANSWER HERE**
+
+## D (5pts) 
+
+Use the `trips_per_day` data and create two autocorrelation plots for `n_trips`: one with the default lags 0 through 30, and another plot with lags 0 through 500. Display the plots side-by-side using `par(mfrow = c(1, 2))` before the two `acf()` lines of code.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Interpret the plots in 1--3 sentences. Be sure to interpret within the context of this dataset, which is about bike rides.
+
+**YOUR ANSWER HERE**
+
+## E (5pts) 
+
+Use the `trips_per_day_usertype` data and create two autocorrelation plots: one for subscribers and one for customers. For both plots, display lags 0 through 500, and arrange the plots side-by-side. Also, specify `ylim = c(-0.3, 1)` within `acf()` to ensure the plots are on the same scale.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Compare and contrast the plots in 1--3 sentences. Again, be sure to interpret within the context of this dataset.
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Moving average and seasonal decomposition (34pts)
+
+## A (6pts) 
+
+Use the `trips_per_day` data and create a moving average plot for `n_trips`. Here, use the functions `ggplot()`, `geom_line()`, and `stat_rollapplyr()` (from the `ggseas` package). Be sure that the raw time series line and moving average line have different colors. Within `stat_rollapplyr()`, set `align = "left"`, and choose a `width` that fits the data well and is interpretable for this dataset.
+
+```{r}
+# make sure to install the ggseas package
+# install.packages("pak")
+# pak::pak("ellisp/ggseas/pkg")
+
+# YOUR CODE HERE
+```
+
+In 1--2 sentences, discuss the chosen `width` value. (No need to discuss the moving average plot.)
+
+**YOUR ANSWER HERE**
+
+## B (6pts) 
+
+Make the following changes to the plot from Part A:
+
+* Display two moving average lines, one for each `usertype`. This requires using the `trips_per_day_usertype` data (instead of the `trips_per_day`). Ensure that that the lines are colored by `usertype`.
+
+* Only display the moving average lines and **not** the raw time series lines.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Interpret the plot in 1--3 sentences. (Note: The comparison here is very similar to the comparison in Problem 2C. Arguably, it is a lot easier to make this comparison in this question than in Problem 2C.)
+
+**YOUR ANSWER HERE**
+
+## C (10pts) 
+
+In this problem, we will work with a special kind of weighted moving average: an [exponential moving average](https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average) (EMA).
+
+The idea of EMAs is to upweigh recent time periods and downweigh far away time periods when computing the moving average. In this part, the task is to compute the EMA for `n_trips` in the `trips_per_day` data, and then plot the EMA on top of the raw time series.
+
+An EMA is defined as follows.
+
+* For the first time period, $t = 1$, set $S_1 = Y_1$, where $S_t$ is the EMA at time $t$, and $Y_t$ is the outcome at time $t$.
+
+* For the next time periods ($t > 1$), define $S_t = \alpha Y_t + (1- \alpha) S_{t-1}$ for some constant $\alpha$. Typically, $\alpha = 2 / (h + 1)$, where $h$ is the size of the window (i.e., the chosen `width` in Part A).
+
+Note that `n_trips` in the `trips_per_day` data should already be ordered by `start.date`, which will make computing the EMA easier.
+
+Use the provided background information to fill in the template code below to compute the EMA.
+
+```{r}
+# define EMA
+# trips_per_day$ema <- vector(length = nrow(trips_per_day))
+
+# initialize the first EMA
+# trips_per_day$ema[1] <- trips_per_day$n_trips[1]
+
+# define alpha
+# alpha <- ? 
+
+# define the remaining EMAs
+# for (i in 2:nrow(trips_per_day)) {
+#   trips_per_day$ema[i] <- ?
+# }
+```
+
+Next, create a time series plot for `n_trips` along with another line for the EMA. Be sure that the raw time series and EMA lines have different colors.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## D (6pts) 
+
+Use the `ggsdc()` function in the `ggseas` package to create a seasonal decomposition plot for the `trips_per_day` data. Within `ggsdc()`, there are two arguments: `frequency` and `s.window`. `frequency` is the same as `width` in `stat_rollapplyr()`, so set `frequency` equal to the chosen `width` value from earlier. Also, set `s.window = 7`.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Interpret the results in 1--4 sentences. In particular, be sure to discuss each of the four plots provided by `ggsdc()`.
+
+**YOUR ANSWER HERE**
+
+## E (6pts) 
+
+Now make a seasonal decomposition plot for the `trips_per_day_usertype` data with lines colored by `usertype`. Be sure to adjust the transparency.
+
+```{r}
+# YOUR CODE HERE
+```
+
+Interpret the last two plots in the seasonal decomposition plot in 1--3 sentences.
+
+**YOUR ANSWER HERE**
