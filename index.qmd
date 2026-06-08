@@ -32,6 +32,7 @@ format:
 * Lecture 9: Mastering ggplot2 [slides](lectures/lecture09.qmd)
 * Lecture 10: Hierarchical clustering and dendrograms [slides](lectures/lecture10.qmd)
 * Lecture 11: Principal component analysis [slides](lectures/lecture11.qmd)
+* Lecture 12: Visualizing trends and time series [slides](lectures/lecture12.qmd)
 
 ## Labs
 
