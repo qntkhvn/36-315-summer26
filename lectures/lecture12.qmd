@@ -33,22 +33,25 @@ knitr::opts_chunk$set(
 
 <br>
 
+. . .
+
 Main topic
 
-* **Time series analysis**
+::: {.panel-tabset}
+
+## Time series analysis
 
   * What already happened?
 
   * Extract meaningful statistics and other characteristics of the data
   
-. . .
-
-* **Time series forecasting**
+## **Time series forecasting**
 
   * What will happen in the future?
 
   * Predict future values based on previously observed values
 
+:::
 
 ## Longitudinal data and time series structure
 
@@ -65,8 +68,7 @@ Main topic
 
 * With $N$ observations, there are $N$ of these matrices
 
-* Time may consist of regularly- or irregularly-spaced intervals
-
+* Time intervals may be regularly or irregularly spaced
 
 ## Example: statistics PhDs over time
 
