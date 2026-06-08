@@ -224,13 +224,19 @@ stats_phd |>
 
 * **Trends**: Does the variable increase or decrease over time, on average?
 
+. . .
+
 * **Seasonality**: Are there changes in the variable that regularly happen (e.g., every winter, every hour, etc.)?
+
+. . .
 
 * **Noise**: Variation in the variable beyond average trends and seasonality
 
 ## Moving average
 
 * Moving/rolling averages are a starting point for visualizing how a trend changes over time
+
+. . .
 
 * Intuition
 
@@ -239,10 +245,32 @@ stats_phd |>
   * Compute the average within each window
 
   * Connect the averages together to make a trend line
+  
+. . .
 
 * This is sometimes called a simple moving average
 
+. . .
+
 * Have we seen this before?
+
+## Smoothing
+
+* Moving averages are extremely similar to loess smoothing
+
+  * Moving average: average within a sliding window
+
+  * Loess: weighted linear regression within a sliding window
+  
+. . .
+
+* Simple moving average: local constant regression (degree 0, intercept-only), rectangular kernel
+
+* Loess: local linear or quadratic regression, smooth kernel (e.g., tri-cube)
+
+. . .
+
+* Loess can also be used for understand the overall trend of a time series
 
 ## {-}
 
@@ -365,6 +393,20 @@ co2 |>
   labs(x = "Year", y = "CO2 (ppm)", title = "Width = 12")
 ```
 
+## Time series shading
+
+```{r}
+#| code-fold: true
+library(ggseas)
+co2 |>
+  ggplot(aes(x = obs_date, y = co2_val)) + 
+  geom_line(color = "red") +
+  stat_rollapplyr(width = 12, align = "right") +
+  annotate(geom = "rect", fill = "gray", alpha = 0.3,
+           xmin = as.Date("1980-01-01"), xmax = as.Date("1989-12-31"), ymin = -Inf, ymax = Inf) +
+  labs(x = "Year", y = "CO2 (ppm)", title = "Width = 12")
+```
+
 ## Moving window
 
 * Setting `width = 12` and `align = "right"` means for each point, plot the average of a **moving window** consisting of that point and the 11 points behind it 
@@ -372,6 +414,8 @@ co2 |>
   * Since this is monthly data, this is the average of a year’s worth of data
   
   * Note that there is no trend line for the first 11 points on the left-hand side of the graph
+  
+. . .
   
 * Choose a `width` value that is "just right" 
 
@@ -433,7 +477,7 @@ $$\mu_k^{\textsf{(WMA)}} = \frac{\sum_{t=k - h + 1}^k X_t \cdot w_t}{ \sum_{t=k 
 
 * **Lags**: a time offset used to compare observations separated by a fixed number of time steps
 
-  * Lag 1: compare $X_t$ with $X_{t - 1}$
+  * Lag 1: compare $X_t$ with $X_{t - 1}$ (i.e., the time series itself and the time series shifted back one time point)
 
   * Lag 2: compare $X_t$ with $X_{t - 2}$
 
@@ -481,15 +525,15 @@ autoplot(auto_corr)
 
 ## Autocorrelation plots and seasonality
 
-* With strong global trends, autocorrelations will be very positive
+* Global trends: very high positive autocorrelations at many lags; hard to distinguish trend from seasonality 
 
-* Visualize autocorrelations after removing the global trend
+* Autocorrelations after removing global trend: Which lags have large positive/negative values?
 
 ```{r}
 #| code-fold: true
 wid12 <- co2 |>
   ggplot(aes(x = obs_date, y = co2_val)) +
-  geom_line(color="red") +
+  geom_line(color = "red") +
   stat_rollapplyr(width = 12, align = "right") +
   labs(x = "Year", y = "CO2 (ppm)")
 
