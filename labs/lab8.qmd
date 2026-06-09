@@ -1,0 +1,77 @@
+---
+title: "Lab 8"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Graphic replication (60pts)
+
+The following dataset contains information about monthly sea ice extent in the Northern Hemisphere between 1979 and 2019. By definition, extent is the area of the ocean with at least 15% sea ice concentration. Each row represents an individual month and includes the `year`, `month` within a year, and `extent` (in millions of square kilometers).
+
+```{r}
+library(tidyverse)
+sea_level <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/sea-level.csv")
+head(sea_level)
+```
+
+Your task here is very simple: **Reproduce the graph shown in the file `lab8-graph.pdf`.**
+
+Some notes:
+
+* Feel free to drop the months with missing extent values and/or ignore the warning messages about missing values.
+
+* Do NOT change the setup for the code chunk (i.e., do NOT change `fig-height` and `fig-width`).
+
+\newpage
+
+```{r}
+#| fig-height: 5
+#| fig-width: 8
+# YOUR CODE HERE
+```
+
+\newpage
+
+# Problem 2: Time series questions (40pts)
+
+Answer the following questions using the graph from Problem 1.
+
+## A (5pts)
+
+What do the dashed horizontal lines represent? What are the values they provide to the graph?
+
+**YOUR ANSWER HERE**
+
+## B (5pts)
+
+Focusing on 2019, in which month(s) do the data deviate the furthest relative to the respective historical monthly average?
+
+**YOUR ANSWER HERE**
+
+## C (10pts)
+
+Looking across all twelve months, what is the consistent long-term trend of the Northern Hemisphere sea ice extent from 1979 to 2019? Discuss in a few sentences.
+
+**YOUR ANSWER HERE**
+
+## D (10pts)
+
+How does the seasonal cycle of sea ice extent behave over the course of a typical year? Which months of the year have the most/least sea ice extent on average? Discuss in a few sentences.
+
+**YOUR ANSWER HERE**
+
+## E (10pts)
+
+Look at how the sea ice extent data behaves in the first 20 years versus the last 20 years. Does it behave uniformly over time? Which period is more erratic and volatile? Which period is more stable and close to the historical average? Discuss in a few sentences.
+
+**YOUR ANSWER HERE**
