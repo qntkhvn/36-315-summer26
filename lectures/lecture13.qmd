@@ -368,4 +368,3 @@ transcripts_sentiment |>
   acast(word ~ sentiment, value.var = "n", fill = 0) |> 
   comparison.cloud(colors = c("midnightblue", "red"), max.words = 100, scale = c(2, 0.5), title.size = 1)
 ```
-
