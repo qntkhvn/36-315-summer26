@@ -1,0 +1,179 @@
+---
+title: "Lab 9"
+subtitle: "36-315: Statistical Graphics and Visualization, Summer 2026"
+format:
+  pdf:
+    colorlinks: true
+    toc: true
+    fontsize: 10pt
+    geometry: margin=0.9in
+execute:
+  warning: false
+  message: false
+---
+
+\newpage
+
+# Problem 1: Tokens and word counts (40pts)
+
+## A (5pts)
+
+First, we use the `gutenbergr` package to download some Shakespeare works directly from [Project Gutenberg](https://www.gutenberg.org/) based on their IDs from the website. For instance, [Hamlet is #1524](https://www.gutenberg.org/ebooks/1524). These Shakespeare plays are stored in an object called `shakespeare`.
+
+
+```{r}
+library(tidyverse)
+library(gutenbergr) # install.packages("gutenbergr")
+shakespeare <- gutenberg_download(c(1524, 1532, 1533, 1513), meta_fields = "title")
+# 1524: Hamlet; 1532: King Lear; 1533: Macbeth; 1513: Romeo and Juliet
+```
+
+Display the first 10 rows of `shakespeare` using `head()`
+
+```{r}
+# YOUR CODE HERE
+```
+
+Notice that this comes in a tidy format, with a column for `gutenberg_id`, a column for `text`, and a column for the book/play `title`. The `text` column may be divided by lines in the work, or sometimes by an entire page or paragraph or chapter.
+
+## B (5pts)
+
+Load the `tidytext` package and use the `unnest_tokens()` to tokenize the `text` columns into a column of words. Call this column `word`. Store this tokenized table as `shakespeare_words` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (5pts)
+
+The `stop_words` dataset is automatically loaded when loading `tidytext`. Use this to remove stop words from `shakespeare_words`. After that, remove the following old-fashioned words and stage directions: "thou", "thy", "haue", "thee", "thine", "enter", "exeunt", "exit". Store the resulting data as `shakespeare_words_filtered` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## D (5pts)
+
+Next, use `shakespeare_words_filtered` and get the frequency of each word in each play. To do so, use the `count()` function. Store this as `shakespeare_wc` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## E (5pts)
+
+Use `shakespeare_wc` to identify the top 10 most common words in each play. Fill in the following template code to do so.
+
+```{r}
+# shakespeare_wc |> 
+#   group_by(?) |> 
+#   slice_max(?, n = ?)
+```
+
+Store this as `shakespeare_top10` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## F (15pts)
+
+Fill in the code below to create a faceted bar chart to show the top 10 most common words for each play, where the bars are also filled by play title.
+
+```{r}
+#| fig-height: 5
+# shakespeare_top10 |>
+#   ggplot(aes(x = ?, y = ?, fill = ?)) +
+#   geom_?() +
+#   labs(x = NULL,
+#        y = "Frequency",
+#        title = "10 most common words in four Shakespeare plays") +
+#   facet_wrap(~ ?, scales = "free_y") +
+#   theme(legend.position = "none")
+```
+
+Notice that in the plot above, the bars within each panel are not ordered. To fix this, use the `reorder_within()` function in `tidytext`, and add `scale_y_reordered()` to the plot. Fill in the code below to do this.
+
+```{r}
+#| fig-height: 5
+# shakespeare_top10 |> 
+#   mutate(word = reorder_within(word, by = ?, within = ?)) |> 
+#   # THEN PUT THE SAME CODE FROM ABOVE HERE (STARTING AT ggplot)
+#   # AND ADD THE FOLLOWING LINE
+#   scale_y_reordered()
+```
+
+\newpage
+
+# Problem 2: Term frequency-inverse document frequency (35pts)
+
+We can determine which words are the most unique for each book/document in a corpus by calculating th term frequency-inverse document frequency (tf-idf) score. The higher the tf-idf value, the more unique the term is in the document.
+
+## A (10pts)
+
+Use the `bind_tf_idf()` function from `tidytext` to add tf-idf values to the counts in the `shakespeare_wc` table from Problem 1.
+Store this as `shakespeare_tf_idf` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## B (10pts)
+
+Use `shakespeare_tf_idf` to identify the top 10 most unique words for each play based on the `tf_idf` score. To do this, repeat the same process as Problem 1E using `group_by()` and `slice_max()`. Store this as `shakespeare_unique10` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (15pts)
+
+Repeat Problem 1F and plot a faceted bar chart to show the top 10 most unique words for each play. Make sure the bars are filled by play title, and the bars within each panel are ordered.
+
+```{r}
+#| fig-height: 5
+# YOUR CODE HERE
+```
+
+What is noticeable about the most unique words in each play?
+
+**YOUR ANSWER HERE**
+
+\newpage
+
+# Problem 3: Sentiment analysis (25pts)
+
+At its core, sentiment analysis involves looking at a list/lexicon of words for how negative or positive they are. Some sentiment lexicons simply label words as positive or negative, while others assign a numerical score (e.g., from −3 to +3) or classify words by specific emotions (e.g., sadness, anger, joy, etc.)
+
+## A (5pts)
+
+Look at the help documentation for the function `get_sentiments()`. What are the available sentiment lexicons? Also, do a quick search and summarize how each lexicon assigns sentiment to words.
+
+**YOUR ANSWER HERE**
+
+## B (10pts)
+
+Consider the [Bing sentiment lexicon](https://dl.acm.org/doi/10.1145/1014052.1014073).
+
+```{r}
+# bing_sentiment <- get_sentiments("bing")
+# head(bing_sentiment)
+```
+
+Use the `inner_join()` function to match the words in `shakespeare_words_filtered` from Problem 1 with the corresponding sentiment values in `bing_sentiment`. Store this as `shakespeare_sentiment` and display the first 10 rows.
+
+```{r}
+# YOUR CODE HERE
+```
+
+## C (10pts)
+
+Create a plot that best visualizes the frequency distribution of positive and negative words in the four plays. Be sure to have appropriate titles and labels.
+
+```{r}
+# YOUR CODE HERE
+```
+
+What is the common pattern across all four plays?
+
+**YOUR ANSWER HERE**
