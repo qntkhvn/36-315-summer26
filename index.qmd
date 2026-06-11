@@ -129,7 +129,7 @@ format:
 <summary><strong>Week 6</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
-| June 15 (Monday)    | Lecture 15   |                      |
+| June 15 (Monday)    | TBD          |                      |
 | June 16 (Tuesday)   | TBD          |                      |
 | June 17 (Wednesday) | TBD          | Project @ 11:59pm    |
 </details>
