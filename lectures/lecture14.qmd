@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 ## Spatial data and maps
 
-2D coordination representation with latitude and longitude
+2D coordinate representation with latitude and longitude
 
 <br>
 
