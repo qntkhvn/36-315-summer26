@@ -603,3 +603,12 @@ school_coordinates |>
   reverse_geocode(lat = school_latitiude, long = school_longitude, method = "osm", full_results = TRUE)
 ```
 
+## Graphic replication
+
+```{r}
+south <- read_csv("https://raw.githubusercontent.com/qntkhvn/36-315-summer26/refs/heads/master/data/south.csv")
+```
+
+<center>
+![](https://www.googleapis.com/download/storage/v1/b/kaggle-user-content/o/inbox%2F1492355%2Ff16938c50af166c57955fc8015de22b3%2Fhickey-map-south2%20(1).png?generation=1675744054308776&alt=media){height=680}
+</center>
