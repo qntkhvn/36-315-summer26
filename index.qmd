@@ -115,7 +115,7 @@ format:
 | June 5 (Friday)     | Lecture 11   | Homework 4 @ 11:59pm |
 </details>
 
-<details open>
+<details>
 <summary><strong>Week 5</strong></summary>
 | Date                | Session      | Due                  |
 |---------------------|--------------|----------------------|
