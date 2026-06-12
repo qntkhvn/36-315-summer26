@@ -46,7 +46,7 @@ knitr::opts_chunk$set(
   
 ## Point pattern data
 
-* **Point pattern** data:	record locations (latitude/longitude coordinates) of events/objects in space
+* **Point pattern** data:	record locations (latitude/longitude coordinates) of points (e.g., events, objects, etc.) in space
 
   * Where are the points?
 
@@ -58,9 +58,9 @@ knitr::opts_chunk$set(
 
 * Display locations as points on a map (often called dot map or bubble map)
 
-* Goal: understand how the density of events varies across space
+* Common goal: understand how the distribution/density of points varies across space
 
-* Event density can also be visualized using density estimation methods
+  * Can be visualized using density estimation methods
 
 ## Point-referenced data
 
@@ -173,9 +173,17 @@ ozmap_states |>
 
 . . .
 
+<center>
+![](../images/earth.png){height=650}
+<center>
+
+## Map projections
+
 * **Map projections**: transformation of the latitude/longitude coordinates on a sphere (the earth) to a 2D plane
 
-  * Not possible to perform map projection without some distortion or cutting (always have to make a decision)
+  * Not possible to perform map projection without some distortion or cutting
+  
+  * Need to make assumptions
 
 . . .
 
